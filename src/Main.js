@@ -1,11 +1,14 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 function Main() {
   return (
-    <View>
-      <Text>Retail Product Classifier</Text>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Main} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

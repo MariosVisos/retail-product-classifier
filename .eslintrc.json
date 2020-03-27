@@ -30,7 +30,8 @@
       "error",
       {
         "trailingComma": "all",
-        "singleQuote": true
+        "singleQuote": true,
+        "endOfLine": "auto"
       }
     ],
     // "react/prop-types": "off",
