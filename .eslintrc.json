@@ -43,6 +43,7 @@
     "react-native/no-single-element-style-arrays": 2,
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
+    "react/prop-types": 0,
     "react/jsx-filename-extension": [
       1,
       {
