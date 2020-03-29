@@ -27,7 +27,9 @@
     "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
-    "expo-camera": "~8.0.0"
+    "expo-camera": "~8.0.0",
+    "expo-blur": "~8.0.0",
+    "react-native-svg": "9.13.3"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

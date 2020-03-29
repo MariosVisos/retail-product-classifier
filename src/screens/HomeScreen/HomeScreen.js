@@ -7,7 +7,7 @@ import styles from './HomeScreenStyles';
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      <Text>Niki I love you</Text>
+      <Text>hey there</Text>
       <Button
         onPress={() => navigation.navigate('Camera')}
         icon={<Entypo name="camera" size={32} />}
