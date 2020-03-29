@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Platform } from 'react-native';
 import { Camera } from 'expo-camera';
+import { useSafeArea } from 'react-native-safe-area-context';
 import styles from './CameraScreenStyles';
 import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
 import BoundingBox from '../../components/BoundingBox/BoundingBox';
@@ -15,6 +16,9 @@ function CameraScreen() {
   useEffect(() => {
     getCameraPermission();
   }, []);
+
+  const insets = useSafeArea();
+  const marginTop = insets.top > 24 ? insets.top : 0;
 
   const [cameraRatio, setCameraRatio] = useState('16:9');
   const [type] = useState(Camera.Constants.Type.back);
@@ -31,7 +35,7 @@ function CameraScreen() {
         const supportedRatios = await cameraRef.getSupportedRatiosAsync();
         let camRatio;
         if (supportedRatios.includes('2:1')) {
-          camRatio = '136:135';
+          camRatio = '2:1';
         } else if (supportedRatios.includes('16:9')) {
           camRatio = '16:9';
         } else if (supportedRatios.includes('4:3')) {
@@ -53,7 +57,7 @@ function CameraScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, marginTop }}>
       {/* <SvgBoundingBox /> */}
       <Camera
         ratio={cameraRatio}
@@ -63,9 +67,8 @@ function CameraScreen() {
         style={styles.camera}
         type={type}
         onCameraReady={getSupportedRatios}
-      >
-        <BoundingBox />
-      </Camera>
+      />
+      <BoundingBox />
       {/* <View style={styles.textContainer}>
         <Text>Camera screen</Text> */}
       {/* 

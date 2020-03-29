@@ -9,9 +9,8 @@ const styles = StyleSheet.create({
     // height: screenHeight,
     // position: 'absolute',
     // width: screenWidth,
+    // zIndex: 1,
     flex: 1,
-    justifyContent: 'flex-start',
-    zIndex: 1,
   },
   container: {
     flex: 1,
