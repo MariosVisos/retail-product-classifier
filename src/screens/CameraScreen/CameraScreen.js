@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text } from 'react-native';
-import { Button } from 'react-native-elements';
-import { Entypo } from '@expo/vector-icons';
+import { View, Text, Platform } from 'react-native';
 import { Camera } from 'expo-camera';
-import { BlurView } from 'expo-blur';
 import styles from './CameraScreenStyles';
 import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
-import { Platform } from 'react-native';
+import BoundingBox from '../../components/BoundingBox/BoundingBox';
 
 function CameraScreen() {
   let cameraRef;
@@ -26,18 +23,12 @@ function CameraScreen() {
   //   const pictureSizes = await cameraRef.getAvailablePictureSizesAsync(
   //     cameraRatio,
   //   );
-  //   console.log('getCameraTypes -> pictureSizes', pictureSizes);
   // };
 
   const getSupportedRatios = async () => {
     if (Platform.OS === 'android') {
-      console.log('CameraScreen -> getSupportedRatios');
       if (cameraRef) {
         const supportedRatios = await cameraRef.getSupportedRatiosAsync();
-        console.log(
-          'CameraScreen -> getSupportedRatios -> supportedRatios',
-          supportedRatios,
-        );
         let camRatio;
         if (supportedRatios.includes('2:1')) {
           camRatio = '136:135';
@@ -54,9 +45,6 @@ function CameraScreen() {
     }
   };
 
-  console.log('CameraScreen -> render -> type', type);
-  console.log('CameraScreen -> render -> cameraRatio', cameraRatio);
-
   if (hasPermission === null) {
     return <View />;
   }
@@ -66,7 +54,7 @@ function CameraScreen() {
 
   return (
     <View style={styles.container}>
-      <SvgBoundingBox />
+      {/* <SvgBoundingBox /> */}
       <Camera
         ratio={cameraRatio}
         ref={ref => {
@@ -75,7 +63,9 @@ function CameraScreen() {
         style={styles.camera}
         type={type}
         onCameraReady={getSupportedRatios}
-      />
+      >
+        <BoundingBox />
+      </Camera>
       {/* <View style={styles.textContainer}>
         <Text>Camera screen</Text> */}
       {/* 

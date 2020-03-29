@@ -5,23 +5,17 @@ const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
 
 const styles = StyleSheet.create({
-  // camera: {
-  //   flex: 1,
-  // },
-  // container: {
-  //   flex: 1,
-  //   // position: 'relative',
-  // },
   camera: {
-    height: screenHeight,
-    position: 'absolute',
-    width: screenWidth,
+    // height: screenHeight,
+    // position: 'absolute',
+    // width: screenWidth,
+    flex: 1,
+    justifyContent: 'flex-start',
     zIndex: 1,
   },
   container: {
-    height: screenHeight,
-    position: 'absolute',
-    width: screenWidth,
+    flex: 1,
+    // width: '100%',
   },
 
   notBlurred: {
