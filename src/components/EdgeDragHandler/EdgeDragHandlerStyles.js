@@ -5,8 +5,8 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: Colors.transparent,
-    // borderColor: Colors.dragHandlerColor,
-    // borderWidth: 1,
+    borderColor: Colors.dragHandlerColor,
+    borderWidth: 1,
     height: 40,
     justifyContent: 'center',
     position: 'absolute',
