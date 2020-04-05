@@ -9,14 +9,6 @@ const overlayBaseStyle = {
   position: 'absolute',
   backgroundColor: 'rgba(0,0,0,0.6)',
 };
-const cornerBaseStyle = {
-  position: 'absolute',
-  borderColor: '#fff',
-  backgroundColor: 'transparent',
-  borderWidth: 2,
-  width: 10,
-  height: 10,
-};
 
 const edgeBaseStyle = {
   position: 'absolute',
@@ -27,60 +19,21 @@ const edgeBaseStyle = {
 };
 
 const styles = StyleSheet.create({
-  bottomEdge: {
-    backgroundColor: 'transparent',
-    borderColor: '#fff',
-    borderWidth: 1,
-    height: 0,
-    width: 20,
+  center: {
+    borderColor: Colors.red,
+    borderWidth: 2,
+    height: 50,
+    width: 50,
   },
-  bottomLeftCorner: {
-    ...cornerBaseStyle,
-    borderRightWidth: 0,
-    borderTopWidth: 0,
-  },
-  bottomOverlay: {
-    ...overlayBaseStyle,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
-  bottomRightCorner: {
-    ...cornerBaseStyle,
-    borderLeftWidth: 0,
-    borderTopWidth: 0,
-  },
-  edgeDragContainer: {
-    ...edgeBaseStyle,
+  container: {
     alignItems: 'center',
-    height: 40,
+    // backgroundColor: 'yellow',
+    borderColor: Colors.red,
+    borderWidth: 2,
+    height: 200,
     justifyContent: 'center',
-    right: screenWidth / 2 - 50,
-    width: 100,
-  },
-  leftOverlay: {
-    ...overlayBaseStyle,
-    left: 0,
-  },
-  rightOverlay: {
-    ...overlayBaseStyle,
-    right: 0,
-  },
-  topLeftCorner: {
-    ...cornerBaseStyle,
-    borderBottomWidth: 0,
-    borderRightWidth: 0,
-  },
-  topOverlay: {
-    ...overlayBaseStyle,
-    left: 0,
-    right: 0,
-    top: 0,
-  },
-  topRightCorner: {
-    ...cornerBaseStyle,
-    borderBottomWidth: 0,
-    borderLeftWidth: 0,
+    position: 'relative',
+    width: 200,
   },
 });
 

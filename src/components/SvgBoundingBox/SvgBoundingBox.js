@@ -25,6 +25,7 @@ const SvgBoundingBox = () => (
             stroke="white"
             strokeWidth="0.2"
             fill-opacity="1"
+            fill="black"
           />
         </Mask>
       </Defs>

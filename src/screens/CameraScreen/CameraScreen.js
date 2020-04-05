@@ -68,8 +68,9 @@ function CameraScreen() {
         style={styles.camera}
         type={type}
         onCameraReady={getSupportedRatios}
-      />
-      <BoundingBox />
+      >
+        <BoundingBox />
+      </Camera>
       {/* <View style={styles.textContainer}>
         <Text>Camera screen</Text> */}
       {/* 
