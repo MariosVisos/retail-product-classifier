@@ -19,7 +19,7 @@ function CameraScreen() {
   }, []);
 
   const insets = useSafeArea();
-  const marginTop = insets.top > 24 ? insets.top : 0;
+  const marginTop = insets.top;
 
   const [cameraRatio, setCameraRatio] = useState('16:9');
   const [type] = useState(Camera.Constants.Type.back);

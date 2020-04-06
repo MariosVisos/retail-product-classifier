@@ -43,6 +43,26 @@ const styles = StyleSheet.create({
     bottom: 3 - dragAreaEdge / 2,
     right: 3 - dragAreaEdge / 2,
   },
+  topLeft: {
+    ...cornerBaseStyle,
+    borderBottomWidth: 0,
+    borderRightWidth: 0,
+  },
+  topLeftContainer: {
+    ...containerBaseStyle,
+    left: 3 - dragAreaEdge / 2,
+    top: 3 - dragAreaEdge / 2,
+  },
+  topRight: {
+    ...cornerBaseStyle,
+    borderBottomWidth: 0,
+    borderLeftWidth: 0,
+  },
+  topRightContainer: {
+    ...containerBaseStyle,
+    right: 3 - dragAreaEdge / 2,
+    top: 3 - dragAreaEdge / 2,
+  },
 });
 
 export default styles;

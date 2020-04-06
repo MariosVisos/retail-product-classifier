@@ -1,22 +1,13 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Colors from '../../constants/Colors';
 
-const opacity = 'rgba(0, 0, 0, .6)';
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
-
-const overlayBaseStyle = {
-  position: 'absolute',
-  backgroundColor: 'rgba(0,0,0,0.6)',
-};
-
-const edgeBaseStyle = {
-  position: 'absolute',
-  borderColor: '#fff',
-  backgroundColor: 'transparent',
-  borderWidth: 2,
-  height: 0,
-};
+// const edgeBaseStyle = {
+//   position: 'absolute',
+//   borderColor: '#fff',
+//   backgroundColor: 'transparent',
+//   borderWidth: 2,
+//   height: 0,
+// };
 
 const styles = StyleSheet.create({
   center: {
@@ -27,12 +18,11 @@ const styles = StyleSheet.create({
   },
   container: {
     alignItems: 'center',
-    // backgroundColor: 'yellow',
     borderColor: Colors.red,
     borderWidth: 2,
     height: 200,
     justifyContent: 'center',
-    position: 'relative',
+    position: 'absolute',
     width: 200,
   },
 });

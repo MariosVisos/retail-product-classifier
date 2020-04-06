@@ -18,8 +18,7 @@ function EdgeDragHandler({
   // const transY = useRef(new Animated.Value(initY)).current;
 
   // let yValue;
-  console.log('transY', transY);
-  console.log('transX', transX);
+
   const edgeDragWidthPercentage = 0.8;
   const cornerDragWidthPercentage = (1 - edgeDragWidthPercentage) / 2;
   const containerStyle = {};

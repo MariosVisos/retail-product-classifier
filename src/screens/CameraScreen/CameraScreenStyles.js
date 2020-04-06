@@ -7,13 +7,16 @@ const screenHeight = Math.round(Dimensions.get('window').height);
 const styles = StyleSheet.create({
   camera: {
     // height: screenHeight,
-    // position: 'absolute',
+    position: 'relative',
     // width: screenWidth,
     // zIndex: 1,
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
     flex: 1,
   },
   container: {
     flex: 1,
+    position: 'relative',
     // width: '100%',
   },
 
