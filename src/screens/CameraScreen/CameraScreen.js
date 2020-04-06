@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Platform } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useSafeArea } from 'react-native-safe-area-context';
-import { PanGestureHandler, State } from 'react-native-gesture-handler';
 import styles from './CameraScreenStyles';
-import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
+// import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
 import BoundingBox from '../../components/BoundingBox/BoundingBox';
 
 function CameraScreen() {

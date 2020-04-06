@@ -1,6 +1,13 @@
 import { StyleSheet } from 'react-native';
 import Colors from '../../constants/Colors';
+import BoundingBoxProperties from '../../constants/BoundingBoxProperties';
 
+const {
+  backgroundColor,
+  borderColor,
+  borderStyle,
+  borderWidth,
+} = BoundingBoxProperties;
 // const edgeBaseStyle = {
 //   position: 'absolute',
 //   borderColor: '#fff',
@@ -13,17 +20,16 @@ const styles = StyleSheet.create({
   center: {
     borderColor: Colors.red,
     borderWidth: 2,
-    height: 50,
-    width: 50,
   },
   container: {
     alignItems: 'center',
-    borderColor: Colors.red,
-    borderWidth: 2,
-    height: 200,
+    backgroundColor,
+    borderColor,
+    borderRadius: 1,
+    borderStyle,
+    borderWidth,
     justifyContent: 'center',
     position: 'absolute',
-    width: 200,
   },
 });
 

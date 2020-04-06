@@ -1,13 +1,22 @@
 import { StyleSheet } from 'react-native';
 import Colors from '../../constants/Colors';
+import BoundingBoxProperties from '../../constants/BoundingBoxProperties';
 
-const dragAreaEdge = 80;
+const {
+  borderColor,
+  borderWidth,
+  cornerArea,
+  cornerDragArea,
+} = BoundingBoxProperties.corner;
+
+const dragAreaEdge = Math.sqrt(cornerDragArea);
+const cornerAreaEdge = Math.sqrt(cornerArea);
 
 const cornerBaseStyle = {
-  borderColor: '#fff',
-  borderWidth: 2,
-  width: 10,
-  height: 10,
+  borderColor,
+  borderWidth,
+  width: cornerAreaEdge,
+  height: cornerAreaEdge,
 };
 
 const containerBaseStyle = {
@@ -25,8 +34,6 @@ const styles = StyleSheet.create({
     ...cornerBaseStyle,
     borderRightWidth: 0,
     borderTopWidth: 0,
-    // bottom: 0,
-    // left: 0,
   },
   bottomLeftContainer: {
     ...containerBaseStyle,

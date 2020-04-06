@@ -1,23 +1,16 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Colors from '../../constants/Colors';
-
-const screenWidth = Math.round(Dimensions.get('window').width);
-const screenHeight = Math.round(Dimensions.get('window').height);
 
 const styles = StyleSheet.create({
   camera: {
-    // height: screenHeight,
-    position: 'relative',
-    // width: screenWidth,
-    // zIndex: 1,
     alignItems: 'flex-start',
-    justifyContent: 'flex-start',
     flex: 1,
+    justifyContent: 'flex-start',
+    position: 'relative',
   },
   container: {
     flex: 1,
     position: 'relative',
-    // width: '100%',
   },
 
   notBlurred: {
