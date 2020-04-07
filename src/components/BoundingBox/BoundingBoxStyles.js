@@ -8,13 +8,6 @@ const {
   borderStyle,
   borderWidth,
 } = BoundingBoxProperties;
-// const edgeBaseStyle = {
-//   position: 'absolute',
-//   borderColor: '#fff',
-//   backgroundColor: 'transparent',
-//   borderWidth: 2,
-//   height: 0,
-// };
 
 const styles = StyleSheet.create({
   center: {

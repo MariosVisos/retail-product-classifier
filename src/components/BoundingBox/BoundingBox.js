@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { Dimensions } from 'react-native';
 import { State, PanGestureHandler } from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
-import CornerDragHandler from '../CornerDragHandler/CornerDragHandler';
+import DragHandler from '../DragHandler/DragHandler';
 import styles from './BoundingBoxStyles';
 
 const screenWidth = Dimensions.get('window').width;
@@ -26,6 +26,69 @@ const BoundingBox = () => {
               set(offsetX, add(offsetX, x)),
               set(offsetY, add(offsetY, y)),
             ]),
+          ]),
+      },
+    ]);
+  }
+  function buildTopGestureEvent(offsetX, offsetY, transY, top) {
+    return event([
+      {
+        nativeEvent: ({ translationY: y, state }) =>
+          block([
+            cond(eq(state, State.ACTIVE), [
+              set(transY, add(transY, sub(offsetY, y))),
+              set(top, add(top, sub(y, offsetY))),
+              set(offsetY, y),
+            ]),
+
+            cond(eq(state, State.END), [set(offsetX, 0), set(offsetY, 0)]),
+          ]),
+      },
+    ]);
+  }
+
+  function buildRightGestureEvent(offsetX, offsetY, transX) {
+    return event([
+      {
+        nativeEvent: ({ translationX: x, state }) =>
+          block([
+            cond(eq(state, State.ACTIVE), [
+              set(transX, add(transX, sub(x, offsetX))),
+              set(offsetX, x),
+            ]),
+            cond(eq(state, State.END), [set(offsetX, 0), set(offsetY, 0)]),
+          ]),
+      },
+    ]);
+  }
+
+  function buildBottomGestureEvent(offsetX, offsetY, transY) {
+    return event([
+      {
+        nativeEvent: ({ translationY: y, state }) =>
+          block([
+            cond(eq(state, State.ACTIVE), [
+              set(transY, add(transY, sub(y, offsetY))),
+              set(offsetY, y),
+            ]),
+            cond(eq(state, State.END), [set(offsetX, 0), set(offsetY, 0)]),
+          ]),
+      },
+    ]);
+  }
+
+  function buildLeftGestureEvent(offsetX, offsetY, transX, left) {
+    return event([
+      {
+        nativeEvent: ({ translationX: x, state }) =>
+          block([
+            cond(eq(state, State.ACTIVE), [
+              set(transX, add(transX, sub(offsetX, x))),
+              set(left, add(left, sub(x, offsetX))),
+              set(offsetX, x),
+            ]),
+
+            cond(eq(state, State.END), [set(offsetX, 0), set(offsetY, 0)]),
           ]),
       },
     ]);
@@ -116,6 +179,18 @@ const BoundingBox = () => {
   const transWidth = useRef(new Value(boxX)).current;
   const transHeight = useRef(new Value(boxY)).current;
 
+  const offsetTopWidth = useRef(new Value(0)).current;
+  const offsetTopHeight = useRef(new Value(0)).current;
+
+  const offsetRightWidth = useRef(new Value(0)).current;
+  const offsetRightHeight = useRef(new Value(0)).current;
+
+  const offsetBottomWidth = useRef(new Value(0)).current;
+  const offsetBottomHeight = useRef(new Value(0)).current;
+
+  const offsetLeftWidth = useRef(new Value(0)).current;
+  const offsetLeftHeight = useRef(new Value(0)).current;
+
   const offsetTopLeftWidth = useRef(new Value(0)).current;
   const offsetTopLeftHeight = useRef(new Value(0)).current;
 
@@ -133,6 +208,28 @@ const BoundingBox = () => {
 
   const onGestureEvent = buildGestureEvent(offsetX, offsetY, transX, transY);
 
+  const handleTopDrag = buildTopGestureEvent(
+    offsetTopWidth,
+    offsetTopHeight,
+    transHeight,
+    absoluteY,
+  );
+  const handleRightDrag = buildRightGestureEvent(
+    offsetRightWidth,
+    offsetRightHeight,
+    transWidth,
+  );
+  const handleBottomDrag = buildBottomGestureEvent(
+    offsetBottomWidth,
+    offsetBottomHeight,
+    transHeight,
+  );
+  const handleLeftDrag = buildLeftGestureEvent(
+    offsetLeftWidth,
+    offsetLeftHeight,
+    transWidth,
+    absoluteX,
+  );
   const handleTopLeftDrag = buildTopLeftGestureEvent(
     offsetTopLeftWidth,
     offsetTopLeftHeight,
@@ -197,20 +294,37 @@ const BoundingBox = () => {
           style={[center, { width: centerWidth, height: centerHeight }]}
         />
       </PanGestureHandler>
-
-      <CornerDragHandler
-        onGestureEvent={handleTopLeftDrag}
-        position="topLeft"
+      <DragHandler
+        transWidth={transWidth}
+        transHeight={transHeight}
+        onGestureEvent={handleTopDrag}
+        position="top"
       />
-      <CornerDragHandler
-        onGestureEvent={handleTopRightDrag}
-        position="topRight"
+      <DragHandler
+        transWidth={transWidth}
+        transHeight={transHeight}
+        onGestureEvent={handleRightDrag}
+        position="right"
       />
-      <CornerDragHandler
+      <DragHandler
+        transWidth={transWidth}
+        transHeight={transHeight}
+        onGestureEvent={handleBottomDrag}
+        position="bottom"
+      />
+      <DragHandler
+        transWidth={transWidth}
+        transHeight={transHeight}
+        onGestureEvent={handleLeftDrag}
+        position="left"
+      />
+      <DragHandler onGestureEvent={handleTopLeftDrag} position="topLeft" />
+      <DragHandler onGestureEvent={handleTopRightDrag} position="topRight" />
+      <DragHandler
         onGestureEvent={handleBottomRightDrag}
         position="bottomRight"
       />
-      <CornerDragHandler
+      <DragHandler
         onGestureEvent={handleBottomLeftDrag}
         position="bottomLeft"
       />

@@ -5,7 +5,7 @@ import styles from './SvgBoundingBoxStyles';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
-const QR_SCAN_SQUARE_SIZE = 200;
+// const QR_SCAN_SQUARE_SIZE = 200;
 const x = 200;
 const y = 200;
 

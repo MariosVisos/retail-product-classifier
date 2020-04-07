@@ -28,8 +28,22 @@ const containerBaseStyle = {
   position: 'absolute',
   width: dragAreaEdge,
 };
+const edgeSize = dragAreaEdge;
+
+const edgeContainerBaseStyle = {
+  ...containerBaseStyle,
+  // position: 'relative',
+};
+
+const edgeBaseStyle = {
+  backgroundColor: Colors.transparent,
+  borderColor: Colors.dragHandlerColor,
+  borderWidth: 1,
+};
 
 const styles = StyleSheet.create({
+  bottom: { ...edgeBaseStyle },
+  bottomContainer: { ...edgeContainerBaseStyle, width: edgeSize },
   bottomLeft: {
     ...cornerBaseStyle,
     borderRightWidth: 0,
@@ -50,6 +64,12 @@ const styles = StyleSheet.create({
     bottom: 3 - dragAreaEdge / 2,
     right: 3 - dragAreaEdge / 2,
   },
+  left: { ...edgeBaseStyle },
+  leftContainer: { ...edgeContainerBaseStyle },
+  right: { ...edgeBaseStyle },
+  rightContainer: { ...edgeContainerBaseStyle },
+  top: { ...edgeBaseStyle },
+  topContainer: { ...edgeContainerBaseStyle },
   topLeft: {
     ...cornerBaseStyle,
     borderBottomWidth: 0,
