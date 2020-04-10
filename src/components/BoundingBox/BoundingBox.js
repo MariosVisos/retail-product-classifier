@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import { Dimensions } from 'react-native';
 import { State, PanGestureHandler } from 'react-native-gesture-handler';
-import Animated, { multiply } from 'react-native-reanimated';
+import Animated, { multiply, lessThan, and, or } from 'react-native-reanimated';
 import DragHandler from '../DragHandler/DragHandler';
 import BoundingBoxProperties from '../../constants/BoundingBoxProperties';
 import styles from './BoundingBoxStyles';
 
-const { centerPaddingPercentage } = BoundingBoxProperties;
+const { centerPaddingPercentage, minWidth, minHeight } = BoundingBoxProperties;
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -15,6 +15,9 @@ const { cond, eq, add, set, Value, event, block, sub } = Animated;
 const BoundingBox = () => {
   const boxX = 200;
   const boxY = 200;
+
+  const minimumWidth = useRef(new Value(minWidth)).current;
+  const minimumHeight = useRef(new Value(minHeight)).current;
 
   function buildGestureEvent(offsetX, offsetY, transX, transY) {
     return event([
@@ -38,11 +41,17 @@ const BoundingBox = () => {
       {
         nativeEvent: ({ translationY: y, state }) =>
           block([
-            cond(eq(state, State.ACTIVE), [
-              set(transY, add(transY, sub(offsetY, y))),
-              set(top, add(top, sub(y, offsetY))),
-              set(offsetY, y),
-            ]),
+            cond(
+              or(
+                and(eq(state, State.ACTIVE), lessThan(minimumHeight, transY)),
+                and(eq(state, State.ACTIVE), lessThan(y, 0)),
+              ),
+              [
+                set(transY, add(transY, sub(offsetY, y))),
+                set(top, add(top, sub(y, offsetY))),
+                set(offsetY, y),
+              ],
+            ),
 
             cond(eq(state, State.END), [set(offsetX, 0), set(offsetY, 0)]),
           ]),
@@ -55,10 +64,13 @@ const BoundingBox = () => {
       {
         nativeEvent: ({ translationX: x, state }) =>
           block([
-            cond(eq(state, State.ACTIVE), [
-              set(transX, add(transX, sub(x, offsetX))),
-              set(offsetX, x),
-            ]),
+            cond(
+              or(
+                and(eq(state, State.ACTIVE), lessThan(minimumWidth, transX)),
+                and(eq(state, State.ACTIVE), lessThan(0, x)),
+              ),
+              [set(transX, add(transX, sub(x, offsetX))), set(offsetX, x)],
+            ),
             cond(eq(state, State.END), [set(offsetX, 0), set(offsetY, 0)]),
           ]),
       },
@@ -70,10 +82,14 @@ const BoundingBox = () => {
       {
         nativeEvent: ({ translationY: y, state }) =>
           block([
-            cond(eq(state, State.ACTIVE), [
-              set(transY, add(transY, sub(y, offsetY))),
-              set(offsetY, y),
-            ]),
+            cond(
+              or(
+                and(eq(state, State.ACTIVE), lessThan(minimumHeight, transY)),
+                and(eq(state, State.ACTIVE), lessThan(0, y)),
+              ),
+              [set(transY, add(transY, sub(y, offsetY))), set(offsetY, y)],
+              [set(transY, add(transY, 0.1))],
+            ),
             cond(eq(state, State.END), [set(offsetX, 0), set(offsetY, 0)]),
           ]),
       },
@@ -85,11 +101,17 @@ const BoundingBox = () => {
       {
         nativeEvent: ({ translationX: x, state }) =>
           block([
-            cond(eq(state, State.ACTIVE), [
-              set(transX, add(transX, sub(offsetX, x))),
-              set(left, add(left, sub(x, offsetX))),
-              set(offsetX, x),
-            ]),
+            cond(
+              or(
+                and(eq(state, State.ACTIVE), lessThan(minimumWidth, transX)),
+                and(eq(state, State.ACTIVE), lessThan(x, 0)),
+              ),
+              [
+                set(transX, add(transX, sub(offsetX, x))),
+                set(left, add(left, sub(x, offsetX))),
+                set(offsetX, x),
+              ],
+            ),
 
             cond(eq(state, State.END), [set(offsetX, 0), set(offsetY, 0)]),
           ]),
@@ -108,14 +130,26 @@ const BoundingBox = () => {
       {
         nativeEvent: ({ translationX: x, translationY: y, state }) =>
           block([
-            cond(eq(state, State.ACTIVE), [
-              set(transX, add(transX, sub(offsetX, x))),
-              set(transY, add(transY, sub(offsetY, y))),
-              set(top, add(top, sub(y, offsetY))),
-              set(left, add(left, sub(x, offsetX))),
-              set(offsetX, x),
-              set(offsetY, y),
-            ]),
+            cond(
+              and(
+                or(
+                  and(eq(state, State.ACTIVE), lessThan(minimumHeight, transY)),
+                  and(eq(state, State.ACTIVE), lessThan(y, 0)),
+                ),
+                or(
+                  and(eq(state, State.ACTIVE), lessThan(minimumWidth, transX)),
+                  and(eq(state, State.ACTIVE), lessThan(x, 0)),
+                ),
+              ),
+              [
+                set(transX, add(transX, sub(offsetX, x))),
+                set(transY, add(transY, sub(offsetY, y))),
+                set(top, add(top, sub(y, offsetY))),
+                set(left, add(left, sub(x, offsetX))),
+                set(offsetX, x),
+                set(offsetY, y),
+              ],
+            ),
 
             cond(eq(state, State.END), [set(offsetX, 0), set(offsetY, 0)]),
           ]),
@@ -127,13 +161,25 @@ const BoundingBox = () => {
       {
         nativeEvent: ({ translationX: x, translationY: y, state }) =>
           block([
-            cond(eq(state, State.ACTIVE), [
-              set(transX, add(transX, sub(x, offsetX))),
-              set(transY, add(transY, sub(offsetY, y))),
-              set(top, add(top, sub(y, offsetY))),
-              set(offsetX, x),
-              set(offsetY, y),
-            ]),
+            cond(
+              and(
+                or(
+                  and(eq(state, State.ACTIVE), lessThan(minimumHeight, transY)),
+                  and(eq(state, State.ACTIVE), lessThan(y, 0)),
+                ),
+                or(
+                  and(eq(state, State.ACTIVE), lessThan(minimumWidth, transX)),
+                  and(eq(state, State.ACTIVE), lessThan(0, x)),
+                ),
+              ),
+              [
+                set(transX, add(transX, sub(x, offsetX))),
+                set(transY, add(transY, sub(offsetY, y))),
+                set(top, add(top, sub(y, offsetY))),
+                set(offsetX, x),
+                set(offsetY, y),
+              ],
+            ),
 
             cond(eq(state, State.END), [set(offsetX, 0), set(offsetY, 0)]),
           ]),
@@ -145,12 +191,24 @@ const BoundingBox = () => {
       {
         nativeEvent: ({ translationX: x, translationY: y, state }) =>
           block([
-            cond(eq(state, State.ACTIVE), [
-              set(transX, add(transX, sub(x, offsetX))),
-              set(transY, add(transY, sub(y, offsetY))),
-              set(offsetX, x),
-              set(offsetY, y),
-            ]),
+            cond(
+              and(
+                or(
+                  and(eq(state, State.ACTIVE), lessThan(minimumHeight, transY)),
+                  and(eq(state, State.ACTIVE), lessThan(0, y)),
+                ),
+                or(
+                  and(eq(state, State.ACTIVE), lessThan(minimumWidth, transX)),
+                  and(eq(state, State.ACTIVE), lessThan(0, x)),
+                ),
+              ),
+              [
+                set(transX, add(transX, sub(x, offsetX))),
+                set(transY, add(transY, sub(y, offsetY))),
+                set(offsetX, x),
+                set(offsetY, y),
+              ],
+            ),
             cond(eq(state, State.END), [set(offsetX, 0), set(offsetY, 0)]),
           ]),
       },
@@ -161,13 +219,26 @@ const BoundingBox = () => {
       {
         nativeEvent: ({ translationX: x, translationY: y, state }) =>
           block([
-            cond(eq(state, State.ACTIVE), [
-              set(transX, add(transX, sub(offsetX, x))),
-              set(transY, add(transY, sub(y, offsetY))),
-              set(left, add(left, sub(x, offsetX))),
-              set(offsetX, x),
-              set(offsetY, y),
-            ]),
+            cond(
+              and(
+                or(
+                  and(eq(state, State.ACTIVE), lessThan(minimumHeight, transY)),
+                  and(eq(state, State.ACTIVE), lessThan(0, y)),
+                ),
+                or(
+                  and(eq(state, State.ACTIVE), lessThan(minimumWidth, transX)),
+                  and(eq(state, State.ACTIVE), lessThan(x, 0)),
+                ),
+              ),
+
+              [
+                set(transX, add(transX, sub(offsetX, x))),
+                set(transY, add(transY, sub(y, offsetY))),
+                set(left, add(left, sub(x, offsetX))),
+                set(offsetX, x),
+                set(offsetY, y),
+              ],
+            ),
             cond(eq(state, State.END), [set(offsetX, 0), set(offsetY, 0)]),
           ]),
       },

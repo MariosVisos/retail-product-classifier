@@ -12,7 +12,7 @@ const {
 const styles = StyleSheet.create({
   center: {
     borderColor: Colors.red,
-    borderWidth: 2,
+    // borderWidth: 2,
     zIndex: 1,
   },
   container: {
