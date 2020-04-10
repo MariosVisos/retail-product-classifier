@@ -12,9 +12,9 @@ const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
 const { cond, eq, add, set, Value, event, block, sub } = Animated;
-const BoundingBox = () => {
-  const boxX = 200;
-  const boxY = 200;
+const BoundingBox = ({ initialBoxWidth, initialBoxHeight }) => {
+  const boxX = initialBoxWidth;
+  const boxY = initialBoxHeight;
 
   const minimumWidth = useRef(new Value(minWidth)).current;
   const minimumHeight = useRef(new Value(minHeight)).current;
