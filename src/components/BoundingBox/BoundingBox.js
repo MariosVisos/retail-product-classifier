@@ -1,9 +1,12 @@
 import React, { useRef } from 'react';
 import { Dimensions } from 'react-native';
 import { State, PanGestureHandler } from 'react-native-gesture-handler';
-import Animated from 'react-native-reanimated';
+import Animated, { multiply } from 'react-native-reanimated';
 import DragHandler from '../DragHandler/DragHandler';
+import BoundingBoxProperties from '../../constants/BoundingBoxProperties';
 import styles from './BoundingBoxStyles';
+
+const { centerPaddingPercentage } = BoundingBoxProperties;
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -259,10 +262,11 @@ const BoundingBox = () => {
     absoluteX,
   );
 
-  const centerPadding = useRef(new Value(88)).current;
-  const centerWidth = sub(transWidth, centerPadding);
-
-  const centerHeight = sub(transHeight, centerPadding);
+  const paddingPercentage = useRef(new Value(centerPaddingPercentage)).current;
+  const centerWidthPadding = multiply(transWidth, paddingPercentage);
+  const centerHeightPadding = multiply(transHeight, paddingPercentage);
+  const centerWidth = sub(transWidth, centerWidthPadding);
+  const centerHeight = sub(transHeight, centerHeightPadding);
 
   const { center } = styles;
 
@@ -303,14 +307,14 @@ const BoundingBox = () => {
       <DragHandler
         transWidth={transWidth}
         transHeight={transHeight}
-        onGestureEvent={handleRightDrag}
-        position="right"
+        onGestureEvent={handleBottomDrag}
+        position="bottom"
       />
       <DragHandler
         transWidth={transWidth}
         transHeight={transHeight}
-        onGestureEvent={handleBottomDrag}
-        position="bottom"
+        onGestureEvent={handleRightDrag}
+        position="right"
       />
       <DragHandler
         transWidth={transWidth}

@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
   center: {
     borderColor: Colors.red,
     borderWidth: 2,
+    zIndex: 1,
   },
   container: {
     alignItems: 'center',

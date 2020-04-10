@@ -22,28 +22,33 @@ const cornerBaseStyle = {
 const containerBaseStyle = {
   alignItems: 'center',
   borderColor: Colors.dragHandlerColor,
-  borderWidth: 1,
+  // borderWidth: 1,
   height: dragAreaEdge,
   justifyContent: 'center',
   position: 'absolute',
   width: dragAreaEdge,
 };
-const edgeSize = dragAreaEdge;
+const edgeSize = dragAreaEdge + 5;
 
 const edgeContainerBaseStyle = {
   ...containerBaseStyle,
-  // position: 'relative',
+  height: edgeSize,
+  width: edgeSize,
 };
 
 const edgeBaseStyle = {
   backgroundColor: Colors.transparent,
   borderColor: Colors.dragHandlerColor,
   borderWidth: 1,
+  width: 20,
 };
 
 const styles = StyleSheet.create({
   bottom: { ...edgeBaseStyle },
-  bottomContainer: { ...edgeContainerBaseStyle, width: edgeSize },
+  bottomContainer: {
+    ...edgeContainerBaseStyle,
+    bottom: -2.6 - dragAreaEdge / 2,
+  },
   bottomLeft: {
     ...cornerBaseStyle,
     borderRightWidth: 0,
@@ -51,8 +56,8 @@ const styles = StyleSheet.create({
   },
   bottomLeftContainer: {
     ...containerBaseStyle,
-    bottom: 3 - dragAreaEdge / 2,
-    left: 3 - dragAreaEdge / 2,
+    bottom: 2 + borderWidth - dragAreaEdge / 2,
+    left: 2 + borderWidth - dragAreaEdge / 2,
   },
   bottomRight: {
     ...cornerBaseStyle,
@@ -61,15 +66,18 @@ const styles = StyleSheet.create({
   },
   bottomRightContainer: {
     ...containerBaseStyle,
-    bottom: 3 - dragAreaEdge / 2,
-    right: 3 - dragAreaEdge / 2,
+    bottom: 2 + borderWidth - dragAreaEdge / 2,
+    right: 2 + borderWidth - dragAreaEdge / 2,
   },
-  left: { ...edgeBaseStyle },
-  leftContainer: { ...edgeContainerBaseStyle },
-  right: { ...edgeBaseStyle },
-  rightContainer: { ...edgeContainerBaseStyle },
+  left: { ...edgeBaseStyle, height: 20, width: 0 },
+  leftContainer: {
+    ...edgeContainerBaseStyle,
+    left: -2.6 - dragAreaEdge / 2,
+  },
+  right: { ...edgeBaseStyle, height: 20, width: 0 },
+  rightContainer: { ...edgeContainerBaseStyle, right: -2.6 - dragAreaEdge / 2 },
   top: { ...edgeBaseStyle },
-  topContainer: { ...edgeContainerBaseStyle },
+  topContainer: { ...edgeContainerBaseStyle, top: -2.6 - dragAreaEdge / 2 },
   topLeft: {
     ...cornerBaseStyle,
     borderBottomWidth: 0,
@@ -77,8 +85,8 @@ const styles = StyleSheet.create({
   },
   topLeftContainer: {
     ...containerBaseStyle,
-    left: 3 - dragAreaEdge / 2,
-    top: 3 - dragAreaEdge / 2,
+    left: 2 + borderWidth - dragAreaEdge / 2,
+    top: 2 + borderWidth - dragAreaEdge / 2,
   },
   topRight: {
     ...cornerBaseStyle,
@@ -87,8 +95,8 @@ const styles = StyleSheet.create({
   },
   topRightContainer: {
     ...containerBaseStyle,
-    right: 3 - dragAreaEdge / 2,
-    top: 3 - dragAreaEdge / 2,
+    right: 2 + borderWidth - dragAreaEdge / 2,
+    top: 2 + borderWidth - dragAreaEdge / 2,
   },
 });
 
