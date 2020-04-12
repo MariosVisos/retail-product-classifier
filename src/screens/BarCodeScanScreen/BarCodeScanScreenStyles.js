@@ -8,12 +8,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     position: 'relative',
   },
-  cameraButton: {
-    alignSelf: 'center',
-    bottom: 0,
-    position: 'absolute',
-    width: '100%',
-  },
   container: {
     flex: 1,
     position: 'relative',

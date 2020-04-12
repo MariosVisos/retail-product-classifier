@@ -31,7 +31,8 @@
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
     "expo-file-system": "~8.1.0",
-    "expo-permissions": "~8.1.0"
+    "expo-permissions": "~8.1.0",
+    "expo-barcode-scanner": "~8.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

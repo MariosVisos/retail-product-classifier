@@ -4,26 +4,35 @@ import { Camera } from 'expo-camera';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { Button } from 'react-native-elements';
 import { Entypo } from '@expo/vector-icons';
+import * as Permissions from 'expo-permissions';
+// import * as FileSystem from 'expo-file-system';
+import { BarCodeScanner } from 'expo-barcode-scanner';
+import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
 import styles from './CameraScreenStyles';
-// import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';\
 import BoundingBox from '../../components/BoundingBox/BoundingBox';
 
 function CameraScreen() {
   let cameraRef;
   const [hasPermission, setHasPermission] = useState(null);
-  async function getCameraPermission() {
-    const { status } = await Camera.requestPermissionsAsync();
-    setHasPermission(status === 'granted');
-  }
+  const [cameraRatio, setCameraRatio] = useState('16:9');
+  const [isBarCodeScanned, setIsBarCodeScanned] = useState(false);
+  // const [showStepBackTutorial, setShowStepBackTutorial] = useState(true);
+
   useEffect(() => {
-    getCameraPermission();
+    // Ask for camera permission after component mounts for the first time
+    // Immediately Invoked Function Expression
+    (async function getCameraPermission() {
+      const { status } = await Camera.requestPermissionsAsync();
+      await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      setHasPermission(status === 'granted');
+    })();
   }, []);
 
+  // Get safe areas and notches
   const insets = useSafeArea();
   const marginTop = insets.top;
 
-  const [cameraRatio, setCameraRatio] = useState('16:9');
-  const [type] = useState(Camera.Constants.Type.back);
+  const cameraType = Camera.Constants.Type.back;
 
   // const getPictureSizes = async () => {
   //   const pictureSizes = await cameraRef.getAvailablePictureSizesAsync(
@@ -55,10 +64,23 @@ function CameraScreen() {
     }
   };
 
-  async function snap() {
+  async function handleCameraButtonPress() {
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
       console.log('snap -> photo', photo);
+      // const directoriesArray = photo.uri.split('/');
+      // const fileName = directoriesArray[directoriesArray.length - 1];
+      // const fileName = 'image.jpg';
+      // const directory = `${FileSystem.documentDirectory}myImages/${fileName}`;
+      // console.log('snap -> directory', directory);
+      // FileSystem.copyAsync({ from: photo.uri, to: directory });
+    }
+  }
+
+  function handleBarCodeScanned(e) {
+    if (!isBarCodeScanned) {
+      console.log('handleBarCodeScanned -> e', e);
+      setIsBarCodeScanned(true);
     }
   }
 
@@ -68,33 +90,62 @@ function CameraScreen() {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
+  // if (showStepBackTutorial) {
+  //   return (
+  //     <ImageBackground
+  //       source={{
+  //         uri: 'imageUrl',
+  //       }}
+  //       style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}
+  //     >
+  //       <Button
+  //         onPress={() => setShowStepBackTutorial(false)}
+  //         icon={<Entypo name="circle-with-cross" size={32} />}
+  //         raised
+  //         containerStyle={{ marginBottom: 20 }}
+  //         type="outline"
+  //       />
+  //     </ImageBackground>
+  //   );
+  // }
 
   return (
     <View style={{ ...styles.container, marginTop }}>
-      {/* <SvgBoundingBox /> */}
+      {!isBarCodeScanned && <SvgBoundingBox />}
       <Camera
         ratio={cameraRatio}
         ref={ref => {
           cameraRef = ref;
         }}
         style={styles.camera}
-        type={type}
+        type={cameraType}
         onCameraReady={getSupportedRatios}
-        useCamera2Api
+        onBarCodeScanned={handleBarCodeScanned}
+        barCodeScannerSettings={{
+          barCodeTypes: [
+            BarCodeScanner.Constants.BarCodeType.ean8,
+            BarCodeScanner.Constants.BarCodeType.ean13,
+            BarCodeScanner.Constants.BarCodeType.upc_e,
+          ],
+        }}
       >
-        <BoundingBox initialBoxWidth={100} initialBoxHeight={100} />
+        {isBarCodeScanned && [
+          <BoundingBox
+            key="boundingBox"
+            initialBoxWidth={100}
+            initialBoxHeight={100}
+          />,
+          <Button
+            key="cameraButton"
+            onPress={handleCameraButtonPress}
+            icon={<Entypo name="camera" size={32} />}
+            raised
+            type="outline"
+            containerStyle={styles.cameraButton}
+          />,
+        ]}
       </Camera>
-      {/* <View style={styles.textContainer}>
-        <Text>Camera screen</Text> */}
-
-      <Button
-        onPress={snap}
-        icon={<Entypo name="camera" size={32} />}
-        raised
-        type="outline"
-      />
-      {/* </View>
-      <BlurView tint="dark" intensity={100} style={styles.notBlurred} /> */}
+      {/* <BlurView tint="dark" intensity={100} style={styles.notBlurred} /> */}
     </View>
   );
 }
