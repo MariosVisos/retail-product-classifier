@@ -2,27 +2,32 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
 import CameraScreen from './screens/CameraScreen/CameraScreen';
-import BarCodeScanScreen from './screens/BarCodeScanScreen/BarCodeScanScreen';
 import SettingsScreen from './screens/SettingsScreen/SettingsScreen';
 import Colors from './constants/Colors';
 
-const { activeTintColor, inactiveTintColor } = Colors;
+const { primary, secondary, secondaryLight } = Colors;
+const headerBackgroundColor = secondary;
+const headerTintColor = primary;
+const activeTintColor = secondary;
+const inactiveTintColor = secondaryLight;
+const tabBackgroundColor = primary;
+
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
 
-function renderTabBarIcon({ focused, color, size, route }) {
+function renderTabBarIcon({ color, size, route }) {
   let iconName;
 
   if (route.name === 'Home') {
-    iconName = focused ? 'home' : 'home-outline';
+    iconName = 'ios-home';
   } else if (route.name === 'Settings') {
-    iconName = focused ? 'settings' : 'settings-outline';
+    iconName = 'ios-settings';
   }
 
-  return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
+  return <Ionicons name={iconName} size={size} color={color} />;
 }
 
 function isCameraScreen(route) {
@@ -43,8 +48,16 @@ function isCameraScreen(route) {
 function HomeStackScreen() {
   return (
     <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-      <HomeStack.Screen name="BarCode" component={BarCodeScanScreen} />
+      <HomeStack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          headerStyle: {
+            backgroundColor: headerBackgroundColor,
+          },
+          headerTintColor,
+        }}
+      />
       <HomeStack.Screen
         name="Camera"
         component={CameraScreen}
@@ -65,6 +78,7 @@ function Main() {
         tabBarOptions={{
           activeTintColor,
           inactiveTintColor,
+          tabStyle: { backgroundColor: tabBackgroundColor },
         }}
       >
         <Tab.Screen

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
-import * as FileSystem from 'expo-file-system';
+// import * as FileSystem from 'expo-file-system';
 // import { Image } from 'react-native-elements';
 import styles from './SettingsScreenStyles';
 

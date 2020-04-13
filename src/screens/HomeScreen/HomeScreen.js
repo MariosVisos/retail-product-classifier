@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Button } from 'react-native-elements';
 import { Entypo } from '@expo/vector-icons';
 import styles from './HomeScreenStyles';
+import Colors from '../../constants/Colors';
+import Button from '../../components/Button/Button';
 
 const HomeScreen = ({ navigation }) => {
   return (
@@ -10,9 +11,8 @@ const HomeScreen = ({ navigation }) => {
       <Text>hey there</Text>
       <Button
         onPress={() => navigation.navigate('Camera')}
-        icon={<Entypo name="camera" size={32} />}
-        raised
-        type="outline"
+        icon={<Entypo name="camera" size={28} color={Colors.primary} />}
+        title="Train"
       />
     </View>
   );
