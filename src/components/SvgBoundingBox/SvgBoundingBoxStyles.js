@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import Colors from '../../constants/Colors';
 
 const styles = StyleSheet.create({
   layout: {
@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   },
   topText: {
     alignSelf: 'center',
-    color: Colors.white,
+    color: Colors.primary,
     fontSize: 28,
     position: 'absolute',
     zIndex: 1,

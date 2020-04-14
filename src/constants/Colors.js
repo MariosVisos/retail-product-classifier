@@ -14,7 +14,6 @@ const Colors = {
   black: 'rgba(40, 35, 28, 1)',
   blackDark: 'rgba(26, 23, 18, 1)',
   blackLight: 'rgba(118, 115, 110, 1)',
-  dragHandlerColor: '#fff',
   red: 'red',
   maskFrameBackgroundColor: 'rgba(1,1,1,0.6)',
   transparent: 'transparent',

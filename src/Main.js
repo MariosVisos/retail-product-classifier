@@ -56,6 +56,7 @@ function HomeStackScreen() {
             backgroundColor: headerBackgroundColor,
           },
           headerTintColor,
+          title: 'Retail Product Classifier',
         }}
       />
       <HomeStack.Screen

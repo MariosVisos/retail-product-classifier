@@ -21,7 +21,7 @@ const cornerBaseStyle = {
 
 const containerBaseStyle = {
   alignItems: 'center',
-  borderColor: Colors.dragHandlerColor,
+  borderColor: Colors.primary,
   // borderWidth: 1,
   height: dragAreaEdge,
   justifyContent: 'center',
@@ -38,7 +38,7 @@ const edgeContainerBaseStyle = {
 
 const edgeBaseStyle = {
   backgroundColor: Colors.transparent,
-  borderColor: Colors.dragHandlerColor,
+  borderColor: Colors.primary,
   borderWidth: 1,
   width: 20,
 };

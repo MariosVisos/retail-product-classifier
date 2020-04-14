@@ -2,14 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Platform } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useSafeArea } from 'react-native-safe-area-context';
-import { Button } from 'react-native-elements';
 import { Entypo } from '@expo/vector-icons';
 import * as Permissions from 'expo-permissions';
 // import * as FileSystem from 'expo-file-system';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import Button from '../../components/Button/Button';
 import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
 import styles from './CameraScreenStyles';
 import BoundingBox from '../../components/BoundingBox/BoundingBox';
+import Colors from '../../constants/Colors';
 
 function CameraScreen() {
   let cameraRef;
@@ -138,9 +139,7 @@ function CameraScreen() {
           <Button
             key="cameraButton"
             onPress={handleCameraButtonPress}
-            icon={<Entypo name="camera" size={32} />}
-            raised
-            type="outline"
+            icon={<Entypo name="camera" size={32} color={Colors.primary} />}
             containerStyle={styles.cameraButton}
           />,
         ]}

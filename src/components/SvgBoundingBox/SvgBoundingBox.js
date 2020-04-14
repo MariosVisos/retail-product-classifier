@@ -3,6 +3,7 @@ import { View, Dimensions, Text } from 'react-native';
 import Svg, { Defs, Rect, Mask } from 'react-native-svg';
 // import { useHeaderHeight } from '@react-navigation/stack';
 import styles from './SvgBoundingBoxStyles';
+import Colors from '../../constants/Colors';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
 const screenHeight = Math.round(Dimensions.get('window').height);
@@ -20,7 +21,12 @@ const SvgBoundingBox = () => {
       <Svg height="100%" width="100%">
         <Defs>
           <Mask id="mask" x="0" y="0" height="100%" width="100%">
-            <Rect height="100%" width="100%" fill="white" opacity={0.4} />
+            <Rect
+              height="100%"
+              width="100%"
+              fill={Colors.primary}
+              opacity={0.4}
+            />
             <Rect
               x={screenWidth / 2 - x / 2}
               y={screenHeight / 2 - y / 2}
@@ -28,7 +34,7 @@ const SvgBoundingBox = () => {
               // ry="50"
               width={x}
               height={y}
-              stroke="white"
+              stroke={Colors.primary}
               strokeWidth="0.2"
               fill-opacity="1"
               fill="black"
