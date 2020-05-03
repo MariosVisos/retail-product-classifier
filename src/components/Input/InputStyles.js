@@ -8,8 +8,7 @@ const styles = StyleSheet.create({
   containerStyle: {
     marginVertical: 8,
   },
-  titleStyle: {
-    color: Colors.primary,
-  },
+  labelStyle: { marginLeft: 14 },
+  leftIconContainerStyle: { marginRight: 10, width: 28 },
 });
 export default styles;

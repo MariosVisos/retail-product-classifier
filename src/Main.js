@@ -1,12 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
 import CameraScreen from './screens/CameraScreen/CameraScreen';
 import SettingsScreen from './screens/SettingsScreen/SettingsScreen';
 import Colors from './constants/Colors';
+import { setUserTokens } from './store/actions';
+import SignInScreen from './screens/SignInScreen/SignInScreen';
+import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
+import ResetPasswordScreen from './screens/ResetPasswordScreen/ResetPasswordScreen';
 
 const { primary, secondary, secondaryLight } = Colors;
 const headerBackgroundColor = secondary;
@@ -17,6 +22,7 @@ const tabBackgroundColor = primary;
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
+const AuthStack = createStackNavigator();
 
 function renderTabBarIcon({ color, size, route }) {
   let iconName;
@@ -45,7 +51,7 @@ function isCameraScreen(route) {
   return true;
 }
 
-function HomeStackScreen() {
+function HomeStackNavigator() {
   return (
     <HomeStack.Navigator>
       <HomeStack.Screen
@@ -68,27 +74,70 @@ function HomeStackScreen() {
   );
 }
 
-function Main() {
+function renderAuthStackNavigator() {
+  return (
+    <AuthStack.Navigator>
+      <AuthStack.Screen
+        name="SignIn"
+        component={SignInScreen}
+        options={{
+          headerStyle: {
+            backgroundColor: headerBackgroundColor,
+          },
+          headerTintColor,
+          title: 'Retail Product Classifier',
+        }}
+      />
+      <AuthStack.Screen
+        name="SignUp"
+        component={SignUpScreen}
+        options={{ headerShown: false }}
+      />
+      <AuthStack.Screen
+        name="ResetPassword"
+        component={ResetPasswordScreen}
+        options={{ headerShown: false }}
+      />
+    </AuthStack.Navigator>
+  );
+}
+
+function renderTabNavigator() {
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) =>
+          renderTabBarIcon({ focused, color, size, route }),
+      })}
+      tabBarOptions={{
+        activeTintColor,
+        inactiveTintColor,
+        tabStyle: { backgroundColor: tabBackgroundColor },
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeStackNavigator}
+        options={({ route }) => ({ tabBarVisible: isCameraScreen(route) })}
+      />
+      <Tab.Screen name="Settings" component={SettingsScreen} />
+    </Tab.Navigator>
+  );
+}
+
+function Main({ tokens }) {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    if (tokens) {
+      dispatch(setUserTokens(tokens));
+    }
+  });
+  const userTokens = useSelector(state => state.user.tokens);
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) =>
-            renderTabBarIcon({ focused, color, size, route }),
-        })}
-        tabBarOptions={{
-          activeTintColor,
-          inactiveTintColor,
-          tabStyle: { backgroundColor: tabBackgroundColor },
-        }}
-      >
-        <Tab.Screen
-          name="Home"
-          component={HomeStackScreen}
-          options={({ route }) => ({ tabBarVisible: isCameraScreen(route) })}
-        />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
-      </Tab.Navigator>
+      {userTokens.accessToken == null
+        ? renderAuthStackNavigator()
+        : renderTabNavigator()}
     </NavigationContainer>
   );
 }

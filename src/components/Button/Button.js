@@ -10,7 +10,7 @@ function Button({
   buttonStyle,
   containerStyle,
   titleStyle,
-  raised = true,
+  raised = false,
   iconRight = false,
 }) {
   let marginLeft = 0;
@@ -27,7 +27,7 @@ function Button({
       onPress={onPress}
       type={type}
       raised={raised}
-      containerStyle={containerStyle}
+      containerStyle={[styles.containerStyle, containerStyle]}
       buttonStyle={[styles.buttonStyle, buttonStyle]}
       titleStyle={[styles.titleStyle, titleStyle, { marginLeft, marginRight }]}
       iconRight={iconRight}
