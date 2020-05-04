@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { AsyncStorage } from 'react-native';
 import { Provider } from 'react-redux';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import axios from 'axios';
 import { AppLoading, SplashScreen } from 'expo';
 import Main from './src/Main';
 import configureStore from './src/store/configureStore';
@@ -16,7 +15,7 @@ export default function App() {
     setUserTokens(tokens);
   }
 
-  function handleAppLoadingFinish(e) {
+  function handleAppLoadingFinish() {
     setIsAppReady(true);
     SplashScreen.hide();
   }
@@ -32,8 +31,7 @@ export default function App() {
     );
   }
 
-  // axios.defaults.baseURL = 'http://192.168.1.18:5000';
-  // // axios.defaults.headers.common.Authorization = AUTH_TOKEN;
+  // axios.defaults.headers.common.Authorization = AUTH_TOKEN;
 
   // async function registerUser() {
   //   try {

@@ -1,26 +1,30 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Input as Inp } from 'react-native-elements';
 import styles from './InputStyles';
-import Colors from '../../constants/Colors';
 
-function Input({
-  placeholder,
-  label,
-  labelStyle,
-  containerStyle,
-  leftIconContainerStyle,
-  onChangeText,
-  leftIcon = false,
-  secureTextEntry = false,
-  keyboardType = 'default',
-  onSubmitEditing,
-}) {
+const Input = (
+  {
+    placeholder,
+    label,
+    labelStyle,
+    containerStyle,
+    leftIconContainerStyle,
+    onChangeText,
+    leftIcon = false,
+    secureTextEntry = false,
+    keyboardType = 'default',
+    onSubmitEditing,
+    blurOnSubmit = true,
+  },
+  ref,
+) => {
   let marginRight = 0;
   if (leftIcon) {
     marginRight = 4;
   }
   return (
     <Inp
+      ref={ref}
       placeholder={placeholder}
       label={label}
       containerStyle={[styles.containerStyle, containerStyle]}
@@ -34,12 +38,12 @@ function Input({
       secureTextEntry={secureTextEntry}
       keyboardType={keyboardType}
       autoCapitalize="none"
-      enablesReturnKeyAutomatically
       maxLength={200}
       onChangeText={onChangeText}
       onSubmitEditing={onSubmitEditing}
+      blurOnSubmit={blurOnSubmit}
     />
   );
-}
+};
 
-export default Input;
+export default forwardRef(Input);
