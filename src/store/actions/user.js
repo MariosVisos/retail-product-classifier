@@ -4,6 +4,7 @@ import {
   SET_IS_USER_SIGNING_IN,
   SET_IS_USER_SIGNING_UP,
 } from '../../constants/UserActionTypes';
+import { uiStartLoading, uiStopLoading } from './ui';
 
 export const setUserTokens = tokens => ({
   type: SET_USER_TOKENS,
@@ -12,11 +13,11 @@ export const setUserTokens = tokens => ({
 
 export const setIsUserSigningIn = isSigningIn => ({
   type: SET_IS_USER_SIGNING_IN,
-  payload: isSigningIn,
+  payload: { isSigningIn },
 });
 export const setIsUserSigningUp = isSigningUp => ({
   type: SET_IS_USER_SIGNING_UP,
-  payload: isSigningUp,
+  payload: { isSigningUp },
 });
 
 export const signIn = () => {
@@ -25,18 +26,33 @@ export const signIn = () => {
   };
 };
 export const signUp = ({ email, password }) => {
-  console.log('signUp -> signUp', signUp);
   return async dispatch => {
     dispatch(setIsUserSigningUp(true));
+    dispatch(uiStartLoading('Signing up...'));
     try {
       const response = await axios.post('/register', {
         username: email,
         password,
       });
-      console.log('registerUser -> response', response);
+      console.log('signUp -> response', response);
     } catch (error) {
-      console.log('registerUser -> error', error);
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        // console.log(error.response.status);
+        // console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+      }
+      // console.log(error.config);
     }
     dispatch(setIsUserSigningUp(false));
+    dispatch(uiStopLoading());
   };
 };

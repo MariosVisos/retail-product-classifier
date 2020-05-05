@@ -6,12 +6,13 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Input from '../../components/Input/Input';
 import Colors from '../../constants/Colors';
 import styles from './SignInScreenStyles';
 import Button from '../../components/Button/Button';
 import { signUp } from '../../store/actions';
+import Loading from '../../components/Loading/Loading';
 
 const SignInScreen = () => {
   const {
@@ -29,6 +30,10 @@ const SignInScreen = () => {
 
   const dispatch = useDispatch();
 
+  const isSigningIn = useSelector(state => state.user.isSigningIn);
+  const isSigningUp = useSelector(state => state.user.isSigningUp);
+  console.log('SignInScreen -> isSigningUp', isSigningUp);
+
   function handleEmailSubmitEditing() {
     passwordInputRef.current.focus();
   }
@@ -41,6 +46,10 @@ const SignInScreen = () => {
   }
   function handleSignUpPress() {
     dispatch(signUp({ email, password }));
+  }
+
+  if (isSigningUp || isSigningIn) {
+    return <Loading />;
   }
 
   return (
@@ -59,6 +68,7 @@ const SignInScreen = () => {
           onSubmitEditing={handleEmailSubmitEditing}
           blurOnSubmit={false}
           onChangeText={handleEmailTextChange}
+          errorMessage="An account with this email already exists!"
         />
         <Input
           ref={passwordInputRef}

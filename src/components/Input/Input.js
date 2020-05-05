@@ -15,6 +15,7 @@ const Input = (
     keyboardType = 'default',
     onSubmitEditing,
     blurOnSubmit = true,
+    errorMessage,
   },
   ref,
 ) => {
@@ -42,6 +43,7 @@ const Input = (
       onChangeText={onChangeText}
       onSubmitEditing={onSubmitEditing}
       blurOnSubmit={blurOnSubmit}
+      errorMessage={errorMessage}
     />
   );
 };
