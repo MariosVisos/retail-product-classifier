@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
-import Colors from '../../constants/Colors';
 
 const styles = StyleSheet.create({
-  container: {},
+  inputContainer: { marginVertical: 28 },
 });
 export default styles;

@@ -47,6 +47,7 @@ const Input = (
       blurOnSubmit={blurOnSubmit}
       errorMessage={errorMessage}
       value={value}
+      inputStyle={styles.inputStyle}
     />
   );
 };

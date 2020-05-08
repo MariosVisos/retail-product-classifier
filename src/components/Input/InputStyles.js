@@ -8,6 +8,7 @@ const styles = StyleSheet.create({
   containerStyle: {
     marginVertical: 8,
   },
+  inputStyle: { color: Colors.black },
   labelStyle: { marginLeft: 14 },
   leftIconContainerStyle: { marginRight: 10, width: 28 },
 });
