@@ -25,6 +25,14 @@ const HomeStack = createStackNavigator();
 const SettingsStack = createStackNavigator();
 const AuthStack = createStackNavigator();
 
+const showHeaderOptions = {
+  headerStyle: {
+    backgroundColor: headerBackgroundColor,
+  },
+  headerTintColor,
+  title: 'Retail Product Classifier',
+};
+
 function renderTabBarIcon({ color, size, route }) {
   let iconName;
 
@@ -59,11 +67,7 @@ function HomeStackNavigator() {
         name="Home"
         component={HomeScreen}
         options={{
-          headerStyle: {
-            backgroundColor: headerBackgroundColor,
-          },
-          headerTintColor,
-          title: 'Retail Product Classifier',
+          ...showHeaderOptions,
         }}
       />
       <HomeStack.Screen
@@ -81,11 +85,7 @@ function SettingsStackNavigator() {
         name="Settings"
         component={SettingsScreen}
         options={{
-          headerStyle: {
-            backgroundColor: headerBackgroundColor,
-          },
-          headerTintColor,
-          title: 'Retail Product Classifier',
+          ...showHeaderOptions,
         }}
       />
     </SettingsStack.Navigator>
@@ -99,11 +99,7 @@ function renderAuthStackNavigator() {
         name="SignIn"
         component={SignInScreen}
         options={{
-          headerStyle: {
-            backgroundColor: headerBackgroundColor,
-          },
-          headerTintColor,
-          title: 'Retail Product Classifier',
+          ...showHeaderOptions,
         }}
       />
       <AuthStack.Screen

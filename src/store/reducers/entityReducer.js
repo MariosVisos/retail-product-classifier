@@ -8,13 +8,9 @@ import {
 } from '../../constants/actionTypes/User';
 
 const initialState = {
-  id: null,
-  email: null,
-  tokens: { accessToken: null, refreshToken: null },
-  isSigningIn: false,
-  isSigningUp: false,
-  signUpError: null,
-  signInError: null,
+  dataset: { byId: {} },
+  label: { byId: {} },
+  image: { byId: {} },
 };
 
 const setUserData = produce((draft, { tokens, user }) => {
@@ -40,7 +36,7 @@ const setSignInError = produce((draft, { error }) => {
   draft.signInError = error;
 });
 
-function userReducer(state = initialState, action) {
+function entityReducer(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case SET_USER_DATA:
@@ -58,4 +54,4 @@ function userReducer(state = initialState, action) {
   }
 }
 
-export default userReducer;
+export default entityReducer;

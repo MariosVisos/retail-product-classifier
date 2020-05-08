@@ -6,7 +6,7 @@ import {
   SET_IS_USER_SIGNING_UP,
   SET_SIGN_UP_ERROR,
   SET_SIGN_IN_ERROR,
-} from '../../constants/UserActionTypes';
+} from '../../constants/actionTypes/User';
 import { uiStartLoading, uiStopLoading } from './ui';
 
 export const setUserData = payload => ({
@@ -49,7 +49,7 @@ export const signIn = ({ email, password }) => {
       axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
       const userData = { tokens: { accessToken, refreshToken }, user };
       await AsyncStorage.setItem('user', JSON.stringify(userData));
-      dispatch(setUserData(user));
+      dispatch(setUserData(userData));
     } catch (error) {
       if (error.response) {
         const { data } = error.response;

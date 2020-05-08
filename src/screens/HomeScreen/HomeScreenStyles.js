@@ -8,6 +8,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
   },
+  fab: {
+    bottom: 10,
+    position: 'absolute',
+    right: 10,
+  },
 });
 
 export default styles;

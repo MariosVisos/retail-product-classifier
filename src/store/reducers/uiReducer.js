@@ -1,7 +1,7 @@
 import {
   UI_START_LOADING,
   UI_STOP_LOADING,
-} from '../../constants/UiActionTypes';
+} from '../../constants/actionTypes/Ui';
 
 const initialState = {
   isLoading: false,
