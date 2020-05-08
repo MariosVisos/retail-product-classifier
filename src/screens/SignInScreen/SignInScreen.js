@@ -11,7 +11,12 @@ import Input from '../../components/Input/Input';
 import Colors from '../../constants/Colors';
 import styles from './SignInScreenStyles';
 import Button from '../../components/Button/Button';
-import { signUp } from '../../store/actions';
+import {
+  signUp,
+  setSignUpError,
+  signIn,
+  setSignInError,
+} from '../../store/actions';
 import Loading from '../../components/Loading/Loading';
 
 const SignInScreen = () => {
@@ -25,6 +30,8 @@ const SignInScreen = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isEmailValid, setIsEmailValid] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(true);
 
   const passwordInputRef = useRef(null);
 
@@ -32,20 +39,79 @@ const SignInScreen = () => {
 
   const isSigningIn = useSelector(state => state.user.isSigningIn);
   const isSigningUp = useSelector(state => state.user.isSigningUp);
-  console.log('SignInScreen -> isSigningUp', isSigningUp);
+  const signUpError = useSelector(state => state.user.signUpError);
+  const signInError = useSelector(state => state.user.signInError);
 
   function handleEmailSubmitEditing() {
     passwordInputRef.current.focus();
   }
 
   function handleEmailTextChange(text) {
+    if (!isEmailValid) {
+      setIsEmailValid(true);
+    }
+    if (signUpError) {
+      dispatch(setSignUpError(null));
+    }
+    if (signInError) {
+      dispatch(setSignInError(null));
+    }
     setEmail(text);
   }
   function handlePasswordTextChange(text) {
+    if (!isPasswordValid) {
+      setIsPasswordValid(true);
+    }
     setPassword(text);
   }
   function handleSignUpPress() {
-    dispatch(signUp({ email, password }));
+    const validEmail = email.split('@').length - 1 === 1;
+    const emptyPassword = password.length === 0;
+    if (validEmail && !emptyPassword) {
+      dispatch(signUp({ email, password }));
+    } else {
+      if (!validEmail) {
+        setIsEmailValid(false);
+      }
+      if (emptyPassword) {
+        setIsPasswordValid(false);
+      }
+    }
+  }
+
+  function handleSignInPress() {
+    const validEmail = email.split('@').length - 1 === 1;
+    const emptyPassword = password.length === 0;
+    if (validEmail && !emptyPassword) {
+      dispatch(signIn({ email, password }));
+    } else {
+      if (!validEmail) {
+        setIsEmailValid(false);
+      }
+      if (emptyPassword) {
+        setIsPasswordValid(false);
+      }
+    }
+  }
+
+  function getEmailErrorMessage() {
+    if (!isEmailValid) {
+      return 'Enter the email in the format someone@example.com!';
+    }
+    if (signUpError) {
+      return signUpError.message;
+    }
+    return '';
+  }
+
+  function getPasswordErrorMessage() {
+    if (!isPasswordValid) {
+      return 'The password cannot be empty!';
+    }
+    if (signUpError) {
+      return signUpError.message;
+    }
+    return '';
   }
 
   if (isSigningUp || isSigningIn) {
@@ -68,7 +134,8 @@ const SignInScreen = () => {
           onSubmitEditing={handleEmailSubmitEditing}
           blurOnSubmit={false}
           onChangeText={handleEmailTextChange}
-          errorMessage="An account with this email already exists!"
+          errorMessage={getEmailErrorMessage()}
+          value={email}
         />
         <Input
           ref={passwordInputRef}
@@ -81,11 +148,17 @@ const SignInScreen = () => {
           }}
           secureTextEntry
           onChangeText={handlePasswordTextChange}
+          value={password}
+          errorMessage={getPasswordErrorMessage()}
         />
         <TouchableOpacity style={forgotPasswordContainerStyle}>
           <Text style={forgotPasswordTextStyle}>Forgot Password?</Text>
         </TouchableOpacity>
-        <Button title="Sign in" containerStyle={buttonContainerStyle} />
+        <Button
+          title="Sign in"
+          containerStyle={buttonContainerStyle}
+          onPress={handleSignInPress}
+        />
         <Text style={signUpTextStyle}>Don&apos;t have an account?</Text>
         <Button
           title="Sign up"

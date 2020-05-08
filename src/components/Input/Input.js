@@ -10,6 +10,7 @@ const Input = (
     containerStyle,
     leftIconContainerStyle,
     onChangeText,
+    value,
     leftIcon = false,
     secureTextEntry = false,
     keyboardType = 'default',
@@ -44,6 +45,7 @@ const Input = (
       onSubmitEditing={onSubmitEditing}
       blurOnSubmit={blurOnSubmit}
       errorMessage={errorMessage}
+      value={value}
     />
   );
 };

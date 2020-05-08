@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AsyncStorage } from 'react-native';
 import { Provider } from 'react-redux';
+import axios from 'axios';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppLoading, SplashScreen } from 'expo';
 import Main from './src/Main';
@@ -8,11 +9,15 @@ import configureStore from './src/store/configureStore';
 
 export default function App() {
   const [isAppReady, setIsAppReady] = useState(false);
-  const [userTokens, setUserTokens] = useState(null);
+  const [userData, setUserData] = useState(null);
 
   async function loadInitialData() {
-    const tokens = await AsyncStorage.getItem('userTokens');
-    setUserTokens(tokens);
+    const userJson = await AsyncStorage.getItem('user');
+    const user = JSON.parse(userJson);
+    if (user) {
+      axios.defaults.headers.common.Authorization = `Bearer ${user.tokens.accessToken}`;
+      setUserData(user);
+    }
   }
 
   function handleAppLoadingFinish() {
@@ -50,7 +55,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <SafeAreaProvider>
-        <Main tokens={userTokens} />
+        <Main userData={userData} />
       </SafeAreaProvider>
     </Provider>
   );

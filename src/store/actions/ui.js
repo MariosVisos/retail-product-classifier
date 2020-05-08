@@ -6,7 +6,7 @@ import {
 export const uiStartLoading = loadingText => {
   return {
     type: UI_START_LOADING,
-    payload: loadingText,
+    payload: { loadingText },
   };
 };
 

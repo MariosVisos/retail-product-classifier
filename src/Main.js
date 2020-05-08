@@ -8,7 +8,7 @@ import HomeScreen from './screens/HomeScreen/HomeScreen';
 import CameraScreen from './screens/CameraScreen/CameraScreen';
 import SettingsScreen from './screens/SettingsScreen/SettingsScreen';
 import Colors from './constants/Colors';
-import { setUserTokens } from './store/actions';
+import { setUserData } from './store/actions';
 import SignInScreen from './screens/SignInScreen/SignInScreen';
 import SignUpScreen from './screens/SignUpScreen/SignUpScreen';
 import ResetPasswordScreen from './screens/ResetPasswordScreen/ResetPasswordScreen';
@@ -22,6 +22,7 @@ const tabBackgroundColor = primary;
 
 const Tab = createBottomTabNavigator();
 const HomeStack = createStackNavigator();
+const SettingsStack = createStackNavigator();
 const AuthStack = createStackNavigator();
 
 function renderTabBarIcon({ color, size, route }) {
@@ -73,6 +74,23 @@ function HomeStackNavigator() {
     </HomeStack.Navigator>
   );
 }
+function SettingsStackNavigator() {
+  return (
+    <SettingsStack.Navigator>
+      <SettingsStack.Screen
+        name="Settings"
+        component={SettingsScreen}
+        options={{
+          headerStyle: {
+            backgroundColor: headerBackgroundColor,
+          },
+          headerTintColor,
+          title: 'Retail Product Classifier',
+        }}
+      />
+    </SettingsStack.Navigator>
+  );
+}
 
 function renderAuthStackNavigator() {
   return (
@@ -120,18 +138,16 @@ function renderTabNavigator() {
         component={HomeStackNavigator}
         options={({ route }) => ({ tabBarVisible: isCameraScreen(route) })}
       />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Settings" component={SettingsStackNavigator} />
     </Tab.Navigator>
   );
 }
 
-function Main({ tokens }) {
+function Main({ userData }) {
   const dispatch = useDispatch();
-  useEffect(() => {
-    if (tokens) {
-      dispatch(setUserTokens(tokens));
-    }
-  });
+  if (userData) {
+    dispatch(setUserData(userData));
+  }
   const userTokens = useSelector(state => state.user.tokens);
   return (
     <NavigationContainer>
