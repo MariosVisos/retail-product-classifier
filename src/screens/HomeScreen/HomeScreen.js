@@ -5,14 +5,16 @@ import styles from './HomeScreenStyles';
 import Colors from '../../constants/Colors';
 import Button from '../../components/Button/Button';
 import Overlay from '../../components/Overlay/Overlay';
+import Input from '../../components/Input/Input';
+import DatasetCreateOverlay from '../../components/DatasetCreateOverlay/DatasetCreateOverlay';
 
 const HomeScreen = ({ navigation }) => {
   const [isCreateDatasetVisible, setIsCreateDatasetVisible] = useState(false);
-
-  const { container, fab } = styles;
   const toggleCreateDatasetOverlay = () => {
     setIsCreateDatasetVisible(!isCreateDatasetVisible);
   };
+
+  const { container, fab } = styles;
   return (
     <View style={container}>
       <Text>hey there</Text>
@@ -24,13 +26,10 @@ const HomeScreen = ({ navigation }) => {
         containerStyle={fab}
         raised
       />
-      <Overlay
+      <DatasetCreateOverlay
         isVisible={isCreateDatasetVisible}
-        onBackdropPress={toggleCreateDatasetOverlay}
-        headerTitle="Create Shelve"
-      >
-        <Text>Create new selve</Text>
-      </Overlay>
+        toggleOverlay={toggleCreateDatasetOverlay}
+      />
     </View>
   );
 };

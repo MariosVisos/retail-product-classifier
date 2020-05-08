@@ -2,13 +2,19 @@ import { StyleSheet } from 'react-native';
 import Colors from '../../constants/Colors';
 
 const styles = StyleSheet.create({
-  buttonStyle: {
-    backgroundColor: Colors.accent,
-  },
   containerStyle: {
     marginVertical: 8,
   },
-  titleStyle: {
+  outlineButtonStyle: {
+    borderColor: Colors.accent,
+  },
+  outlineTitleStyle: {
+    color: Colors.accent,
+  },
+  solidButtonStyle: {
+    backgroundColor: Colors.accent,
+  },
+  solidTitleStyle: {
     color: Colors.primary,
   },
 });

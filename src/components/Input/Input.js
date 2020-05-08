@@ -24,13 +24,14 @@ const Input = (
   if (leftIcon) {
     marginRight = 4;
   }
+  const customLabelStyle = leftIcon ? styles.labelStyle : {};
   return (
     <Inp
       ref={ref}
       placeholder={placeholder}
       label={label}
       containerStyle={[styles.containerStyle, containerStyle]}
-      labelStyle={[styles.labelStyle, labelStyle]}
+      labelStyle={[customLabelStyle, labelStyle]}
       leftIconContainerStyle={[
         styles.leftIconContainerStyle,
         leftIconContainerStyle,
