@@ -4,6 +4,7 @@ import {
   SET_DATASET_CREATE_ERROR,
   SET_DATASET_CREATE_SUCCESS,
   DATASETS_CREATE,
+  SET_DATASETS_REFRESHING,
 } from '../../constants/actionTypes/Entity';
 
 const initialState = {
@@ -12,6 +13,7 @@ const initialState = {
     isCreatingDataset: false,
     createError: null,
     createSuccess: false,
+    refreshing: false,
   },
   label: { byId: {} },
   image: { byId: {} },
@@ -30,9 +32,14 @@ const setDatasetCreateSuccess = produce((draft, { createSuccess }) => {
 });
 
 const datasetsCreate = produce((draft, { datasets }) => {
+  console.log('datasetsCreate -> datasets', datasets);
   datasets.forEach(dataset => {
     draft.dataset.byId[dataset.id] = dataset;
   });
+});
+
+const setDatasetsResfreshing = produce((draft, { refreshing }) => {
+  draft.dataset.refreshing = refreshing;
 });
 
 function entityReducer(state = initialState, action) {
@@ -46,6 +53,8 @@ function entityReducer(state = initialState, action) {
       return setDatasetCreateSuccess(state, payload);
     case DATASETS_CREATE:
       return datasetsCreate(state, payload);
+    case SET_DATASETS_REFRESHING:
+      return setDatasetsResfreshing(state, payload);
     default:
       return state;
   }

@@ -30,10 +30,7 @@ const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
 
   useEffect(() => {
     if (createDatasetSuccess) {
-      console.log(
-        'DatasetCreateOverlay -> useEffect -> createDatasetSuccess',
-        createDatasetSuccess,
-      );
+      setDatasetName('');
       toggleOverlay();
       dispatch(setDatasetCreateSuccess(false));
     }
@@ -65,7 +62,6 @@ const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
       setIsDatasetNameValid(false);
     } else {
       dispatch(createDataset({ name: datasetName }));
-      console.log('handleCreateDatasetPress -> dispatch', dispatch);
     }
   }
 
