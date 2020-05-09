@@ -3,6 +3,7 @@ import { View, Text } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import styles from './HomeScreenStyles';
 import Colors from '../../constants/Colors';
+import DatasetList from '../../components/DatasetList/DatasetList';
 import Button from '../../components/Button/Button';
 import Overlay from '../../components/Overlay/Overlay';
 import Input from '../../components/Input/Input';
@@ -17,7 +18,7 @@ const HomeScreen = ({ navigation }) => {
   const { container, fab } = styles;
   return (
     <View style={container}>
-      <Text>hey there</Text>
+      <DatasetList />
       <Button
         // onPress={() => navigation.navigate('Camera')}
         onPress={toggleCreateDatasetOverlay}

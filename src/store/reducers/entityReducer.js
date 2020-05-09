@@ -1,54 +1,51 @@
 import produce from 'immer';
 import {
-  SET_USER_DATA,
-  SET_IS_USER_SIGNING_IN,
-  SET_IS_USER_SIGNING_UP,
-  SET_SIGN_UP_ERROR,
-  SET_SIGN_IN_ERROR,
-} from '../../constants/actionTypes/User';
+  SET_IS_CREATING_DATASET,
+  SET_DATASET_CREATE_ERROR,
+  SET_DATASET_CREATE_SUCCESS,
+  DATASETS_CREATE,
+} from '../../constants/actionTypes/Entity';
 
 const initialState = {
-  dataset: { byId: {} },
+  dataset: {
+    byId: {},
+    isCreatingDataset: false,
+    createError: null,
+    createSuccess: false,
+  },
   label: { byId: {} },
   image: { byId: {} },
 };
 
-const setUserData = produce((draft, { tokens, user }) => {
-  const { username, id } = user;
-  const { accessToken, refreshToken } = tokens;
-  draft.tokens.accessToken = accessToken;
-  draft.tokens.refreshToken = refreshToken;
-  draft.email = username;
-  draft.id = id;
+const setIsDatasetCreated = produce((draft, { isCreatingDataset }) => {
+  draft.dataset.isCreatingDataset = isCreatingDataset;
 });
 
-const setIsUserSigningIn = produce((draft, { isSigningIn }) => {
-  draft.isSigningIn = isSigningIn;
-});
-const setIsUserSigningUp = produce((draft, { isSigningUp }) => {
-  draft.isSigningUp = isSigningUp;
+const setDatasetCreateError = produce((draft, { error }) => {
+  draft.dataset.createError = error;
 });
 
-const setSignUpError = produce((draft, { error }) => {
-  draft.signUpError = error;
+const setDatasetCreateSuccess = produce((draft, { createSuccess }) => {
+  draft.dataset.createSuccess = createSuccess;
 });
-const setSignInError = produce((draft, { error }) => {
-  draft.signInError = error;
+
+const datasetsCreate = produce((draft, { datasets }) => {
+  datasets.forEach(dataset => {
+    draft.dataset.byId[dataset.id] = dataset;
+  });
 });
 
 function entityReducer(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
-    case SET_USER_DATA:
-      return setUserData(state, payload);
-    case SET_IS_USER_SIGNING_IN:
-      return setIsUserSigningIn(state, payload);
-    case SET_IS_USER_SIGNING_UP:
-      return setIsUserSigningUp(state, payload);
-    case SET_SIGN_UP_ERROR:
-      return setSignUpError(state, payload);
-    case SET_SIGN_IN_ERROR:
-      return setSignInError(state, payload);
+    case SET_IS_CREATING_DATASET:
+      return setIsDatasetCreated(state, payload);
+    case SET_DATASET_CREATE_ERROR:
+      return setDatasetCreateError(state, payload);
+    case SET_DATASET_CREATE_SUCCESS:
+      return setDatasetCreateSuccess(state, payload);
+    case DATASETS_CREATE:
+      return datasetsCreate(state, payload);
     default:
       return state;
   }

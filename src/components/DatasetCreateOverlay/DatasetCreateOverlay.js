@@ -1,21 +1,95 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Overlay from '../Overlay/Overlay';
 import Input from '../Input/Input';
+import Loading from '../Loading/Loading';
 import styles from './DatasetCreateOverlayStyles';
+import {
+  createDataset,
+  setDatasetCreateError,
+  setDatasetCreateSuccess,
+} from '../../store/actions/entity';
 
 const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
+  const [datasetName, setDatasetName] = useState('');
+  const [isDatasetNameValid, setIsDatasetNameValid] = useState(true);
+
+  const createDatasetError = useSelector(
+    state => state.entity.dataset.createError,
+  );
+
+  const createDatasetSuccess = useSelector(
+    state => state.entity.dataset.createSuccess,
+  );
+
+  const isCreatingDataset = useSelector(
+    state => state.entity.dataset.isCreatingDataset,
+  );
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (createDatasetSuccess) {
+      console.log(
+        'DatasetCreateOverlay -> useEffect -> createDatasetSuccess',
+        createDatasetSuccess,
+      );
+      toggleOverlay();
+      dispatch(setDatasetCreateSuccess(false));
+    }
+  }, [dispatch, createDatasetSuccess]);
+
+  function handleDatasetNameChange(text) {
+    if (!isDatasetNameValid) {
+      setIsDatasetNameValid(true);
+    }
+    if (createDatasetError) {
+      dispatch(setDatasetCreateError(null));
+    }
+    setDatasetName(text);
+  }
+
+  function getDatasetNameErrorMessage() {
+    if (!isDatasetNameValid) {
+      return 'Shelve name cannot be empty!';
+    }
+    if (createDatasetError) {
+      return createDatasetError.message;
+    }
+    return '';
+  }
+
+  function handleCreateDatasetPress() {
+    const emptyDatasetName = datasetName.length === 0;
+    if (emptyDatasetName) {
+      setIsDatasetNameValid(false);
+    } else {
+      dispatch(createDataset({ name: datasetName }));
+      console.log('handleCreateDatasetPress -> dispatch', dispatch);
+    }
+  }
+
+  if (isCreatingDataset) {
+    return <Loading />;
+  }
+
   return (
     <Overlay
       isVisible={isVisible}
       onBackdropPress={toggleOverlay}
-      headerTitle="Create shelve"
+      headerTitle="Create new shelve"
       applyButtonTitle="Create shelve"
       overlayStyle={styles.container}
+      onApplyPress={handleCreateDatasetPress}
     >
       <Input
         containerStyle={styles.inputContainer}
         placeholder="e.g. Cereal"
         label="Shelve name"
+        value={datasetName}
+        onChangeText={handleDatasetNameChange}
+        errorMessage={getDatasetNameErrorMessage()}
+        onSubmitEditing={handleCreateDatasetPress}
       />
     </Overlay>
   );
