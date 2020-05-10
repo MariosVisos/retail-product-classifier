@@ -5,10 +5,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { Entypo } from '@expo/vector-icons';
 import styles from './DatasetListItemStyles';
 import Button from '../Button/Button';
+import Colors from '../../constants/Colors';
 
-const DatasetListItem = ({ dataset }) => {
+const DatasetListItem = ({ dataset, onCollectPress }) => {
   const {
     container,
     nameText,
@@ -17,26 +19,30 @@ const DatasetListItem = ({ dataset }) => {
     buttonsContainer,
     trainButtonStyle,
     classifyButtonStyle,
+    leftContainer,
   } = styles;
   function handleTrainPress() {}
+  function handleCollectPress() {}
   return (
     <TouchableOpacity style={container}>
-      <View>
+      <View style={leftContainer}>
         <Text style={nameText}>{dataset.name}</Text>
         <Text style={labelSubtitleText}>{dataset.labels.length} labels</Text>
-        <Text style={modelSubtitleText}>Model found</Text>
+        <Text style={modelSubtitleText}>No model found</Text>
       </View>
       <TouchableWithoutFeedback>
         <View style={buttonsContainer}>
           <Button
-            onPress={handleTrainPress}
+            onPress={onCollectPress}
             buttonStyle={trainButtonStyle}
-            title="Train"
+            title="Collect"
+            icon={<Entypo name="camera" size={22} color={Colors.black} />}
           />
           <Button
             onPress={handleTrainPress}
             buttonStyle={classifyButtonStyle}
             title="Classify"
+            disabled
           />
         </View>
       </TouchableWithoutFeedback>

@@ -6,7 +6,7 @@ import { datasetsRefresh } from '../../store/actions/entity';
 import styles from './DatasetListStyles';
 import Colors from '../../constants/Colors';
 
-const DatasetList = () => {
+const DatasetList = ({ navigation }) => {
   const { footerContainer, headerContainer, headerText } = styles;
   const datasets = useSelector(state => {
     const { byId } = state.entity.dataset;
@@ -25,6 +25,10 @@ const DatasetList = () => {
     dispatch(datasetsRefresh());
   }
 
+  function navigateToCameraScreen() {
+    navigation.navigate('Camera');
+  }
+
   const emptyList = (
     <View>
       <Text>Create new shelve</Text>
@@ -41,7 +45,12 @@ const DatasetList = () => {
   return (
     <FlatList
       data={datasets}
-      renderItem={({ item }) => <DatasetListItem dataset={item} />}
+      renderItem={({ item }) => (
+        <DatasetListItem
+          dataset={item}
+          onCollectPress={navigateToCameraScreen}
+        />
+      )}
       keyExtractor={dataset => dataset.id.toString()}
       ListEmptyComponent={emptyList}
       ListHeaderComponent={header}

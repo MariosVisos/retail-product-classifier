@@ -10,8 +10,9 @@ function Button({
   buttonStyle,
   containerStyle,
   titleStyle,
-  raised = false,
-  iconRight = false,
+  disabled,
+  raised,
+  iconRight,
 }) {
   let marginLeft = 0;
   let marginRight = 0;
@@ -35,6 +36,7 @@ function Button({
       buttonStyle={[customButtonStyle, buttonStyle]}
       titleStyle={[customTitleStyle, titleStyle, { marginLeft, marginRight }]}
       iconRight={iconRight}
+      disabled={disabled}
     />
   );
 }
