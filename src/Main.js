@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
+import DatasetScreen from './screens/DatasetScreen/DatasetScreen';
 import CameraScreen from './screens/CameraScreen/CameraScreen';
 import SettingsScreen from './screens/SettingsScreen/SettingsScreen';
 import Colors from './constants/Colors';
@@ -69,6 +70,14 @@ function HomeStackNavigator() {
         options={{
           ...showHeaderOptions,
         }}
+      />
+      <HomeStack.Screen
+        name="Dataset"
+        component={DatasetScreen}
+        options={({ route }) => ({
+          ...showHeaderOptions,
+          title: route.params.name,
+        })}
       />
       <HomeStack.Screen
         name="Camera"

@@ -25,10 +25,6 @@ const DatasetList = ({ navigation }) => {
     dispatch(datasetsRefresh());
   }
 
-  function navigateToCameraScreen() {
-    navigation.navigate('Camera');
-  }
-
   const emptyList = (
     <View>
       <Text>Create new shelve</Text>
@@ -46,10 +42,7 @@ const DatasetList = ({ navigation }) => {
     <FlatList
       data={datasets}
       renderItem={({ item }) => (
-        <DatasetListItem
-          dataset={item}
-          onCollectPress={navigateToCameraScreen}
-        />
+        <DatasetListItem dataset={item} navigation={navigation} />
       )}
       keyExtractor={dataset => dataset.id.toString()}
       ListEmptyComponent={emptyList}

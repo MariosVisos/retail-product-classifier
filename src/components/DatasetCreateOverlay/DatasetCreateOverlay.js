@@ -28,21 +28,33 @@ const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (createDatasetSuccess) {
-      setDatasetName('');
-      toggleOverlay();
-      dispatch(setDatasetCreateSuccess(false));
-    }
-  }, [dispatch, createDatasetSuccess]);
-
-  function handleDatasetNameChange(text) {
+  function resetValidationError() {
     if (!isDatasetNameValid) {
       setIsDatasetNameValid(true);
     }
     if (createDatasetError) {
       dispatch(setDatasetCreateError(null));
     }
+  }
+
+  function handleBackdropPress() {
+    if (isVisible) {
+      setDatasetName('');
+    }
+    resetValidationError();
+    toggleOverlay();
+  }
+
+  useEffect(() => {
+    if (createDatasetSuccess) {
+      setDatasetName('');
+      handleBackdropPress();
+      dispatch(setDatasetCreateSuccess(false));
+    }
+  }, [dispatch, createDatasetSuccess]);
+
+  function handleDatasetNameChange(text) {
+    resetValidationError();
     setDatasetName(text);
   }
 
@@ -72,7 +84,7 @@ const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
   return (
     <Overlay
       isVisible={isVisible}
-      onBackdropPress={toggleOverlay}
+      onBackdropPress={handleBackdropPress}
       headerTitle="Create new shelve"
       applyButtonTitle="Create shelve"
       overlayStyle={styles.container}

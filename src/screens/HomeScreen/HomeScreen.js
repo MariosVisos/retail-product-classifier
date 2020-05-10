@@ -18,7 +18,6 @@ const HomeScreen = ({ navigation }) => {
     <View style={container}>
       <DatasetList navigation={navigation} />
       <Button
-        // onPress={() => navigation.navigate('Camera')}
         onPress={toggleCreateDatasetOverlay}
         icon={<AntDesign name="pluscircleo" size={26} color={Colors.primary} />}
         title="New Shelve"

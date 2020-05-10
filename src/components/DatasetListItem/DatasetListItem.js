@@ -10,7 +10,7 @@ import styles from './DatasetListItemStyles';
 import Button from '../Button/Button';
 import Colors from '../../constants/Colors';
 
-const DatasetListItem = ({ dataset, onCollectPress }) => {
+const DatasetListItem = ({ dataset, navigation }) => {
   const {
     container,
     nameText,
@@ -21,10 +21,18 @@ const DatasetListItem = ({ dataset, onCollectPress }) => {
     classifyButtonStyle,
     leftContainer,
   } = styles;
+
+  function handleDatasetPress() {
+    navigation.navigate('Dataset', {
+      name: dataset.name,
+    });
+  }
+  function handleCollectPress() {
+    navigation.navigate('Camera');
+  }
   function handleTrainPress() {}
-  function handleCollectPress() {}
   return (
-    <TouchableOpacity style={container}>
+    <TouchableOpacity onPress={handleDatasetPress} style={container}>
       <View style={leftContainer}>
         <Text style={nameText}>{dataset.name}</Text>
         <Text style={labelSubtitleText}>{dataset.labels.length} labels</Text>
@@ -33,7 +41,7 @@ const DatasetListItem = ({ dataset, onCollectPress }) => {
       <TouchableWithoutFeedback>
         <View style={buttonsContainer}>
           <Button
-            onPress={onCollectPress}
+            onPress={handleCollectPress}
             buttonStyle={trainButtonStyle}
             title="Collect"
             icon={<Entypo name="camera" size={22} color={Colors.black} />}

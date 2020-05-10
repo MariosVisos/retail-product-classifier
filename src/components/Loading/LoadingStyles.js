@@ -6,7 +6,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: Colors.primary,
     flex: 1,
+    height: '100%',
     justifyContent: 'center',
+    position: 'absolute',
+    width: '100%',
   },
   textStyle: { color: Colors.secondary, fontSize: 20, marginVertical: 8 },
 });
