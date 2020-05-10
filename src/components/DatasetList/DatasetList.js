@@ -3,9 +3,11 @@ import { FlatList, Text, View, RefreshControl } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import DatasetListItem from '../DatasetListItem/DatasetListItem';
 import { datasetsRefresh } from '../../store/actions/entity';
+import styles from './DatasetListStyles';
 import Colors from '../../constants/Colors';
 
 const DatasetList = () => {
+  const { footerContainer, headerContainer, headerText } = styles;
   const datasets = useSelector(state => {
     const { byId } = state.entity.dataset;
     const datasetsArray = Object.values(byId);
@@ -16,7 +18,6 @@ const DatasetList = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log('DatasetList -> useEffect', datasetsRefresh);
     dispatch(datasetsRefresh());
   }, [dispatch]);
 
@@ -31,29 +32,31 @@ const DatasetList = () => {
   );
 
   const header = (
-    <View>
-      <Text>Shelves</Text>
+    <View style={headerContainer}>
+      <Text style={headerText}>{datasets.length} Shelves</Text>
     </View>
   );
+
+  const footer = <View style={footerContainer} />;
   return (
-    <View>
-      <FlatList
-        data={datasets}
-        renderItem={({ item }) => <DatasetListItem dataset={item} />}
-        keyExtractor={dataset => dataset.id.toString()}
-        ListEmptyComponent={emptyList}
-        ListHeaderComponent={header}
-        refreshControl={
-          <RefreshControl
-            colors={[Colors.secondary]}
-            tintColor={Colors.secondary}
-            progressBackgroundColor={Colors.primary}
-            refreshing={refreshing}
-            onRefresh={handleRefresh}
-          />
-        }
-      />
-    </View>
+    <FlatList
+      data={datasets}
+      renderItem={({ item }) => <DatasetListItem dataset={item} />}
+      keyExtractor={dataset => dataset.id.toString()}
+      ListEmptyComponent={emptyList}
+      ListHeaderComponent={header}
+      ListFooterComponent={footer}
+      showsVerticalScrollIndicator={false}
+      refreshControl={
+        <RefreshControl
+          colors={[Colors.secondary]}
+          tintColor={Colors.secondary}
+          progressBackgroundColor={Colors.primary}
+          refreshing={refreshing}
+          onRefresh={handleRefresh}
+        />
+      }
+    />
   );
 };
 

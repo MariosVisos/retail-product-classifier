@@ -32,7 +32,6 @@ const setDatasetCreateSuccess = produce((draft, { createSuccess }) => {
 });
 
 const datasetsCreate = produce((draft, { datasets }) => {
-  console.log('datasetsCreate -> datasets', datasets);
   datasets.forEach(dataset => {
     draft.dataset.byId[dataset.id] = dataset;
   });

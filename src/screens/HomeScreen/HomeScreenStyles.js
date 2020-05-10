@@ -3,10 +3,9 @@ import Colors from '../../constants/Colors';
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: 'center',
     backgroundColor: Colors.primary,
     flex: 1,
-    justifyContent: 'space-around',
+    // padding: 20,
   },
   fab: {
     bottom: 10,

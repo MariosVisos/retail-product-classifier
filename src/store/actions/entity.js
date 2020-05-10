@@ -40,7 +40,6 @@ export const createDataset = ({ name }) => {
     try {
       const response = await axios.post(`/dataset/${name}`);
       const dataset = response.data;
-      console.log('createDataset -> dataset', dataset);
       dispatch(datasetsCreate([dataset]));
       dispatch(setDatasetCreateSuccess(true));
     } catch (error) {
@@ -82,7 +81,6 @@ export const datasetsRefresh = () => {
     try {
       const response = await axios.get('/datasets');
       const { datasets } = response.data;
-      console.log('datasetsRefresh -> datasets', datasets);
       dispatch(datasetsCreate(datasets));
     } catch (error) {
       if (error.response) {
