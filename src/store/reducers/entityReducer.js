@@ -7,20 +7,25 @@ import {
   SET_DATASETS_REFRESHING,
 } from '../../constants/actionTypes/Entity';
 
-const initialState = {
-  dataset: {
+function getBaseEntityState() {
+  const baseEntityState = {
     byId: {},
-    isCreatingDataset: false,
+    isBeingCreated: false,
     createError: null,
     createSuccess: false,
     refreshing: false,
-  },
-  label: { byId: {} },
-  image: { byId: {} },
+  };
+  return baseEntityState;
+}
+
+const initialState = {
+  dataset: getBaseEntityState(),
+  label: getBaseEntityState(),
+  image: getBaseEntityState(),
 };
 
-const setIsDatasetCreated = produce((draft, { isCreatingDataset }) => {
-  draft.dataset.isCreatingDataset = isCreatingDataset;
+const setIsDatasetCreated = produce((draft, { isBeingCreated }) => {
+  draft.dataset.isBeingCreated = isBeingCreated;
 });
 
 const setDatasetCreateError = produce((draft, { error }) => {

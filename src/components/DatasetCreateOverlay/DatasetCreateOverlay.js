@@ -22,8 +22,8 @@ const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
     state => state.entity.dataset.createSuccess,
   );
 
-  const isCreatingDataset = useSelector(
-    state => state.entity.dataset.isCreatingDataset,
+  const isBeingCreated = useSelector(
+    state => state.entity.dataset.isBeingCreated,
   );
 
   const dispatch = useDispatch();
@@ -77,7 +77,7 @@ const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
     }
   }
 
-  if (isCreatingDataset) {
+  if (isBeingCreated) {
     return <Loading />;
   }
 

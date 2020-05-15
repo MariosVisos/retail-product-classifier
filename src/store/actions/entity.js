@@ -8,9 +8,9 @@ import {
 } from '../../constants/actionTypes/Entity';
 import { uiStartLoading, uiStopLoading } from './ui';
 
-export const setIsCreatingDataset = isCreatingDataset => ({
+export const setIsCreatingDataset = isBeingCreated => ({
   type: SET_IS_CREATING_DATASET,
-  payload: { isCreatingDataset },
+  payload: { isBeingCreated },
 });
 
 export const setDatasetCreateError = error => ({
