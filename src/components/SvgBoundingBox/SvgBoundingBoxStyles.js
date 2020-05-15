@@ -3,7 +3,9 @@ import Colors from '../../constants/Colors';
 
 const styles = StyleSheet.create({
   layout: {
+    height: '100%',
     position: 'absolute',
+    width: '100%',
     zIndex: 2,
   },
   topText: {

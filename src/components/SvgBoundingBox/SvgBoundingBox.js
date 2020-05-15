@@ -14,9 +14,7 @@ const y = 200;
 const SvgBoundingBox = () => {
   // const headerHeight = useHeaderHeight();
   return (
-    <View
-      style={{ ...styles.layout, height: screenHeight, width: screenWidth }}
-    >
+    <View style={{ ...styles.layout }}>
       <Text style={styles.topText}>Scan the product barcode</Text>
       <Svg height="100%" width="100%">
         <Defs>
