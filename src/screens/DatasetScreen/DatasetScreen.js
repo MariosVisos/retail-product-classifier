@@ -7,11 +7,11 @@ import styles from './DatasetScreenStyles';
 import Button from '../../components/Button/Button';
 import Colors from '../../constants/Colors';
 
-const DatasetScreen = () => {
+const DatasetScreen = ({ navigation }) => {
   const { container, trainButton, scanToAddButton, manuallyAddButton } = styles;
   return (
     <View style={container}>
-      <LabelList />
+      <LabelList navigation={navigation} />
       <Button title="Model train" containerStyle={trainButton} raised />
       <Button
         icon={<FontAwesome5 name="barcode" size={26} color={Colors.primary} />}

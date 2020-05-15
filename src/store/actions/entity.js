@@ -33,12 +33,17 @@ export const setEntityRefreshing = ({ entityType, refreshing }) => ({
   payload: { entityType, refreshing },
 });
 
-export const createEntity = ({ entityType, name }) => {
+export const createEntity = ({ entityType, name, relationshipEntity }) => {
   return async dispatch => {
     dispatch(setIsCreatingEntity({ entityType, isBeingCreated: true }));
     dispatch(uiStartLoading('Creating shelf'));
+    const params = {};
+    if (relationshipEntity) {
+      const { type, id } = relationshipEntity;
+      params[`${type}_${id}`] = id;
+    }
     try {
-      const response = await axios.post(`/${entityType}/${name}`);
+      const response = await axios.post(`/${entityType}/${name}`, params);
       const entity = response.data;
       dispatch(entitiesCreate({ entityType, entities: [entity] }));
       dispatch(setEntityCreateSuccess({ entityType, createSuccess: true }));

@@ -6,45 +6,45 @@ import { entityRefresh } from '../../store/actions/entity';
 import styles from './LabelListStyles';
 import Colors from '../../constants/Colors';
 
-const DatasetList = ({ navigation }) => {
+const LabelList = ({ navigation }) => {
   const { footerContainer, headerContainer, headerText } = styles;
-  const datasets = useSelector(state => {
-    const { byId } = state.entity.dataset;
-    const datasetsArray = Object.values(byId);
-    return datasetsArray;
+  const labels = useSelector(state => {
+    const { byId } = state.entity.label;
+    const labelsArray = Object.values(byId);
+    return labelsArray;
   });
 
-  const refreshing = useSelector(state => state.entity.dataset.refreshing);
+  const refreshing = useSelector(state => state.entity.label.refreshing);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(entityRefresh({ entityType: 'dataset' }));
+    dispatch(entityRefresh({ entityType: 'label' }));
   }, [dispatch]);
 
   function handleRefresh() {
-    dispatch(entityRefresh({ entityType: 'dataset' }));
+    dispatch(entityRefresh({ entityType: 'label' }));
   }
 
   const emptyList = (
     <View>
-      <Text>Create new shelf</Text>
+      <Text>Create new label</Text>
     </View>
   );
 
   const header = (
     <View style={headerContainer}>
-      <Text style={headerText}>{datasets.length} Shelves</Text>
+      <Text style={headerText}>{labels.length} Labels</Text>
     </View>
   );
 
   const footer = <View style={footerContainer} />;
   return (
     <FlatList
-      data={datasets}
+      data={labels}
       renderItem={({ item }) => (
-        <DatasetListItem dataset={item} navigation={navigation} />
+        <DatasetListItem label={item} navigation={navigation} />
       )}
-      keyExtractor={dataset => dataset.id.toString()}
+      keyExtractor={label => label.id.toString()}
       ListEmptyComponent={emptyList}
       ListHeaderComponent={header}
       ListFooterComponent={footer}
@@ -62,4 +62,4 @@ const DatasetList = ({ navigation }) => {
   );
 };
 
-export default DatasetList;
+export default LabelList;
