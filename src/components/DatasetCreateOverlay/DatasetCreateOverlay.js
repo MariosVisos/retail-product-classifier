@@ -5,9 +5,9 @@ import Input from '../Input/Input';
 import Loading from '../Loading/Loading';
 import styles from './DatasetCreateOverlayStyles';
 import {
-  createDataset,
-  setDatasetCreateError,
-  setDatasetCreateSuccess,
+  createEntity,
+  setEntityCreateError,
+  setEntityCreateSuccess,
 } from '../../store/actions/entity';
 
 const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
@@ -33,7 +33,7 @@ const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
       setIsDatasetNameValid(true);
     }
     if (createDatasetError) {
-      dispatch(setDatasetCreateError(null));
+      dispatch(setEntityCreateError({ entityType: 'dataset', error: null }));
     }
   }
 
@@ -49,7 +49,9 @@ const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
     if (createDatasetSuccess) {
       setDatasetName('');
       handleBackdropPress();
-      dispatch(setDatasetCreateSuccess(false));
+      dispatch(
+        setEntityCreateSuccess({ entityType: 'dataset', createSuccess: false }),
+      );
     }
   }, [dispatch, createDatasetSuccess]);
 
@@ -73,7 +75,7 @@ const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
     if (emptyDatasetName) {
       setIsDatasetNameValid(false);
     } else {
-      dispatch(createDataset({ name: datasetName }));
+      dispatch(createEntity({ entityType: 'dataset', name: datasetName }));
     }
   }
 

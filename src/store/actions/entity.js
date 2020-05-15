@@ -1,47 +1,47 @@
 import axios from 'axios';
 import {
-  SET_IS_CREATING_DATASET,
-  SET_DATASET_CREATE_ERROR,
-  SET_DATASET_CREATE_SUCCESS,
-  DATASETS_CREATE,
-  SET_DATASETS_REFRESHING,
+  SET_IS_CREATING_ENTITY,
+  SET_ENTITY_CREATE_ERROR,
+  SET_ENTITY_CREATE_SUCCESS,
+  ENTITIES_CREATE,
+  SET_ENTITY_REFRESHING,
 } from '../../constants/actionTypes/Entity';
 import { uiStartLoading, uiStopLoading } from './ui';
 
-export const setIsCreatingDataset = isBeingCreated => ({
-  type: SET_IS_CREATING_DATASET,
-  payload: { isBeingCreated },
+export const setIsCreatingEntity = ({ entityType, isBeingCreated }) => ({
+  type: SET_IS_CREATING_ENTITY,
+  payload: { entityType, isBeingCreated },
 });
 
-export const setDatasetCreateError = error => ({
-  type: SET_DATASET_CREATE_ERROR,
-  payload: { error },
+export const setEntityCreateError = ({ entityType, error }) => ({
+  type: SET_ENTITY_CREATE_ERROR,
+  payload: { entityType, error },
 });
 
-export const setDatasetCreateSuccess = createSuccess => ({
-  type: SET_DATASET_CREATE_SUCCESS,
-  payload: { createSuccess },
+export const setEntityCreateSuccess = ({ entityType, createSuccess }) => ({
+  type: SET_ENTITY_CREATE_SUCCESS,
+  payload: { entityType, createSuccess },
 });
 
-export const datasetsCreate = datasets => ({
-  type: DATASETS_CREATE,
-  payload: { datasets },
+export const entitiesCreate = ({ entityType, entities }) => ({
+  type: ENTITIES_CREATE,
+  payload: { entityType, entities },
 });
 
-export const setDatasetsResfreshing = refreshing => ({
-  type: SET_DATASETS_REFRESHING,
-  payload: { refreshing },
+export const setEntityRefreshing = ({ entityType, refreshing }) => ({
+  type: SET_ENTITY_REFRESHING,
+  payload: { entityType, refreshing },
 });
 
-export const createDataset = ({ name }) => {
+export const createEntity = ({ entityType, name }) => {
   return async dispatch => {
-    dispatch(setIsCreatingDataset(true));
+    dispatch(setIsCreatingEntity({ entityType, isBeingCreated: true }));
     dispatch(uiStartLoading('Creating shelve'));
     try {
-      const response = await axios.post(`/dataset/${name}`);
-      const dataset = response.data;
-      dispatch(datasetsCreate([dataset]));
-      dispatch(setDatasetCreateSuccess(true));
+      const response = await axios.post(`/${entityType}/${name}`);
+      const entity = response.data;
+      dispatch(entitiesCreate({ entityType, entities: [entity] }));
+      dispatch(setEntityCreateSuccess({ entityType, createSuccess: true }));
     } catch (error) {
       if (error.response) {
         const { data } = error.response;
@@ -59,7 +59,7 @@ export const createDataset = ({ name }) => {
           errorData.reason = 'errorInserting';
           errorData.message = data.message;
         }
-        dispatch(setDatasetCreateError(errorData));
+        dispatch(setEntityCreateError({ entityType, error: errorData }));
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -70,18 +70,19 @@ export const createDataset = ({ name }) => {
       }
       // console.log(error.config);
     }
-    dispatch(setIsCreatingDataset(false));
+    dispatch(setIsCreatingEntity({ entityType, isBeingCreated: false }));
     dispatch(uiStopLoading());
   };
 };
 
-export const datasetsRefresh = () => {
+export const entityRefresh = ({ entityType }) => {
   return async dispatch => {
-    dispatch(setDatasetsResfreshing(true));
+    dispatch(setEntityRefreshing({ entityType, refreshing: true }));
     try {
-      const response = await axios.get('/datasets');
-      const { datasets } = response.data;
-      dispatch(datasetsCreate(datasets));
+      const entityPlural = `${entityType}s`;
+      const response = await axios.get(`/${entityPlural}`);
+      const entities = response.data[entityPlural];
+      dispatch(entitiesCreate({ entityType, entities }));
     } catch (error) {
       if (error.response) {
         const { data } = error.response;
@@ -100,6 +101,6 @@ export const datasetsRefresh = () => {
       }
       // console.log(error.config);
     }
-    dispatch(setDatasetsResfreshing(false));
+    dispatch(setEntityRefreshing({ entityType, refreshing: false }));
   };
 };

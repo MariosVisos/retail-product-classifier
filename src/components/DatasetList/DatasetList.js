@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { FlatList, Text, View, RefreshControl } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import DatasetListItem from '../DatasetListItem/DatasetListItem';
-import { datasetsRefresh } from '../../store/actions/entity';
+import { entityRefresh } from '../../store/actions/entity';
 import styles from './DatasetListStyles';
 import Colors from '../../constants/Colors';
 
@@ -18,11 +18,11 @@ const DatasetList = ({ navigation }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(datasetsRefresh());
+    dispatch(entityRefresh({ entityType: 'dataset' }));
   }, [dispatch]);
 
   function handleRefresh() {
-    dispatch(datasetsRefresh());
+    dispatch(entityRefresh({ entityType: 'dataset' }));
   }
 
   const emptyList = (
