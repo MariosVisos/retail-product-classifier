@@ -40,7 +40,7 @@ export const createEntity = ({ entityType, name, relationshipEntity }) => {
     const params = {};
     if (relationshipEntity) {
       const { type, id } = relationshipEntity;
-      params[`${type}_${id}`] = id;
+      params[`${type}_id`] = id;
     }
     try {
       const response = await axios.post(`/${entityType}/${name}`, params);

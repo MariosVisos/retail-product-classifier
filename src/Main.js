@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -76,7 +76,7 @@ function HomeStackNavigator() {
         component={DatasetScreen}
         options={({ route }) => ({
           ...showHeaderOptions,
-          title: route.params.name,
+          title: route.params.dataset.name,
         })}
       />
       <HomeStack.Screen

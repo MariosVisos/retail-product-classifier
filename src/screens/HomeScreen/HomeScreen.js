@@ -5,7 +5,7 @@ import styles from './HomeScreenStyles';
 import Colors from '../../constants/Colors';
 import DatasetList from '../../components/DatasetList/DatasetList';
 import Button from '../../components/Button/Button';
-import DatasetCreateOverlay from '../../components/DatasetCreateOverlay/DatasetCreateOverlay';
+import EntityCreateOverlay from '../../components/EntityCreateOverlay/EntityCreateOverlay';
 
 const HomeScreen = ({ navigation }) => {
   const [isCreateDatasetVisible, setIsCreateDatasetVisible] = useState(false);
@@ -24,9 +24,10 @@ const HomeScreen = ({ navigation }) => {
         containerStyle={newShelfButtonContainer}
         raised
       />
-      <DatasetCreateOverlay
+      <EntityCreateOverlay
         isVisible={isCreateDatasetVisible}
         toggleOverlay={toggleCreateDatasetOverlay}
+        entityType="dataset"
       />
     </View>
   );
