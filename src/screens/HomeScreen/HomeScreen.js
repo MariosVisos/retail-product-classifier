@@ -13,15 +13,15 @@ const HomeScreen = ({ navigation }) => {
     setIsCreateDatasetVisible(!isCreateDatasetVisible);
   };
 
-  const { container, fab } = styles;
+  const { container, newShelfButtonContainer } = styles;
   return (
     <View style={container}>
       <DatasetList navigation={navigation} />
       <Button
         onPress={toggleCreateDatasetOverlay}
         icon={<AntDesign name="pluscircleo" size={26} color={Colors.primary} />}
-        title="New Shelve"
-        containerStyle={fab}
+        title="New Shelf"
+        containerStyle={newShelfButtonContainer}
         raised
       />
       <DatasetCreateOverlay

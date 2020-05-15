@@ -7,8 +7,8 @@ const styles = StyleSheet.create({
     flex: 1,
     // padding: 20,
   },
-  fab: {
-    bottom: 10,
+  newShelfButtonContainer: {
+    bottom: 18,
     position: 'absolute',
     right: 10,
   },

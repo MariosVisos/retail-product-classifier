@@ -27,7 +27,7 @@ const DatasetList = ({ navigation }) => {
 
   const emptyList = (
     <View>
-      <Text>Create new shelve</Text>
+      <Text>Create new shelf</Text>
     </View>
   );
 

@@ -62,7 +62,7 @@ const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
 
   function getDatasetNameErrorMessage() {
     if (!isDatasetNameValid) {
-      return 'Shelve name cannot be empty!';
+      return 'Shelf name cannot be empty!';
     }
     if (createDatasetError) {
       return createDatasetError.message;
@@ -87,15 +87,15 @@ const DatasetCreateOverlay = ({ isVisible, toggleOverlay }) => {
     <Overlay
       isVisible={isVisible}
       onBackdropPress={handleBackdropPress}
-      headerTitle="Create new shelve"
-      applyButtonTitle="Create shelve"
+      headerTitle="Create new shelf"
+      applyButtonTitle="Create shelf"
       overlayStyle={styles.container}
       onApplyPress={handleCreateDatasetPress}
     >
       <Input
         containerStyle={styles.inputContainer}
         placeholder="e.g. Cereal"
-        label="Shelve name"
+        label="Shelf name"
         value={datasetName}
         onChangeText={handleDatasetNameChange}
         errorMessage={getDatasetNameErrorMessage()}

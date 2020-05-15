@@ -36,7 +36,7 @@ export const setEntityRefreshing = ({ entityType, refreshing }) => ({
 export const createEntity = ({ entityType, name }) => {
   return async dispatch => {
     dispatch(setIsCreatingEntity({ entityType, isBeingCreated: true }));
-    dispatch(uiStartLoading('Creating shelve'));
+    dispatch(uiStartLoading('Creating shelf'));
     try {
       const response = await axios.post(`/${entityType}/${name}`);
       const entity = response.data;
