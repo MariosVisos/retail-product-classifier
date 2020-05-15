@@ -8,7 +8,7 @@ function CustomOverlay({
   isVisible,
   onBackdropPress,
   overlayStyle,
-  backDropStyle,
+  backdropStyle,
   headerTitle,
   applyButtonTitle,
   onApplyPress,
@@ -19,7 +19,7 @@ function CustomOverlay({
       isVisible={isVisible}
       onBackdropPress={onBackdropPress}
       overlayStyle={[styles.overlayStyle, overlayStyle]}
-      backDropStyle={[styles.backDropStyle, backDropStyle]}
+      backdropStyle={[styles.backdropStyle, backdropStyle]}
       animationType="fade"
     >
       <>

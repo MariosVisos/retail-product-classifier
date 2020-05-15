@@ -14,8 +14,8 @@ const styles = StyleSheet.create({
   headerTitle: { color: Colors.primary, fontSize: 20 },
   overlayStyle: {
     backgroundColor: Colors.primary,
-    height: 'auto',
     padding: 0,
+    width: '80%',
   },
 });
 export default styles;
