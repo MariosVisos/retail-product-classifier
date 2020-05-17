@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { FlatList, Text, View, RefreshControl } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import DatasetListItem from '../DatasetListItem/DatasetListItem';
+import LabelListItem from '../LabelListItem/LabelListItem';
 import { entityRefresh } from '../../store/actions/entity';
 import styles from './LabelListStyles';
 import Colors from '../../constants/Colors';
@@ -42,7 +42,7 @@ const LabelList = ({ navigation }) => {
     <FlatList
       data={labels}
       renderItem={({ item }) => (
-        <DatasetListItem label={item} navigation={navigation} />
+        <LabelListItem label={item} navigation={navigation} />
       )}
       keyExtractor={label => label.id.toString()}
       ListEmptyComponent={emptyList}
