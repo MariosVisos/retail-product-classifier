@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
   containerStyle: {
     backgroundColor: Colors.primary,
     borderRadius: 0,
+    paddingHorizontal: 0,
     ...Platform.select({
       android: {
         elevation: 4,

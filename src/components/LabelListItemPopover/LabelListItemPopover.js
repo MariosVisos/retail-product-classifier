@@ -15,7 +15,7 @@ const LabelListItemPopover = () => {
         titleStyle={titleStyle}
         title="Delete"
         leftIcon={
-          <FontAwesome5 name="trash" size={22} color={Colors.blackLight} />
+          <FontAwesome5 name="trash" size={18} color={Colors.blackLight} />
         }
         onPress={handleDeletePress}
       />

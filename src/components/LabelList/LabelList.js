@@ -33,7 +33,9 @@ const LabelList = ({ navigation }) => {
 
   const header = (
     <View style={headerContainer}>
-      <Text style={headerText}>{labels.length} Labels</Text>
+      <Text style={headerText}>
+        {labels.length} Label{labels.length !== 1 && 's'}
+      </Text>
     </View>
   );
 

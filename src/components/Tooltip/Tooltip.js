@@ -16,7 +16,7 @@ function CustomTooltip(
       withOverlay={withOverlay || false}
       withPointer={false}
       height={height || 80}
-      width={width || 200}
+      width={width || 140}
       overlayColor={Colors.black}
     >
       {children}
