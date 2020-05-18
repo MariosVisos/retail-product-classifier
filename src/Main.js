@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import HomeScreen from './screens/HomeScreen/HomeScreen';
 import DatasetScreen from './screens/DatasetScreen/DatasetScreen';
+import LabelScreen from './screens/LabelScreen/LabelScreen';
 import CameraScreen from './screens/CameraScreen/CameraScreen';
 import SettingsScreen from './screens/SettingsScreen/SettingsScreen';
 import Colors from './constants/Colors';
@@ -77,6 +78,14 @@ function HomeStackNavigator() {
         options={({ route }) => ({
           ...showHeaderOptions,
           title: route.params.dataset.name,
+        })}
+      />
+      <HomeStack.Screen
+        name="Label"
+        component={LabelScreen}
+        options={({ route }) => ({
+          ...showHeaderOptions,
+          title: route.params.label.name,
         })}
       />
       <HomeStack.Screen
