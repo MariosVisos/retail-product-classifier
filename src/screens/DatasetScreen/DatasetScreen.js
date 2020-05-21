@@ -19,7 +19,10 @@ const DatasetScreen = ({ navigation, route }) => {
 
   return (
     <View style={container}>
-      <LabelList navigation={navigation} />
+      <LabelList
+        navigation={navigation}
+        relationshipEntity={relationshipEntity}
+      />
       <Button title="Model train" containerStyle={trainButton} raised />
       <Button
         icon={<FontAwesome5 name="barcode" size={26} color={Colors.primary} />}

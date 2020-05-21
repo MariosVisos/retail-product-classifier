@@ -5,6 +5,7 @@ import {
   SET_ENTITY_CREATE_SUCCESS,
   ENTITIES_CREATE,
   SET_ENTITY_REFRESHING,
+  ADD_RELATIONSHIP_ENTITY_ID,
 } from '../../constants/actionTypes/Entity';
 
 function getBaseEntityState() {
@@ -55,6 +56,13 @@ const setEntityRefreshing = produce((draft, { entityType, refreshing }) => {
   draft[entityType].refreshing = refreshing;
 });
 
+const addRelationshipEntityId = produce((draft, yo) => {
+  console.log('addRelationshipEntityId -> yo', yo);
+  const { entityId, relationshipEntity, entityType } = yo;
+  const { type, id } = relationshipEntity;
+  draft[entityType].byId[entityId][`${type}Ids`].push(id);
+});
+
 function entityReducer(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
@@ -68,6 +76,8 @@ function entityReducer(state = initialState, action) {
       return entitiesCreate(state, payload);
     case SET_ENTITY_REFRESHING:
       return setEntityRefreshing(state, payload);
+    case ADD_RELATIONSHIP_ENTITY_ID:
+      return addRelationshipEntityId(state, payload);
     default:
       return state;
   }

@@ -12,7 +12,7 @@ const LabelListItem = ({ navigation, label }) => {
 
   function handleLabelPress() {
     navigation.navigate('Label', {
-      label: { name: label.name, id: label.id },
+      label,
     });
   }
 

@@ -34,7 +34,7 @@ const DatasetList = ({ navigation }) => {
   const header = (
     <View style={headerContainer}>
       <Text style={headerText}>
-        {datasets.length} Shelve{datasets.length !== 1 && 's'}
+        {datasets.length} Shel{datasets.length === 1 ? 'f' : 'ves'}
       </Text>
     </View>
   );

@@ -11,6 +11,8 @@ import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
 import styles from './CameraScreenStyles';
 import BoundingBox from '../../components/BoundingBox/BoundingBox';
 import Colors from '../../constants/Colors';
+import { uploadImage } from '../../store/actions/entity';
+import { useDispatch } from 'react-redux';
 
 function CameraScreen() {
   let cameraRef;
@@ -28,6 +30,8 @@ function CameraScreen() {
       setHasPermission(status === 'granted');
     })();
   }, []);
+
+  const dispatch = useDispatch();
 
   // Get safe areas and notches
   const insets = useSafeArea();
@@ -68,7 +72,8 @@ function CameraScreen() {
   async function handleCameraButtonPress() {
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
-      console.log('snap -> photo', photo);
+      // console.log('snap -> photo', photo);
+      dispatch(uploadImage({ photo }));
       // const directoriesArray = photo.uri.split('/');
       // const fileName = directoriesArray[directoriesArray.length - 1];
       // const fileName = 'image.jpg';

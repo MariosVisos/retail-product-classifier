@@ -6,23 +6,33 @@ import { entityRefresh } from '../../store/actions/entity';
 import styles from './LabelListStyles';
 import Colors from '../../constants/Colors';
 
-const LabelList = ({ navigation }) => {
+const LabelList = ({ navigation, relationshipEntity }) => {
   const { footerContainer, headerContainer, headerText } = styles;
+
   const labels = useSelector(state => {
+    const { labelIds } = state.entity.dataset.byId[relationshipEntity.id];
+    console.log('LabelList -> labelIds', labelIds);
     const { byId } = state.entity.label;
-    const labelsArray = Object.values(byId);
+    const labelsArray = [];
+    labelIds.forEach(labelId => {
+      const label = byId[labelId];
+      if (label) {
+        labelsArray.push(label);
+      }
+    });
     return labelsArray;
   });
+  console.log('LabelList -> labels', labels);
 
   const refreshing = useSelector(state => state.entity.label.refreshing);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(entityRefresh({ entityType: 'label' }));
-  }, [dispatch]);
+    dispatch(entityRefresh({ entityType: 'label', relationshipEntity }));
+  }, [dispatch, relationshipEntity]);
 
   function handleRefresh() {
-    dispatch(entityRefresh({ entityType: 'label' }));
+    dispatch(entityRefresh({ entityType: 'label', relationshipEntity }));
   }
 
   const emptyList = (

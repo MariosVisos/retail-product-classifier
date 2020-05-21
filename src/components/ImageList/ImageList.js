@@ -6,20 +6,16 @@ import { entityRefresh } from '../../store/actions/entity';
 import styles from './ImageListStyles';
 import Colors from '../../constants/Colors';
 
-const ImageList = ({ navigation }) => {
+const ImageList = ({ navigation, label }) => {
   const { footerContainer, headerContainer, headerText } = styles;
-  const images = useSelector(state => {
-    const { byId } = state.entity.image;
-    const imagesArray = Object.values(byId);
-    return imagesArray;
-  });
+  const { images } = label;
 
   const refreshing = useSelector(state => state.entity.image.refreshing);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(entityRefresh({ entityType: 'image' }));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(entityRefresh({ entityType: 'image' }));
+  // }, [dispatch]);
 
   function handleRefresh() {
     dispatch(entityRefresh({ entityType: 'image' }));
@@ -43,7 +39,16 @@ const ImageList = ({ navigation }) => {
   return (
     <FlatList
       data={images}
-      renderItem={({ item }) => <Image />}
+      renderItem={({ item }) => {
+        return (
+          <Image
+            style={{ width: 120, height: 120, margin: 2 }}
+            source={{
+              uri: `http://192.168.43.30:5000/image/${item.name}`,
+            }}
+          />
+        );
+      }}
       keyExtractor={image => image.id.toString()}
       ListEmptyComponent={emptyList}
       ListHeaderComponent={header}
