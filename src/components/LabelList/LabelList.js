@@ -11,7 +11,6 @@ const LabelList = ({ navigation, relationshipEntity }) => {
 
   const labels = useSelector(state => {
     const { labelIds } = state.entity.dataset.byId[relationshipEntity.id];
-    console.log('LabelList -> labelIds', labelIds);
     const { byId } = state.entity.label;
     const labelsArray = [];
     labelIds.forEach(labelId => {
@@ -22,7 +21,6 @@ const LabelList = ({ navigation, relationshipEntity }) => {
     });
     return labelsArray;
   });
-  console.log('LabelList -> labels', labels);
 
   const refreshing = useSelector(state => state.entity.label.refreshing);
   const dispatch = useDispatch();

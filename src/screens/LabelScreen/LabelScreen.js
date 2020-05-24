@@ -7,11 +7,15 @@ import ImageList from '../../components/ImageList/ImageList';
 const LabelScreen = ({ navigation, route }) => {
   const { container } = styles;
 
-  const { label } = route.params;
+  const { id, name } = route.params.label;
+  const relationshipEntity = { type: 'label', id, name };
 
   return (
     <View style={container}>
-      <ImageList navigation={navigation} label={label} />
+      <ImageList
+        navigation={navigation}
+        relationshipEntity={relationshipEntity}
+      />
     </View>
   );
 };

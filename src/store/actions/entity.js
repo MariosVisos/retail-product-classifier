@@ -56,7 +56,7 @@ function buildEntities(entityType, entitiesRaw) {
         entity.labelIds = entityRaw.label_ids;
         break;
       case 'label':
-        entity.images = buildEntities('image', entityRaw.images);
+        entity.imageIds = entityRaw.image_ids;
         break;
       case 'image':
         entity.labelId = entityRaw.label_id;
@@ -176,14 +176,13 @@ export const entityRefresh = ({ entityType, relationshipEntity }) => {
   };
 };
 
-export const uploadImage = (photo, datasetId, labelId) => {
+export const uploadImage = (photo, labelId = 'New label') => {
   return async dispatch => {
     try {
       const directoriesArray = photo.uri.split('/');
       const fileName = directoriesArray[directoriesArray.length - 1];
       const bodyFormData = new FormData();
       bodyFormData.append('label_id', labelId);
-      bodyFormData.append('dataset_id', datasetId);
       bodyFormData.append('image', {
         name: 'test.jpg',
         type: 'image/jpg',

@@ -6,19 +6,31 @@ import { entityRefresh } from '../../store/actions/entity';
 import styles from './ImageListStyles';
 import Colors from '../../constants/Colors';
 
-const ImageList = ({ navigation, label }) => {
+const ImageList = ({ navigation, relationshipEntity }) => {
   const { footerContainer, headerContainer, headerText } = styles;
-  const { images } = label;
+
+  const images = useSelector(state => {
+    const { imageIds } = state.entity.label.byId[relationshipEntity.id];
+    const { byId } = state.entity.image;
+    const imagesArray = [];
+    imageIds.forEach(labelId => {
+      const label = byId[labelId];
+      if (label) {
+        imagesArray.push(label);
+      }
+    });
+    return imagesArray;
+  });
 
   const refreshing = useSelector(state => state.entity.image.refreshing);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   dispatch(entityRefresh({ entityType: 'image' }));
-  // }, [dispatch]);
+  useEffect(() => {
+    dispatch(entityRefresh({ entityType: 'image', relationshipEntity }));
+  }, [dispatch, relationshipEntity]);
 
   function handleRefresh() {
-    dispatch(entityRefresh({ entityType: 'image' }));
+    dispatch(entityRefresh({ entityType: 'image', relationshipEntity }));
   }
 
   const emptyList = (
@@ -44,7 +56,7 @@ const ImageList = ({ navigation, label }) => {
           <Image
             style={{ width: 120, height: 120, margin: 2 }}
             source={{
-              uri: `http://192.168.43.30:5000/image/${item.name}`,
+              uri: `http://192.168.43.30:5000/image/${relationshipEntity.name}/${item.id}`,
             }}
           />
         );

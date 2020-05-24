@@ -5,6 +5,7 @@ import { useSafeArea } from 'react-native-safe-area-context';
 import { Entypo } from '@expo/vector-icons';
 import * as Permissions from 'expo-permissions';
 // import * as FileSystem from 'expo-file-system';
+import { useDispatch } from 'react-redux';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Button from '../../components/Button/Button';
 import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
@@ -12,7 +13,6 @@ import styles from './CameraScreenStyles';
 import BoundingBox from '../../components/BoundingBox/BoundingBox';
 import Colors from '../../constants/Colors';
 import { uploadImage } from '../../store/actions/entity';
-import { useDispatch } from 'react-redux';
 
 function CameraScreen() {
   let cameraRef;
@@ -73,7 +73,7 @@ function CameraScreen() {
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
       // console.log('snap -> photo', photo);
-      dispatch(uploadImage({ photo }));
+      dispatch(uploadImage(photo));
       // const directoriesArray = photo.uri.split('/');
       // const fileName = directoriesArray[directoriesArray.length - 1];
       // const fileName = 'image.jpg';

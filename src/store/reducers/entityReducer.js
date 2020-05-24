@@ -57,7 +57,6 @@ const setEntityRefreshing = produce((draft, { entityType, refreshing }) => {
 });
 
 const addRelationshipEntityId = produce((draft, yo) => {
-  console.log('addRelationshipEntityId -> yo', yo);
   const { entityId, relationshipEntity, entityType } = yo;
   const { type, id } = relationshipEntity;
   draft[entityType].byId[entityId][`${type}Ids`].push(id);

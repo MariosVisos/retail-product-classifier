@@ -11,7 +11,6 @@ import Button from '../Button/Button';
 import Colors from '../../constants/Colors';
 
 const DatasetListItem = ({ dataset, navigation }) => {
-  console.log('DatasetListItem -> dataset', dataset);
   const {
     container,
     nameText,
