@@ -26,11 +26,11 @@ const LabelList = ({ navigation, relationshipEntity }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(entityRefresh({ entityType: 'label', relationshipEntity }));
+    dispatch(entityRefresh('label', relationshipEntity));
   }, [dispatch, relationshipEntity]);
 
   function handleRefresh() {
-    dispatch(entityRefresh({ entityType: 'label', relationshipEntity }));
+    dispatch(entityRefresh('label', relationshipEntity));
   }
 
   const emptyList = (

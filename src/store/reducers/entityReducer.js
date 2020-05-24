@@ -56,11 +56,12 @@ const setEntityRefreshing = produce((draft, { entityType, refreshing }) => {
   draft[entityType].refreshing = refreshing;
 });
 
-const addRelationshipEntityId = produce((draft, yo) => {
-  const { entityId, relationshipEntity, entityType } = yo;
-  const { type, id } = relationshipEntity;
-  draft[entityType].byId[entityId][`${type}Ids`].push(id);
-});
+const addRelationshipEntityId = produce(
+  (draft, { entity, relationshipEntity }) => {
+    const { type, id } = relationshipEntity;
+    draft[entity.type].byId[entity.id][`${type}Ids`].push(id);
+  },
+);
 
 function entityReducer(state = initialState, action) {
   const { type, payload } = action;

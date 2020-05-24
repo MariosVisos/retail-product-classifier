@@ -18,11 +18,11 @@ const DatasetList = ({ navigation }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(entityRefresh({ entityType: 'dataset' }));
+    dispatch(entityRefresh('dataset'));
   }, [dispatch]);
 
   function handleRefresh() {
-    dispatch(entityRefresh({ entityType: 'dataset' }));
+    dispatch(entityRefresh('dataset'));
   }
 
   const emptyList = (

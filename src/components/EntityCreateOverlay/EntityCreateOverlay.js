@@ -84,9 +84,7 @@ const EntityCreateOverlay = ({
     if (emptyEntityName) {
       setIsEntityNameValid(false);
     } else {
-      dispatch(
-        createEntity({ entityType, name: entityName, relationshipEntity }),
-      );
+      dispatch(createEntity(entityType, entityName, relationshipEntity));
     }
   }
 

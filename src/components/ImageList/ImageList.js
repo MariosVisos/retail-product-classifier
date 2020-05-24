@@ -26,11 +26,11 @@ const ImageList = ({ navigation, relationshipEntity }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(entityRefresh({ entityType: 'image', relationshipEntity }));
+    dispatch(entityRefresh('image', relationshipEntity));
   }, [dispatch, relationshipEntity]);
 
   function handleRefresh() {
-    dispatch(entityRefresh({ entityType: 'image', relationshipEntity }));
+    dispatch(entityRefresh('image', relationshipEntity));
   }
 
   const emptyList = (

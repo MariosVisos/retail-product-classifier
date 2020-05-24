@@ -11,38 +11,34 @@ import { uiStartLoading, uiStopLoading } from './ui';
 import { batch } from 'react-redux';
 import { Platform } from 'react-native';
 
-export const setIsCreatingEntity = ({ entityType, isBeingCreated }) => ({
+export const setIsCreatingEntity = (entityType, isBeingCreated) => ({
   type: SET_IS_CREATING_ENTITY,
   payload: { entityType, isBeingCreated },
 });
 
-export const setEntityCreateError = ({ entityType, error }) => ({
+export const setEntityCreateError = (entityType, error) => ({
   type: SET_ENTITY_CREATE_ERROR,
   payload: { entityType, error },
 });
 
-export const setEntityCreateSuccess = ({ entityType, createSuccess }) => ({
+export const setEntityCreateSuccess = (entityType, createSuccess) => ({
   type: SET_ENTITY_CREATE_SUCCESS,
   payload: { entityType, createSuccess },
 });
 
-export const entitiesCreate = ({ entityType, entities }) => ({
+export const entitiesCreate = (entityType, entities) => ({
   type: ENTITIES_CREATE,
   payload: { entityType, entities },
 });
 
-export const setEntityRefreshing = ({ entityType, refreshing }) => ({
+export const setEntityRefreshing = (entityType, refreshing) => ({
   type: SET_ENTITY_REFRESHING,
   payload: { entityType, refreshing },
 });
 
-export const addRelationshipEntityId = ({
-  entityId,
-  relationshipEntity,
-  entityType,
-}) => ({
+export const addRelationshipEntityId = (entity, relationshipEntity) => ({
   type: ADD_RELATIONSHIP_ENTITY_ID,
-  payload: { entityId, relationshipEntity, entityType },
+  payload: { entity, relationshipEntity },
 });
 
 function buildEntities(entityType, entitiesRaw) {
@@ -51,6 +47,7 @@ function buildEntities(entityType, entitiesRaw) {
     const entity = {};
     entity.name = entityRaw.name;
     entity.id = entityRaw.id;
+    entity.type = entityType;
     switch (entityType) {
       case 'dataset':
         entity.labelIds = entityRaw.label_ids;
@@ -73,10 +70,10 @@ function buildEntities(entityType, entitiesRaw) {
   return entities;
 }
 
-export const createEntity = ({ entityType, name, relationshipEntity }) => {
+export const createEntity = (entityType, name, relationshipEntity) => {
   return async dispatch => {
     batch(() => {
-      dispatch(setIsCreatingEntity({ entityType, isBeingCreated: true }));
+      dispatch(setIsCreatingEntity(entityType, true));
       dispatch(uiStartLoading('Creating shelf'));
     });
     const params = {};
@@ -89,17 +86,13 @@ export const createEntity = ({ entityType, name, relationshipEntity }) => {
       const entityRaw = response.data;
       const [entity] = buildEntities(entityType, [entityRaw]);
       batch(() => {
-        dispatch(entitiesCreate({ entityType, entities: [entity] }));
-        dispatch(setEntityCreateSuccess({ entityType, createSuccess: true }));
+        dispatch(entitiesCreate(entityType, [entity]));
+        dispatch(setEntityCreateSuccess(entityType, true));
         if (relationshipEntity) {
+          // Add the created entity id to its relation entity array of ids
           dispatch(
-            addRelationshipEntityId({
-              entityId: relationshipEntity.id,
-              relationshipEntity: {
-                type: entityType,
-                id: entity.id,
-              },
-              entityType: relationshipEntity.type,
+            addRelationshipEntityId(relationshipEntity, {
+              entity,
             }),
           );
         }
@@ -121,7 +114,7 @@ export const createEntity = ({ entityType, name, relationshipEntity }) => {
           errorData.reason = 'errorInserting';
           errorData.message = data.message;
         }
-        dispatch(setEntityCreateError({ entityType, error: errorData }));
+        dispatch(setEntityCreateError(entityType, errorData));
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -132,14 +125,14 @@ export const createEntity = ({ entityType, name, relationshipEntity }) => {
       }
       // console.log(error.config);
     }
-    dispatch(setIsCreatingEntity({ entityType, isBeingCreated: false }));
+    dispatch(setIsCreatingEntity(entityType, false));
     dispatch(uiStopLoading());
   };
 };
 
-export const entityRefresh = ({ entityType, relationshipEntity }) => {
+export const entityRefresh = (entityType, relationshipEntity) => {
   return async dispatch => {
-    dispatch(setEntityRefreshing({ entityType, refreshing: true }));
+    dispatch(setEntityRefreshing(entityType, true));
     try {
       const entityPlural = `${entityType}s`;
       // let relationshipIdUrl = '';
@@ -153,7 +146,7 @@ export const entityRefresh = ({ entityType, relationshipEntity }) => {
       // const response = await axios.get(`/${entityPlural}${relationshipIdUrl}`);
       const entitiesRaw = response.data[entityPlural];
       const entities = buildEntities(entityType, entitiesRaw);
-      dispatch(entitiesCreate({ entityType, entities }));
+      dispatch(entitiesCreate(entityType, entities));
     } catch (error) {
       if (error.response) {
         const { data } = error.response;
@@ -172,7 +165,7 @@ export const entityRefresh = ({ entityType, relationshipEntity }) => {
       }
       // console.log(error.config);
     }
-    dispatch(setEntityRefreshing({ entityType, refreshing: false }));
+    dispatch(setEntityRefreshing(entityType, false));
   };
 };
 
@@ -203,7 +196,7 @@ export const uploadImage = (photo, labelId = 'New label') => {
       //   headers: { 'Content-Type': 'multipart/form-data' },
       // });
       // const entities = response.data[entityPlural];
-      // dispatch(entitiesCreate({ entityType: 'image', entities }));
+      // dispatch(entitiesCreate('image', entities ));
     } catch (error) {
       if (error.response) {
         const { data } = error.response;
@@ -222,5 +215,11 @@ export const uploadImage = (photo, labelId = 'New label') => {
       }
       // console.log(error.config);
     }
+  };
+};
+
+export const barcodeScanned = params => {
+  return async dispatch => {
+    dispatch(createEntity());
   };
 };
