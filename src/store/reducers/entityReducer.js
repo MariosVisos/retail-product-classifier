@@ -6,7 +6,10 @@ import {
   ENTITIES_CREATE,
   SET_ENTITY_REFRESHING,
   ADD_RELATIONSHIP_ENTITY_ID,
+  GET_LABEL_BY_BARCODE_SUCCESS,
+  CLEAR_SCANNED_LABEL,
 } from '../../constants/actionTypes/Entity';
+import { clearScannedLabel } from '../actions/entity';
 
 function getBaseEntityState() {
   const baseEntityState = {
@@ -30,6 +33,7 @@ const initialState = {
   dataset: baseEntityState,
   label: baseEntityState,
   image: baseEntityState,
+  scannedLabelName: null,
 };
 
 const setIsEntityCreated = produce((draft, { entityType, isBeingCreated }) => {
@@ -63,6 +67,10 @@ const addRelationshipEntityId = produce(
   },
 );
 
+const setScannedLabel = produce((draft, { labelName }) => {
+  draft.scannedLabelName = labelName;
+});
+
 function entityReducer(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
@@ -78,6 +86,10 @@ function entityReducer(state = initialState, action) {
       return setEntityRefreshing(state, payload);
     case ADD_RELATIONSHIP_ENTITY_ID:
       return addRelationshipEntityId(state, payload);
+    case GET_LABEL_BY_BARCODE_SUCCESS:
+      return setScannedLabel(state, payload);
+    case CLEAR_SCANNED_LABEL:
+      return setScannedLabel(state, payload);
     default:
       return state;
   }

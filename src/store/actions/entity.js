@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+import { batch } from 'react-redux';
 import axios from 'axios';
 import {
   SET_IS_CREATING_ENTITY,
@@ -6,10 +8,10 @@ import {
   ENTITIES_CREATE,
   SET_ENTITY_REFRESHING,
   ADD_RELATIONSHIP_ENTITY_ID,
+  GET_LABEL_BY_BARCODE_SUCCESS,
+  CLEAR_SCANNED_LABEL,
 } from '../../constants/actionTypes/Entity';
 import { uiStartLoading, uiStopLoading } from './ui';
-import { batch } from 'react-redux';
-import { Platform } from 'react-native';
 
 export const setIsCreatingEntity = (entityType, isBeingCreated) => ({
   type: SET_IS_CREATING_ENTITY,
@@ -39,6 +41,16 @@ export const setEntityRefreshing = (entityType, refreshing) => ({
 export const addRelationshipEntityId = (entity, relationshipEntity) => ({
   type: ADD_RELATIONSHIP_ENTITY_ID,
   payload: { entity, relationshipEntity },
+});
+
+export const getLabelByBarCodeSuccess = labelName => ({
+  type: GET_LABEL_BY_BARCODE_SUCCESS,
+  payload: { labelName },
+});
+
+export const clearScannedLabel = () => ({
+  type: CLEAR_SCANNED_LABEL,
+  payload: { labelName: null },
 });
 
 function buildEntities(entityType, entitiesRaw) {
@@ -169,13 +181,13 @@ export const entityRefresh = (entityType, relationshipEntity) => {
   };
 };
 
-export const uploadImage = (photo, labelId = 'New label') => {
+export const uploadImage = (photo, labelName) => {
   return async dispatch => {
     try {
-      const directoriesArray = photo.uri.split('/');
-      const fileName = directoriesArray[directoriesArray.length - 1];
+      // const directoriesArray = photo.uri.split('/');
+      // const fileName = directoriesArray[directoriesArray.length - 1];
       const bodyFormData = new FormData();
-      bodyFormData.append('label_id', labelId);
+      bodyFormData.append('label_name', labelName);
       bodyFormData.append('image', {
         name: 'test.jpg',
         type: 'image/jpg',
@@ -185,7 +197,7 @@ export const uploadImage = (photo, labelId = 'New label') => {
             : photo.uri.replace('file://', ''),
       });
 
-      const response = await axios.post(`/upload/image`, bodyFormData, {
+      await axios.post(`/upload/image`, bodyFormData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -218,8 +230,44 @@ export const uploadImage = (photo, labelId = 'New label') => {
   };
 };
 
-export const barcodeScanned = params => {
+export const barCodeScanned = (barCode, relationshipEntity) => {
   return async dispatch => {
-    dispatch(createEntity());
+    try {
+      dispatch(uiStartLoading('Getting product'));
+      const response = await axios.get(
+        `https://eatfit-service.foodcoa.ch/products/${barCode}/`,
+        {
+          headers: {
+            Authorization:
+              'Basic ZWF0Zml0X3N0dWRlbnRfbWFyaW9zOjdGM1oxMDNMNzNrR3pkcDJtZmRjRDNVdw==',
+          },
+        },
+      );
+      const [product] = response.data.products;
+      const name = product.product_name_en;
+      batch(() => {
+        dispatch(createEntity('label', name, relationshipEntity));
+        dispatch(getLabelByBarCodeSuccess(name));
+        dispatch(uiStopLoading());
+      });
+    } catch (error) {
+      if (error.response) {
+        const { data } = error.response;
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(data);
+        // console.log(error.response.status);
+        // console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+      }
+      // console.log(error.config);
+      dispatch(uiStopLoading());
+    }
   };
 };

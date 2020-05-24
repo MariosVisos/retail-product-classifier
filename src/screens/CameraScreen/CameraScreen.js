@@ -1,24 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, Platform } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { Entypo } from '@expo/vector-icons';
+import { useFocusEffect } from '@react-navigation/native';
 import * as Permissions from 'expo-permissions';
 // import * as FileSystem from 'expo-file-system';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Button from '../../components/Button/Button';
 import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
 import styles from './CameraScreenStyles';
 import BoundingBox from '../../components/BoundingBox/BoundingBox';
 import Colors from '../../constants/Colors';
-import { uploadImage } from '../../store/actions/entity';
+import {
+  uploadImage,
+  barCodeScanned,
+  clearScannedLabel,
+} from '../../store/actions/entity';
+import Loading from '../../components/Loading/Loading';
 
-function CameraScreen() {
+function CameraScreen({ route }) {
+  const { dataset } = route.params;
   let cameraRef;
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRatio, setCameraRatio] = useState('16:9');
   const [isBarCodeScanned, setIsBarCodeScanned] = useState(false);
+
   // const [showStepBackTutorial, setShowStepBackTutorial] = useState(true);
 
   useEffect(() => {
@@ -31,8 +39,19 @@ function CameraScreen() {
     })();
   }, []);
 
+  const isLoading = useSelector(state => state.ui.isLoading);
+  const scannedLabelName = useSelector(state => state.entity.scannedLabelName);
+
   const dispatch = useDispatch();
 
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        console.log('CameraScreen -> unsubscribe');
+        dispatch(clearScannedLabel());
+      };
+    }, []),
+  );
   // Get safe areas and notches
   const insets = useSafeArea();
   const marginTop = insets.top;
@@ -73,7 +92,11 @@ function CameraScreen() {
     if (cameraRef) {
       const photo = await cameraRef.takePictureAsync();
       // console.log('snap -> photo', photo);
-      dispatch(uploadImage(photo));
+      console.log(
+        'handleCameraButtonPress -> scannedLabelName',
+        scannedLabelName,
+      );
+      dispatch(uploadImage(photo, scannedLabelName));
       // const directoriesArray = photo.uri.split('/');
       // const fileName = directoriesArray[directoriesArray.length - 1];
       // const fileName = 'image.jpg';
@@ -83,11 +106,16 @@ function CameraScreen() {
     }
   }
 
-  function handleBarCodeScanned(e) {
+  console.log('handleBarCodeScanned -> dataset', dataset);
+  function handleBarCodeScanned({ data }) {
     if (!isBarCodeScanned) {
-      console.log('handleBarCodeScanned -> e', e);
+      dispatch(barCodeScanned(data, dataset));
       setIsBarCodeScanned(true);
     }
+  }
+
+  if (isLoading) {
+    return <Loading />;
   }
 
   if (hasPermission === null) {

@@ -24,11 +24,11 @@ const DatasetListItem = ({ dataset, navigation }) => {
 
   function handleDatasetPress() {
     navigation.navigate('Dataset', {
-      dataset: { name: dataset.name, id: dataset.id },
+      dataset,
     });
   }
   function handleCollectPress() {
-    navigation.navigate('Camera');
+    navigation.navigate('Camera', { dataset });
   }
   function handleTrainPress() {}
   return (
