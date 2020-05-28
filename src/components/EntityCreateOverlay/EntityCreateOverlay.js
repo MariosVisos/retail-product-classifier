@@ -60,7 +60,7 @@ const EntityCreateOverlay = ({
     if (createEntitySuccess) {
       setEntityName('');
       handleBackdropPress();
-      dispatch(setEntityCreateSuccess({ entityType, createSuccess: false }));
+      dispatch(setEntityCreateSuccess(entityType, false));
     }
   }, [dispatch, createEntitySuccess]);
 
