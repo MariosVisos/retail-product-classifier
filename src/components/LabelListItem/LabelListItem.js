@@ -1,6 +1,6 @@
 import React from 'react';
 import { ListItem, Icon, Image } from 'react-native-elements';
-import Tooltip from '../Tooltip/Tooltip';
+import Tooltip from '../ui/Tooltip/Tooltip';
 import LabelListItemPopover from '../LabelListItemPopover/LabelListItemPopover';
 import NoImage from '../NoImage/NoImage';
 import styles from './LabelListItemStyles';
@@ -32,7 +32,7 @@ const LabelListItem = ({ navigation, label }) => {
           <Image
             style={{ width: 60, height: 60 }}
             source={{
-              uri: `http://192.168.43.30:5000/image/${name}/${imageIds[0]}`,
+              uri: `http://192.168.1.23:5000/image/${name}/${imageIds[0]}`,
             }}
           />
         ) : (

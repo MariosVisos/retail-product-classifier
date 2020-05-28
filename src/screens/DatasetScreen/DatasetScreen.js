@@ -4,7 +4,7 @@ import { AntDesign, FontAwesome5 } from '@expo/vector-icons';
 import LabelList from '../../components/LabelList/LabelList';
 
 import styles from './DatasetScreenStyles';
-import Button from '../../components/Button/Button';
+import Button from '../../components/ui/Button/Button';
 import Colors from '../../constants/Colors';
 import EntityCreateOverlay from '../../components/EntityCreateOverlay/EntityCreateOverlay';
 

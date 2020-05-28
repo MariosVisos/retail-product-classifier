@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import styles from './DatasetListItemStyles';
-import Button from '../Button/Button';
+import Button from '../ui/Button/Button';
 import Colors from '../../constants/Colors';
 
 const DatasetListItem = ({ dataset, navigation }) => {

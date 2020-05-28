@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import { Tooltip } from 'react-native-elements';
 import styles from './TooltipStyles';
-import Colors from '../../constants/Colors';
+import Colors from '../../../constants/Colors';
 
 function CustomTooltip(
   { popover, height, width, backgroundColor, withOverlay, children },

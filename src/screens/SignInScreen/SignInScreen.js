@@ -7,10 +7,10 @@ import {
   Keyboard,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import Input from '../../components/Input/Input';
+import Input from '../../components/ui/Input/Input';
 import Colors from '../../constants/Colors';
 import styles from './SignInScreenStyles';
-import Button from '../../components/Button/Button';
+import Button from '../../components/ui/Button/Button';
 import {
   signUp,
   setSignUpError,

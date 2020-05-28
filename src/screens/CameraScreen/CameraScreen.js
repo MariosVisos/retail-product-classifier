@@ -8,7 +8,7 @@ import * as Permissions from 'expo-permissions';
 // import * as FileSystem from 'expo-file-system';
 import { useDispatch, useSelector } from 'react-redux';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import Button from '../../components/Button/Button';
+import Button from '../../components/ui/Button/Button';
 import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
 import styles from './CameraScreenStyles';
 import BoundingBox from '../../components/BoundingBox/BoundingBox';

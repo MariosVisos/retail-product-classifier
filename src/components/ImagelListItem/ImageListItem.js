@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { ListItem, Icon, Image } from 'react-native-elements';
-import Tooltip from '../Tooltip/Tooltip';
+import Tooltip from '../ui/Tooltip/Tooltip';
 import NoImage from '../NoImage/NoImage';
 import styles from './ImageListItemStyles';
 import Colors from '../../constants/Colors';

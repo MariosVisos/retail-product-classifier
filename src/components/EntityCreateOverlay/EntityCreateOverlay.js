@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Overlay from '../Overlay/Overlay';
-import Input from '../Input/Input';
+import Overlay from '../ui/Overlay/Overlay';
+import Input from '../ui/Input/Input';
 import Loading from '../Loading/Loading';
 import styles from './EntityCreateOverlayStyles';
 import {

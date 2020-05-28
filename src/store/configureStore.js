@@ -4,7 +4,7 @@ import axios from 'axios';
 import thunk from 'redux-thunk';
 import rootReducer from './reducers';
 
-axios.defaults.baseURL = 'http://192.168.43.30:5000';
+axios.defaults.baseURL = 'http://192.168.1.23:5000';
 
 function configureStore() {
   const store = createStore(

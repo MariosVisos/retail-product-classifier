@@ -4,7 +4,7 @@ import { AntDesign } from '@expo/vector-icons';
 import styles from './HomeScreenStyles';
 import Colors from '../../constants/Colors';
 import DatasetList from '../../components/DatasetList/DatasetList';
-import Button from '../../components/Button/Button';
+import Button from '../../components/ui/Button/Button';
 import EntityCreateOverlay from '../../components/EntityCreateOverlay/EntityCreateOverlay';
 
 const HomeScreen = ({ navigation }) => {

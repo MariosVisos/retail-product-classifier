@@ -56,7 +56,7 @@ const ImageList = ({ navigation, relationshipEntity }) => {
           <Image
             style={{ width: 120, height: 120, margin: 2 }}
             source={{
-              uri: `http://192.168.43.30:5000/image/${relationshipEntity.name}/${item.id}`,
+              uri: `http://192.168.1.23:5000/image/${relationshipEntity.name}/${item.id}`,
             }}
           />
         );
