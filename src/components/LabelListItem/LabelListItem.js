@@ -5,6 +5,7 @@ import LabelListItemPopover from '../LabelListItemPopover/LabelListItemPopover';
 import NoImage from '../NoImage/NoImage';
 import styles from './LabelListItemStyles';
 import Colors from '../../constants/Colors';
+import { ActivityIndicator } from 'react-native';
 
 const LabelListItem = ({ navigation, label }) => {
   const { name, imageIds } = label;
@@ -34,6 +35,7 @@ const LabelListItem = ({ navigation, label }) => {
             source={{
               uri: `http://192.168.1.23:5000/image/${name}/${imageIds[0]}`,
             }}
+            PlaceholderContent={<ActivityIndicator />}
           />
         ) : (
           <NoImage />

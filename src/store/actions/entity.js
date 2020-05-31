@@ -82,7 +82,7 @@ function buildEntities(entityType, entitiesRaw) {
   return entities;
 }
 
-export const createEntity = (entityType, name, relationshipEntity) => {
+export const createEntity = (entityType, relationshipEntity, name, gtin) => {
   return async dispatch => {
     batch(() => {
       dispatch(setIsCreatingEntity(entityType, true));
@@ -92,6 +92,9 @@ export const createEntity = (entityType, name, relationshipEntity) => {
     if (relationshipEntity) {
       const { type, id } = relationshipEntity;
       params[`${type}_id`] = id;
+    }
+    if (gtin) {
+      params.gtin = gtin;
     }
     try {
       const response = await axios.post(`/${entityType}/${name}`, params);
@@ -114,7 +117,7 @@ export const createEntity = (entityType, name, relationshipEntity) => {
         const { data } = error.response;
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log(data);
+        console.log('createEntity -> data', data);
         // console.log(error.response.status);
         // console.log(error.response.headers);
         const errorData = {};
@@ -234,19 +237,33 @@ export const barCodeScanned = (barCode, relationshipEntity) => {
   return async dispatch => {
     try {
       dispatch(uiStartLoading('Getting product'));
-      const response = await axios.get(
-        `https://eatfit-service.foodcoa.ch/products/${barCode}/`,
-        {
-          headers: {
-            Authorization:
-              'Basic ZWF0Zml0X3N0dWRlbnRfbWFyaW9zOjdGM1oxMDNMNzNrR3pkcDJtZmRjRDNVdw==',
+      let response;
+      let name;
+      response = await axios.get(`/label/test`, {
+        params: { gtin: barCode, dataset_id: relationshipEntity.id },
+      });
+      console.log('barCodeScanned -> response.data', response.data);
+      if (response.data.error) {
+        response = await axios.get(
+          `https://eatfit-service.foodcoa.ch/products/${barCode}/`,
+          {
+            headers: {
+              Authorization:
+                'Basic ZWF0Zml0X3N0dWRlbnRfbWFyaW9zOjdGM1oxMDNMNzNrR3pkcDJtZmRjRDNVdw==',
+            },
           },
-        },
-      );
-      const [product] = response.data.products;
-      const name = product.product_name_en;
+        );
+        const [product] = response.data.products;
+        name = product.product_name_en;
+      } else {
+        name = response.data.label.name;
+      }
+      console.log('barCodeScanned -> name', name);
+
       batch(() => {
-        dispatch(createEntity('label', name, relationshipEntity));
+        if (response.data.products) {
+          dispatch(createEntity('label', relationshipEntity, name, barCode));
+        }
         dispatch(getLabelByBarCodeSuccess(name));
         dispatch(uiStopLoading());
       });
@@ -255,7 +272,7 @@ export const barCodeScanned = (barCode, relationshipEntity) => {
         const { data } = error.response;
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        console.log(data);
+        console.log('barCodeScanned -> data', data);
         // console.log(error.response.status);
         // console.log(error.response.headers);
       } else if (error.request) {

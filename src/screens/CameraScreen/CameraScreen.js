@@ -106,7 +106,6 @@ function CameraScreen({ route }) {
     }
   }
 
-  console.log('handleBarCodeScanned -> dataset', dataset);
   function handleBarCodeScanned({ data }) {
     if (!isBarCodeScanned) {
       dispatch(barCodeScanned(data, dataset));

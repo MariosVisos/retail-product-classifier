@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
-import { FlatList, Text, View, RefreshControl } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  View,
+  RefreshControl,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Image } from 'react-native-elements';
 import { entityRefresh } from '../../store/actions/entity';
@@ -52,12 +58,14 @@ const ImageList = ({ navigation, relationshipEntity }) => {
     <FlatList
       data={images}
       renderItem={({ item }) => {
+        const name = relationshipEntity.name.split(' ').join('%20');
         return (
           <Image
             style={{ width: 120, height: 120, margin: 2 }}
             source={{
-              uri: `http://192.168.1.23:5000/image/${relationshipEntity.name}/${item.id}`,
+              uri: `http://192.168.1.23:5000/image/${name}/${item.id}`,
             }}
+            PlaceholderContent={<ActivityIndicator />}
           />
         );
       }}
