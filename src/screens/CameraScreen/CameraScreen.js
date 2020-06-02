@@ -90,7 +90,7 @@ function CameraScreen({ route }) {
 
   async function handleCameraButtonPress() {
     if (cameraRef) {
-      const photo = await cameraRef.takePictureAsync();
+      const photo = await cameraRef.takePictureAsync({ quality: 0 });
       // console.log('snap -> photo', photo);
       console.log(
         'handleCameraButtonPress -> scannedLabelName',

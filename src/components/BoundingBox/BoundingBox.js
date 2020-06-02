@@ -1,17 +1,29 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Dimensions } from 'react-native';
 import { State, PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { multiply, lessThan, and, or } from 'react-native-reanimated';
 import DragHandler from '../DragHandler/DragHandler';
 import BoundingBoxProperties from '../../constants/BoundingBoxProperties';
 import styles from './BoundingBoxStyles';
+import Button from '../ui/Button/Button';
 
 const { centerPaddingPercentage, minWidth, minHeight } = BoundingBoxProperties;
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
 
-const { cond, eq, add, set, Value, event, block, sub } = Animated;
+const {
+  cond,
+  eq,
+  add,
+  set,
+  Value,
+  event,
+  block,
+  sub,
+  useCode,
+  call,
+} = Animated;
 const BoundingBox = ({ initialBoxWidth, initialBoxHeight }) => {
   const boxX = initialBoxWidth;
   const boxY = initialBoxHeight;
@@ -359,6 +371,29 @@ const BoundingBox = ({ initialBoxWidth, initialBoxHeight }) => {
     ],
   };
 
+  const [animated, setAnimated] = useState(false);
+
+  useCode(
+    () =>
+      animated && [
+        call(
+          [absoluteX, absoluteY, transWidth, transHeight],
+          ([valX, valY, width, height]) => {
+            console.log('BoundingBox -> height', height);
+            console.log('BoundingBox -> width', width);
+            console.log('BoundingBox -> absoluteX ->valX', valX);
+            console.log('BoundingBox -> absoluteX ->valY', valY);
+            setAnimated(false);
+          },
+        ),
+      ],
+    [animated],
+  );
+
+  function handleMeasurePress() {
+    setAnimated(true);
+  }
+
   return (
     <Animated.View style={[styles.container, animatedStyles, transformStyles]}>
       <PanGestureHandler
@@ -403,6 +438,7 @@ const BoundingBox = ({ initialBoxWidth, initialBoxHeight }) => {
         onGestureEvent={handleBottomLeftDrag}
         position="bottomLeft"
       />
+      <Button title="measure" onPress={handleMeasurePress} />
     </Animated.View>
   );
 };
