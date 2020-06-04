@@ -32,9 +32,14 @@ function Button({
       onPress={onPress}
       type={type}
       raised={raised}
-      containerStyle={[styles.containerStyle, containerStyle]}
-      buttonStyle={[customButtonStyle, buttonStyle]}
-      titleStyle={[customTitleStyle, titleStyle, { marginLeft, marginRight }]}
+      containerStyle={{ ...styles.containerStyle, ...containerStyle }}
+      buttonStyle={{ ...customButtonStyle, ...buttonStyle }}
+      titleStyle={{
+        ...customTitleStyle,
+        ...titleStyle,
+        marginLeft,
+        marginRight,
+      }}
       iconRight={iconRight}
       disabled={disabled}
     />

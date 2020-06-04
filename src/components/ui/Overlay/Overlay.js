@@ -18,8 +18,8 @@ function CustomOverlay({
     <Overlay
       isVisible={isVisible}
       onBackdropPress={onBackdropPress}
-      overlayStyle={[styles.overlayStyle, overlayStyle]}
-      backdropStyle={[styles.backdropStyle, backdropStyle]}
+      overlayStyle={{ ...styles.overlayStyle, ...overlayStyle }}
+      backdropStyle={{ ...styles.backdropStyle, ...backdropStyle }}
       animationType="fade"
     >
       <>

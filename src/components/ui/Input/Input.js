@@ -30,13 +30,13 @@ const Input = (
       ref={ref}
       placeholder={placeholder}
       label={label}
-      containerStyle={[styles.containerStyle, containerStyle]}
-      labelStyle={[customLabelStyle, labelStyle]}
-      leftIconContainerStyle={[
-        styles.leftIconContainerStyle,
-        leftIconContainerStyle,
-        { marginRight },
-      ]}
+      containerStyle={{ ...styles.containerStyle, ...containerStyle }}
+      labelStyle={{ ...customLabelStyle, ...labelStyle }}
+      leftIconContainerStyle={{
+        ...styles.leftIconContainerStyle,
+        ...leftIconContainerStyle,
+        marginRight,
+      }}
       leftIcon={leftIcon}
       secureTextEntry={secureTextEntry}
       keyboardType={keyboardType}
