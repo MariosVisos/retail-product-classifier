@@ -1,17 +1,18 @@
 import React, { useRef, useState } from 'react';
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 import { State, PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, { multiply, lessThan, and, or } from 'react-native-reanimated';
+import { useSelector, useDispatch } from 'react-redux';
 import DragHandler from '../DragHandler/DragHandler';
 import BoundingBoxProperties from '../../constants/BoundingBoxProperties';
 import styles from './BoundingBoxStyles';
-import Button from '../ui/Button/Button';
+import { uploadImage } from '../../store/actions/entity';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+const screenHeight = Dimensions.get('screen').height;
 
 const { centerPaddingPercentage, minWidth, minHeight } = BoundingBoxProperties;
-
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
-
 const {
   cond,
   eq,
@@ -24,7 +25,24 @@ const {
   useCode,
   call,
 } = Animated;
-const BoundingBox = ({ initialBoxWidth, initialBoxHeight }) => {
+const BoundingBox = ({
+  initialBoxWidth,
+  initialBoxHeight,
+  photo,
+  setPhoto,
+  insets,
+}) => {
+  const verticalInset = insets.top + insets.bottom;
+  let cameraScreenHeight = windowHeight - verticalInset;
+  const cameraScreenWidth = windowWidth;
+  const hasNotch = insets.top > 24;
+  if (hasNotch && screenHeight > windowHeight) {
+    cameraScreenHeight = screenHeight - verticalInset;
+  }
+
+  const scannedLabelName = useSelector(state => state.entity.scannedLabelName);
+  const dispatch = useDispatch();
+
   const boxX = initialBoxWidth;
   const boxY = initialBoxHeight;
 
@@ -289,8 +307,8 @@ const BoundingBox = ({ initialBoxWidth, initialBoxHeight }) => {
   const offsetBottomLeftWidth = useRef(new Value(0)).current;
   const offsetBottomLeftHeight = useRef(new Value(0)).current;
 
-  const absoluteY = useRef(new Value((screenHeight - boxY) / 2)).current;
-  const absoluteX = useRef(new Value((screenWidth - boxX) / 2)).current;
+  const absoluteY = useRef(new Value((cameraScreenHeight - boxY) / 2)).current;
+  const absoluteX = useRef(new Value((cameraScreenWidth - boxX) / 2)).current;
 
   const onGestureEvent = buildGestureEvent(offsetX, offsetY, transX, transY);
 
@@ -375,24 +393,49 @@ const BoundingBox = ({ initialBoxWidth, initialBoxHeight }) => {
 
   useCode(
     () =>
-      animated && [
+      photo && [
         call(
-          [absoluteX, absoluteY, transWidth, transHeight],
-          ([valX, valY, width, height]) => {
-            console.log('BoundingBox -> height', height);
-            console.log('BoundingBox -> width', width);
-            console.log('BoundingBox -> absoluteX ->valX', valX);
-            console.log('BoundingBox -> absoluteX ->valY', valY);
-            setAnimated(false);
+          [absoluteX, absoluteY, transX, transY, transWidth, transHeight],
+          ([valX, valY, tranX, tranY, width, height]) => {
+            const absX = valX + tranX;
+            const absY = valY + tranY;
+            const boundingBox = {
+              topLeft: {
+                x: (photo.width * absX) / cameraScreenWidth,
+                y: (photo.height * absY) / cameraScreenHeight,
+              },
+              bottomRight: {
+                x: (photo.width * (absX + width)) / cameraScreenWidth,
+                y: (photo.height * (absY + height)) / cameraScreenHeight,
+              },
+              width: (photo.width * width) / cameraScreenWidth,
+              height: (photo.height * height) / cameraScreenHeight,
+            };
+            console.log('boundingBox', boundingBox);
+
+            // console.log('BoundingBox -> height', height);
+            // console.log('BoundingBox -> width', width);
+            // console.log('BoundingBox -> absoluteX -> valX', valX);
+            // console.log('BoundingBox -> absoluteX -> tranX', tranX);
+            // console.log('BoundingBox -> absoluteY -> valY', valY);
+            // console.log('BoundingBox -> absoluteY -> tranY', tranY);
+
+            // console.log('screenWidth', cameraScreenWidth);
+            // console.log('screenHeight', cameraScreenHeight);
+
+            dispatch(uploadImage(photo, scannedLabelName, boundingBox));
+            // console.log('scannedLabelName', scannedLabelName);
+
+            // console.log('x', valX + tranX);
+            // console.log('y', valY + tranY);
+            console.log('photo', photo);
+
+            setPhoto(null);
           },
         ),
       ],
-    [animated],
+    [photo],
   );
-
-  function handleMeasurePress() {
-    setAnimated(true);
-  }
 
   return (
     <Animated.View style={[styles.container, animatedStyles, transformStyles]}>
@@ -438,7 +481,6 @@ const BoundingBox = ({ initialBoxWidth, initialBoxHeight }) => {
         onGestureEvent={handleBottomLeftDrag}
         position="bottomLeft"
       />
-      <Button title="measure" onPress={handleMeasurePress} />
     </Animated.View>
   );
 };

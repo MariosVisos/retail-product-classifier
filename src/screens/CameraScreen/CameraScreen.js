@@ -28,6 +28,7 @@ function CameraScreen({ route }) {
   const [isBarCodeScanned, setIsBarCodeScanned] = useState(false);
 
   // const [showStepBackTutorial, setShowStepBackTutorial] = useState(true);
+  const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
     // Ask for camera permission after component mounts for the first time
@@ -40,7 +41,6 @@ function CameraScreen({ route }) {
   }, []);
 
   const isLoading = useSelector(state => state.ui.isLoading);
-  const scannedLabelName = useSelector(state => state.entity.scannedLabelName);
 
   const dispatch = useDispatch();
 
@@ -90,13 +90,8 @@ function CameraScreen({ route }) {
 
   async function handleCameraButtonPress() {
     if (cameraRef) {
-      const photo = await cameraRef.takePictureAsync({ quality: 0 });
-      // console.log('snap -> photo', photo);
-      console.log(
-        'handleCameraButtonPress -> scannedLabelName',
-        scannedLabelName,
-      );
-      dispatch(uploadImage(photo, scannedLabelName));
+      const photoObj = await cameraRef.takePictureAsync({ quality: 0 });
+      setPhoto(photoObj);
       // const directoriesArray = photo.uri.split('/');
       // const fileName = directoriesArray[directoriesArray.length - 1];
       // const fileName = 'image.jpg';
@@ -167,6 +162,9 @@ function CameraScreen({ route }) {
             key="boundingBox"
             initialBoxWidth={100}
             initialBoxHeight={100}
+            photo={photo}
+            setPhoto={setPhoto}
+            insets={insets}
           />,
           <Button
             key="cameraButton"
@@ -176,7 +174,6 @@ function CameraScreen({ route }) {
           />,
         ]}
       </Camera>
-      {/* <BlurView tint="dark" intensity={100} style={styles.notBlurred} /> */}
     </View>
   );
 }

@@ -184,13 +184,14 @@ export const entityRefresh = (entityType, relationshipEntity) => {
   };
 };
 
-export const uploadImage = (photo, labelName) => {
+export const uploadImage = (photo, labelName, boundingBox) => {
   return async dispatch => {
     try {
       // const directoriesArray = photo.uri.split('/');
       // const fileName = directoriesArray[directoriesArray.length - 1];
       const bodyFormData = new FormData();
       bodyFormData.append('label_name', labelName);
+      bodyFormData.append('bounding_box', JSON.stringify(boundingBox));
       bodyFormData.append('image', {
         name: 'test.jpg',
         type: 'image/jpg',
