@@ -26,6 +26,7 @@ function CameraScreen({ route }) {
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRatio, setCameraRatio] = useState('16:9');
   const [isBarCodeScanned, setIsBarCodeScanned] = useState(false);
+  const [step, setStep] = useState(0);
 
   // const [showStepBackTutorial, setShowStepBackTutorial] = useState(true);
   const [photo, setPhoto] = useState(null);
@@ -100,12 +101,23 @@ function CameraScreen({ route }) {
       // FileSystem.copyAsync({ from: photo.uri, to: directory });
     }
   }
+  function increaseStep() {
+    setStep(prevStep => prevStep + 1);
+  }
+  function decreaseStep() {
+    setStep(prevStep => prevStep - 1);
+  }
 
   function handleBarCodeScanned({ data }) {
     if (!isBarCodeScanned) {
       dispatch(barCodeScanned(data, dataset));
       setIsBarCodeScanned(true);
+      increaseStep();
     }
+  }
+
+  function handleNextButtonPress() {
+    increaseStep();
   }
 
   if (isLoading) {
@@ -157,7 +169,7 @@ function CameraScreen({ route }) {
           ],
         }}
       >
-        {isBarCodeScanned && [
+        {step > 0 && [
           <BoundingBox
             key="boundingBox"
             initialBoxWidth={100}
@@ -167,6 +179,16 @@ function CameraScreen({ route }) {
             insets={insets}
           />,
           <Button
+            raised
+            key="nextButton"
+            onPress={handleNextButtonPress}
+            icon={
+              <Entypo name="controller-next" size={32} color={Colors.primary} />
+            }
+            containerStyle={styles.nextButton}
+          />,
+          <Button
+            raised
             key="cameraButton"
             onPress={handleCameraButtonPress}
             icon={<Entypo name="camera" size={32} color={Colors.primary} />}

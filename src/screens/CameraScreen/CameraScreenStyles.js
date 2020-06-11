@@ -18,9 +18,10 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
   },
-
-  notBlurred: {
-    ...StyleSheet.absoluteFill,
+  nextButton: {
+    bottom: 68,
+    position: 'absolute',
+    right: 8,
   },
   textContainer: {
     alignItems: 'center',
