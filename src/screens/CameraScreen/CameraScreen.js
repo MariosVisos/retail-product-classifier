@@ -19,6 +19,7 @@ import {
   clearScannedLabel,
 } from '../../store/actions/entity';
 import Loading from '../../components/Loading/Loading';
+import ProgressBars from '../../components/ProgressBars/ProgressBars';
 
 function CameraScreen({ route }) {
   const { dataset } = route.params;
@@ -170,6 +171,7 @@ function CameraScreen({ route }) {
         }}
       >
         {step > 0 && [
+          <ProgressBars key="progressBar" currentStep={step} totalSteps={4} />,
           <BoundingBox
             key="boundingBox"
             initialBoxWidth={100}
