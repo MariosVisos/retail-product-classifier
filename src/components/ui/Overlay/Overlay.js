@@ -12,11 +12,13 @@ function CustomOverlay({
   headerTitle,
   applyButtonTitle,
   onApplyPress,
+  fullScreen,
   children,
 }) {
   return (
     <Overlay
       isVisible={isVisible}
+      fullScreen={fullScreen}
       onBackdropPress={onBackdropPress}
       overlayStyle={{ ...styles.overlayStyle, ...overlayStyle }}
       backdropStyle={{ ...styles.backdropStyle, ...backdropStyle }}

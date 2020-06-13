@@ -6,6 +6,7 @@ const progressBarBaseStyle = {
   borderColor: Colors.secondaryDark,
   borderWidth: 0.6,
   borderRadius: 8,
+  backgroundColor: Colors.secondary,
   height: 20,
   width: 80,
 };
@@ -27,10 +28,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   currentStepText: { ...stepTextBaseStyle },
-  filledProgressBarContainer: {
-    ...progressBarBaseStyle,
-    backgroundColor: Colors.secondary,
-  },
+  filledProgressBarContainer: progressBarBaseStyle,
+
   filledStepText: { ...stepTextBaseStyle, color: Colors.primary },
   progressBarContainer: {
     ...progressBarBaseStyle,

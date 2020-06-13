@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, Platform } from 'react-native';
+import { View, Text, Platform, Image } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { Entypo } from '@expo/vector-icons';
@@ -20,6 +20,7 @@ import {
 } from '../../store/actions/entity';
 import Loading from '../../components/Loading/Loading';
 import ProgressBars from '../../components/ProgressBars/ProgressBars';
+import CameraTutorialOverlay from '../../components/CameraTutorialOverlay/CameraTutorialOverlay';
 
 function CameraScreen({ route }) {
   const { dataset } = route.params;
@@ -29,7 +30,7 @@ function CameraScreen({ route }) {
   const [isBarCodeScanned, setIsBarCodeScanned] = useState(false);
   const [step, setStep] = useState(0);
 
-  // const [showStepBackTutorial, setShowStepBackTutorial] = useState(true);
+  const [showStepBackTutorial, setShowStepBackTutorial] = useState(false);
   const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
@@ -93,7 +94,7 @@ function CameraScreen({ route }) {
   async function handleCameraButtonPress() {
     if (cameraRef) {
       const photoObj = await cameraRef.takePictureAsync({ quality: 0 });
-      setPhoto(photoObj);
+      // setPhoto(photoObj);
       // const directoriesArray = photo.uri.split('/');
       // const fileName = directoriesArray[directoriesArray.length - 1];
       // const fileName = 'image.jpg';
@@ -118,6 +119,7 @@ function CameraScreen({ route }) {
   }
 
   function handleNextButtonPress() {
+    setShowStepBackTutorial(true);
     increaseStep();
   }
 
@@ -131,28 +133,11 @@ function CameraScreen({ route }) {
   if (hasPermission === false) {
     return <Text>No access to camera</Text>;
   }
-  // if (showStepBackTutorial) {
-  //   return (
-  //     <ImageBackground
-  //       source={{
-  //         uri: 'imageUrl',
-  //       }}
-  //       style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }}
-  //     >
-  //       <Button
-  //         onPress={() => setShowStepBackTutorial(false)}
-  //         icon={<Entypo name="circle-with-cross" size={32} />}
-  //         raised
-  //         containerStyle={{ marginBottom: 20 }}
-  //         type="outline"
-  //       />
-  //     </ImageBackground>
-  //   );
-  // }
 
   return (
     <View style={{ ...styles.container, marginTop }}>
       {!isBarCodeScanned && <SvgBoundingBox />}
+
       <Camera
         ratio={cameraRatio}
         ref={ref => {
@@ -197,6 +182,10 @@ function CameraScreen({ route }) {
             containerStyle={styles.cameraButton}
           />,
         ]}
+        <CameraTutorialOverlay
+          isVisible={showStepBackTutorial}
+          onBackdropPress={() => setShowStepBackTutorial(false)}
+        />
       </Camera>
     </View>
   );
