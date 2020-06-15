@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, Platform, Image } from 'react-native';
+import { View, Text, Platform } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { Entypo } from '@expo/vector-icons';
@@ -13,14 +13,11 @@ import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
 import styles from './CameraScreenStyles';
 import BoundingBox from '../../components/BoundingBox/BoundingBox';
 import Colors from '../../constants/Colors';
-import {
-  uploadImage,
-  barCodeScanned,
-  clearScannedLabel,
-} from '../../store/actions/entity';
+import { barCodeScanned, clearScannedLabel } from '../../store/actions/entity';
 import Loading from '../../components/Loading/Loading';
 import ProgressBars from '../../components/ProgressBars/ProgressBars';
 import CameraTutorialOverlay from '../../components/CameraTutorialOverlay/CameraTutorialOverlay';
+import { toggleDontShowAgain } from '../../store/actions';
 
 function CameraScreen({ route }) {
   const { dataset } = route.params;
@@ -44,8 +41,16 @@ function CameraScreen({ route }) {
   }, []);
 
   const isLoading = useSelector(state => state.ui.isLoading);
+  const dontShowChecked = useSelector(
+    state => state.settings.showTutorialByStep[step],
+  );
+  console.log('CameraScreen -> dontShowChecked', dontShowChecked);
 
   const dispatch = useDispatch();
+
+  function handleCheckBoxPress() {
+    dispatch(toggleDontShowAgain(step));
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -53,7 +58,7 @@ function CameraScreen({ route }) {
         console.log('CameraScreen -> unsubscribe');
         dispatch(clearScannedLabel());
       };
-    }, []),
+    }, [dispatch]),
   );
   // Get safe areas and notches
   const insets = useSafeArea();
@@ -94,7 +99,7 @@ function CameraScreen({ route }) {
   async function handleCameraButtonPress() {
     if (cameraRef) {
       const photoObj = await cameraRef.takePictureAsync({ quality: 0 });
-      // setPhoto(photoObj);
+      setPhoto(photoObj);
       // const directoriesArray = photo.uri.split('/');
       // const fileName = directoriesArray[directoriesArray.length - 1];
       // const fileName = 'image.jpg';
@@ -106,9 +111,10 @@ function CameraScreen({ route }) {
   function increaseStep() {
     setStep(prevStep => prevStep + 1);
   }
-  function decreaseStep() {
-    setStep(prevStep => prevStep - 1);
-  }
+
+  // function decreaseStep() {
+  //   setStep(prevStep => prevStep - 1);
+  // }
 
   function handleBarCodeScanned({ data }) {
     if (!isBarCodeScanned) {
@@ -185,6 +191,8 @@ function CameraScreen({ route }) {
         <CameraTutorialOverlay
           isVisible={showStepBackTutorial}
           onBackdropPress={() => setShowStepBackTutorial(false)}
+          onCheckBoxPress={handleCheckBoxPress}
+          checked={dontShowChecked}
         />
       </Camera>
     </View>

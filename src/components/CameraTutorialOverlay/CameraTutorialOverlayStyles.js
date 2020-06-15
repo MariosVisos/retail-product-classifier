@@ -2,7 +2,8 @@ import { StyleSheet } from 'react-native';
 import Colors from '../../constants/Colors';
 
 const styles = StyleSheet.create({
-  cancelButtonContainer: { bottom: 20, position: 'absolute' },
+  cancelButtonContainer: { position: 'absolute', right: 0, top: 0 },
+  checkBoxContainer: { bottom: 48, position: 'absolute' },
   imageStyle: {
     alignItems: 'center',
     backgroundColor: Colors.primary,

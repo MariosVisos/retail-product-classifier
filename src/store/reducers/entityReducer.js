@@ -9,18 +9,7 @@ import {
   GET_LABEL_BY_BARCODE_SUCCESS,
   CLEAR_SCANNED_LABEL,
 } from '../../constants/actionTypes/Entity';
-import { clearScannedLabel } from '../actions/entity';
 
-function getBaseEntityState() {
-  const baseEntityState = {
-    byId: {},
-    isBeingCreated: false,
-    createError: null,
-    createSuccess: false,
-    refreshing: false,
-  };
-  return baseEntityState;
-}
 const baseEntityState = {
   byId: {},
   isBeingCreated: false,

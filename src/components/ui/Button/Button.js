@@ -21,10 +21,17 @@ function Button({
   } else {
     marginLeft = 4;
   }
-  const customButtonStyle =
+  let customButtonStyle =
     type === 'solid' ? styles.solidButtonStyle : styles.outlineButtonStyle;
+  const customContainerStyle =
+    type === 'solid'
+      ? styles.solidContainerStyle
+      : styles.outlineContainerStyle;
   const customTitleStyle =
     type === 'solid' ? styles.solidTitleStyle : styles.outlineTitleStyle;
+  if (type === 'outline' && raised) {
+    customButtonStyle = styles.outlineButtonRaised;
+  }
   return (
     <Btn
       title={title}
@@ -32,7 +39,7 @@ function Button({
       onPress={onPress}
       type={type}
       raised={raised}
-      containerStyle={{ ...styles.containerStyle, ...containerStyle }}
+      containerStyle={{ ...customContainerStyle, ...containerStyle }}
       buttonStyle={{ ...customButtonStyle, ...buttonStyle }}
       titleStyle={{
         ...customTitleStyle,
