@@ -18,6 +18,16 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
   },
+  instructionContainer: {
+    backgroundColor: Colors.getColorOpacity(Colors.black, 0.4),
+    paddingBottom: 2,
+    paddingHorizontal: 10,
+    position: 'absolute',
+    textAlign: 'center',
+    top: 34,
+    width: '100%',
+  },
+  instructionText: { color: Colors.primary, fontSize: 18 },
   nextButton: {
     bottom: 68,
     position: 'absolute',

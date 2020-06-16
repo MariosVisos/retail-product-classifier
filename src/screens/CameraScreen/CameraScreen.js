@@ -129,6 +129,26 @@ function CameraScreen({ route }) {
     increaseStep();
   }
 
+  function getInstructionText() {
+    let instructionText;
+    switch (step) {
+      case 1:
+        instructionText = 'Try to fit the product in the bounding box';
+        break;
+      case 2:
+        instructionText =
+          'Now go a bit back and try to fit the product in the bounding box';
+        break;
+      case 3:
+        instructionText =
+          'Now go a bit back again and try to fit the product in the bounding box';
+        break;
+      default:
+        break;
+    }
+    return instructionText;
+  }
+
   if (isLoading) {
     return <Loading />;
   }
@@ -163,6 +183,9 @@ function CameraScreen({ route }) {
       >
         {step > 0 && [
           <ProgressBars key="progressBar" currentStep={step} totalSteps={4} />,
+          <View key="instructionContainer" style={styles.instructionContainer}>
+            <Text style={styles.instructionText}>{getInstructionText()}</Text>
+          </View>,
           <BoundingBox
             key="boundingBox"
             initialBoxWidth={100}

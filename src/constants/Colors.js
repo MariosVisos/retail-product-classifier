@@ -20,6 +20,17 @@ const Colors = {
   maskOuterBackgroundColor: 'white',
 };
 
+function getColorOpacity(color, opacity) {
+  const colorArraySplitByComma = color.split(',');
+
+  colorArraySplitByComma[colorArraySplitByComma.length - 1] = ` ${opacity})`;
+
+  const colorWithOpacity = colorArraySplitByComma.join(',');
+  return colorWithOpacity;
+}
+
+Colors.getColorOpacity = getColorOpacity;
+
 export default Colors;
 
 /* Coolors Exported Palette - coolors.co/61988e-785964-f0f7ee-ddd5d0-28231c */
