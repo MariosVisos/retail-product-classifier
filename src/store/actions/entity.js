@@ -7,7 +7,7 @@ import {
   SET_ENTITY_CREATE_SUCCESS,
   ENTITIES_CREATE,
   SET_ENTITY_REFRESHING,
-  ADD_RELATIONSHIP_ENTITY_ID,
+  ADD_RELATIONSHIP_ENTITY_IDS,
   GET_LABEL_BY_BARCODE_SUCCESS,
   CLEAR_SCANNED_LABEL,
 } from '../../constants/actionTypes/Entity';
@@ -38,9 +38,9 @@ export const setEntityRefreshing = (entityType, refreshing) => ({
   payload: { entityType, refreshing },
 });
 
-export const addRelationshipEntityId = (entity, relationshipEntity) => ({
-  type: ADD_RELATIONSHIP_ENTITY_ID,
-  payload: { entity, relationshipEntity },
+export const addRelationshipEntityId = (entity, relationshipEntities) => ({
+  type: ADD_RELATIONSHIP_ENTITY_IDS,
+  payload: { entity, relationshipEntities },
 });
 
 export const getLabelByBarCodeSuccess = labelName => ({
@@ -99,20 +99,17 @@ export const createEntity = (entityType, relationshipEntity, name, gtin) => {
     try {
       const response = await axios.post(`/${entityType}/${name}`, params);
       const entityRaw = response.data;
-      const [entity] = buildEntities(entityType, [entityRaw]);
+      const entities = buildEntities(entityType, [entityRaw]);
       batch(() => {
-        dispatch(entitiesCreate(entityType, [entity]));
+        dispatch(entitiesCreate(entityType, entities));
         dispatch(setEntityCreateSuccess(entityType, true));
         if (relationshipEntity) {
           // Add the created entity id to its relation entity array of ids
-          dispatch(
-            addRelationshipEntityId(relationshipEntity, {
-              entity,
-            }),
-          );
+          dispatch(addRelationshipEntityId(relationshipEntity, entities));
         }
       });
     } catch (error) {
+      console.log('createEntity -> error', error);
       if (error.response) {
         const { data } = error.response;
         // The request was made and the server responded with a status code
@@ -161,7 +158,13 @@ export const entityRefresh = (entityType, relationshipEntity) => {
       // const response = await axios.get(`/${entityPlural}${relationshipIdUrl}`);
       const entitiesRaw = response.data[entityPlural];
       const entities = buildEntities(entityType, entitiesRaw);
-      dispatch(entitiesCreate(entityType, entities));
+      batch(() => {
+        dispatch(entitiesCreate(entityType, entities));
+        if (relationshipEntity) {
+          // Add the created entity id to its relation entity array of ids
+          dispatch(addRelationshipEntityId(relationshipEntity, entities));
+        }
+      });
     } catch (error) {
       if (error.response) {
         const { data } = error.response;
@@ -254,21 +257,31 @@ export const barCodeScanned = (barCode, relationshipEntity) => {
             },
           },
         );
-        const [product] = response.data.products;
-        name = product.product_name_en;
+        if (response.data.success) {
+          const [product] = response.data.products;
+          name = product.product_name_en;
+        } else {
+          const openFoodFactsUrl = `https://world.openfoodfacts.org/api/v0/product/${barCode}.json`;
+
+          response = await axios.get(openFoodFactsUrl);
+          const brand = response.data.product.brands;
+          const productName = response.data.product.product_name;
+          name = `${brand} ${productName}`;
+        }
       } else {
         name = response.data.label.name;
       }
       console.log('barCodeScanned -> name', name);
 
       batch(() => {
-        if (response.data.products) {
+        if (response.data.products || response.data.product) {
           dispatch(createEntity('label', relationshipEntity, name, barCode));
         }
         dispatch(getLabelByBarCodeSuccess(name));
         dispatch(uiStopLoading());
       });
     } catch (error) {
+      console.log('barCodeScanned -> error', error);
       if (error.response) {
         const { data } = error.response;
         // The request was made and the server responded with a status code

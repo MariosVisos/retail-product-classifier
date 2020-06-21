@@ -5,7 +5,7 @@ import {
   SET_ENTITY_CREATE_SUCCESS,
   ENTITIES_CREATE,
   SET_ENTITY_REFRESHING,
-  ADD_RELATIONSHIP_ENTITY_ID,
+  ADD_RELATIONSHIP_ENTITY_IDS,
   GET_LABEL_BY_BARCODE_SUCCESS,
   CLEAR_SCANNED_LABEL,
 } from '../../constants/actionTypes/Entity';
@@ -50,9 +50,13 @@ const setEntityRefreshing = produce((draft, { entityType, refreshing }) => {
 });
 
 const addRelationshipEntityId = produce(
-  (draft, { entity, relationshipEntity }) => {
-    const { type, id } = relationshipEntity;
-    draft[entity.type].byId[entity.id][`${type}Ids`].push(id);
+  (draft, { entity, relationshipEntities }) => {
+    relationshipEntities.forEach(relationshipEntity => {
+      const { type, id } = relationshipEntity;
+      if (!draft[entity.type].byId[entity.id][`${type}Ids`].includes(id)) {
+        draft[entity.type].byId[entity.id][`${type}Ids`].push(id);
+      }
+    });
   },
 );
 
@@ -73,7 +77,7 @@ function entityReducer(state = initialState, action) {
       return entitiesCreate(state, payload);
     case SET_ENTITY_REFRESHING:
       return setEntityRefreshing(state, payload);
-    case ADD_RELATIONSHIP_ENTITY_ID:
+    case ADD_RELATIONSHIP_ENTITY_IDS:
       return addRelationshipEntityId(state, payload);
     case GET_LABEL_BY_BARCODE_SUCCESS:
       return setScannedLabel(state, payload);

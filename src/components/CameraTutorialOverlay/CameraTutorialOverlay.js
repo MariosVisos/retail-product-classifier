@@ -7,6 +7,8 @@ import styles from './CameraTutorialOverlayStyles';
 import Colors from '../../constants/Colors';
 import Checkbox from '../ui/CheckBox/CheckBox';
 
+const step1Gif = require('../../assets/step1Gif.gif');
+
 const {
   imageStyle,
   overlayStyle,
@@ -19,7 +21,26 @@ const CameraTutorialOverlay = ({
   onBackdropPress,
   onCheckBoxPress,
   checked,
+  step,
 }) => {
+  let uri = '';
+  switch (step) {
+    case 1:
+      uri = 'https://media.giphy.com/media/Xg5asdpw4iASCRIcqg/giphy.gif';
+      break;
+    case 2:
+      uri = 'https://media.giphy.com/media/QURxYDqGL7AbWgBbvx/giphy.gif';
+      break;
+    case 3:
+      uri = 'https://media.giphy.com/media/MCXdtdt5wLOSLsHCys/giphy.gif';
+      break;
+    case 4:
+      uri = 'https://media.giphy.com/media/daxyPRjrw1kMni4pkH/giphy.gif';
+      break;
+
+    default:
+      break;
+  }
   return (
     <Overlay
       isVisible={isVisible}
@@ -29,7 +50,7 @@ const CameraTutorialOverlay = ({
     >
       <ImageBackground
         source={{
-          uri: 'https://media.giphy.com/media/d8odUf2SE8yPJwWxcH/giphy.gif',
+          uri,
         }}
         style={imageStyle}
         resizeMode="stretch"

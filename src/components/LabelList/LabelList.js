@@ -35,14 +35,14 @@ const LabelList = ({ navigation, relationshipEntity }) => {
 
   const emptyList = (
     <View>
-      <Text>Create new label</Text>
+      <Text>Create new product</Text>
     </View>
   );
 
   const header = (
     <View style={headerContainer}>
       <Text style={headerText}>
-        {labels.length} Label{labels.length !== 1 && 's'}
+        {labels.length} Product{labels.length !== 1 && 's'}
       </Text>
     </View>
   );

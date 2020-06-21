@@ -6,6 +6,7 @@ import NoImage from '../NoImage/NoImage';
 import styles from './LabelListItemStyles';
 import Colors from '../../constants/Colors';
 import { ActivityIndicator } from 'react-native';
+import { baseUrl } from '../../constants/actionTypes/api';
 
 const LabelListItem = ({ navigation, label }) => {
   const { name, imageIds } = label;
@@ -33,7 +34,7 @@ const LabelListItem = ({ navigation, label }) => {
           <Image
             style={{ width: 60, height: 60 }}
             source={{
-              uri: `http://192.168.1.23:5000/image/${name}/${imageIds[0]}`,
+              uri: `${baseUrl}/image/${name}/${imageIds[0]}`,
             }}
             PlaceholderContent={<ActivityIndicator />}
           />

@@ -11,6 +11,7 @@ import { Image } from 'react-native-elements';
 import { entityRefresh } from '../../store/actions/entity';
 import styles from './ImageListStyles';
 import Colors from '../../constants/Colors';
+import { baseUrl } from '../../constants/actionTypes/api';
 
 const ImageList = ({ navigation, relationshipEntity }) => {
   const { footerContainer, headerContainer, headerText } = styles;
@@ -63,7 +64,7 @@ const ImageList = ({ navigation, relationshipEntity }) => {
           <Image
             style={{ width: 120, height: 120, margin: 2 }}
             source={{
-              uri: `http://192.168.1.23:5000/image/${name}/${item.id}`,
+              uri: `${baseUrl}/image/${name}/${item.id}`,
             }}
             PlaceholderContent={<ActivityIndicator />}
           />

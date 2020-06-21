@@ -1,16 +1,17 @@
 import { createStore, applyMiddleware } from 'redux';
-// import { composeWithDevTools } from 'redux-devtools-extension';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import axios from 'axios';
 import thunk from 'redux-thunk';
 import rootReducer from './reducers';
+import { baseUrl } from '../constants/actionTypes/api';
 
-axios.defaults.baseURL = 'http://192.168.1.23:5000';
+axios.defaults.baseURL = baseUrl;
 
 function configureStore() {
   const store = createStore(
     rootReducer,
-    applyMiddleware(thunk),
-    // composeWithDevTools(applyMiddleware(thunk)),
+    // applyMiddleware(thunk),
+    composeWithDevTools(applyMiddleware(thunk)),
   );
   return store;
 }

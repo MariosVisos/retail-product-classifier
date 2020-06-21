@@ -19,7 +19,7 @@ import ProgressBars from '../../components/ProgressBars/ProgressBars';
 import CameraTutorialOverlay from '../../components/CameraTutorialOverlay/CameraTutorialOverlay';
 import { toggleDontShowAgain } from '../../store/actions';
 
-function CameraScreen({ route }) {
+function CameraScreen({ route, navigation }) {
   const { dataset } = route.params;
   let cameraRef;
   const [hasPermission, setHasPermission] = useState(null);
@@ -44,7 +44,6 @@ function CameraScreen({ route }) {
   const dontShowChecked = useSelector(
     state => state.settings.showTutorialByStep[step],
   );
-  console.log('CameraScreen -> dontShowChecked', dontShowChecked);
 
   const dispatch = useDispatch();
 
@@ -55,7 +54,6 @@ function CameraScreen({ route }) {
   useFocusEffect(
     useCallback(() => {
       return () => {
-        console.log('CameraScreen -> unsubscribe');
         dispatch(clearScannedLabel());
       };
     }, [dispatch]),
@@ -91,9 +89,7 @@ function CameraScreen({ route }) {
         }
         // getPictureSizes();
       }
-    } catch (error) {
-      console.log('getSupportedRatios -> error', error);
-    }
+    } catch (error) {}
   };
 
   async function handleCameraButtonPress() {
@@ -104,7 +100,6 @@ function CameraScreen({ route }) {
       // const fileName = directoriesArray[directoriesArray.length - 1];
       // const fileName = 'image.jpg';
       // const directory = `${FileSystem.documentDirectory}myImages/${fileName}`;
-      // console.log('snap -> directory', directory);
       // FileSystem.copyAsync({ from: photo.uri, to: directory });
     }
   }
@@ -121,12 +116,17 @@ function CameraScreen({ route }) {
       dispatch(barCodeScanned(data, dataset));
       setIsBarCodeScanned(true);
       increaseStep();
+      setShowStepBackTutorial(true);
     }
   }
 
   function handleNextButtonPress() {
-    setShowStepBackTutorial(true);
-    increaseStep();
+    if (step === 4) {
+      navigation.navigate('Home');
+    } else {
+      setShowStepBackTutorial(true);
+      increaseStep();
+    }
   }
 
   function getInstructionText() {
@@ -142,6 +142,10 @@ function CameraScreen({ route }) {
       case 3:
         instructionText =
           'Now go a bit back again and try to fit the product in the bounding box';
+        break;
+      case 4:
+        instructionText =
+          'Now go a bit left and try to fit the product in the bounding box';
         break;
       default:
         break;
@@ -216,6 +220,7 @@ function CameraScreen({ route }) {
           onBackdropPress={() => setShowStepBackTutorial(false)}
           onCheckBoxPress={handleCheckBoxPress}
           checked={dontShowChecked}
+          step={step}
         />
       </Camera>
     </View>

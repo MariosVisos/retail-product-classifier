@@ -35,7 +35,9 @@ const DatasetListItem = ({ dataset, navigation }) => {
     <TouchableOpacity onPress={handleDatasetPress} style={container}>
       <View style={leftContainer}>
         <Text style={nameText}>{dataset.name}</Text>
-        <Text style={labelSubtitleText}>{dataset.labelIds.length} labels</Text>
+        <Text style={labelSubtitleText}>
+          {dataset.labelIds.length} products
+        </Text>
         <Text style={modelSubtitleText}>No model found</Text>
       </View>
       <TouchableWithoutFeedback>
