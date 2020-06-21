@@ -7,8 +7,6 @@ import styles from './CameraTutorialOverlayStyles';
 import Colors from '../../constants/Colors';
 import Checkbox from '../ui/CheckBox/CheckBox';
 
-const step1Gif = require('../../assets/step1Gif.gif');
-
 const {
   imageStyle,
   overlayStyle,
