@@ -1,12 +1,12 @@
 import React from 'react';
 import { ListItem, Icon, Image } from 'react-native-elements';
+import { ActivityIndicator } from 'react-native';
 import Tooltip from '../ui/Tooltip/Tooltip';
 import LabelListItemPopover from '../LabelListItemPopover/LabelListItemPopover';
 import NoImage from '../NoImage/NoImage';
 import styles from './LabelListItemStyles';
 import Colors from '../../constants/Colors';
-import { ActivityIndicator } from 'react-native';
-import { baseUrl } from '../../constants/actionTypes/api';
+import { baseUrl } from '../../constants/api';
 
 const LabelListItem = ({ navigation, label }) => {
   const { name, imageIds } = label;

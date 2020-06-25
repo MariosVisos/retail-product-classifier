@@ -11,7 +11,7 @@ import { Image } from 'react-native-elements';
 import { entityRefresh } from '../../store/actions/entity';
 import styles from './ImageListStyles';
 import Colors from '../../constants/Colors';
-import { baseUrl } from '../../constants/actionTypes/api';
+import { baseUrl } from '../../constants/api';
 
 const ImageList = ({ navigation, relationshipEntity }) => {
   const { footerContainer, headerContainer, headerText } = styles;

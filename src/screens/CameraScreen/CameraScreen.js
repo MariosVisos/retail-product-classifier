@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, Platform } from 'react-native';
+import { View, Text, Platform, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { Entypo } from '@expo/vector-icons';
 import { useFocusEffect } from '@react-navigation/native';
+import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 // import * as FileSystem from 'expo-file-system';
 import { useDispatch, useSelector } from 'react-redux';
@@ -29,14 +30,25 @@ function CameraScreen({ route, navigation }) {
 
   const [showStepBackTutorial, setShowStepBackTutorial] = useState(false);
   const [photo, setPhoto] = useState(null);
+  const [location, setLocation] = useState(null);
 
   useEffect(() => {
     // Ask for camera permission after component mounts for the first time
     // Immediately Invoked Function Expression
     (async function getCameraPermission() {
-      const { status } = await Camera.requestPermissionsAsync();
+      const { status: camPermission } = await Camera.requestPermissionsAsync();
       await Permissions.askAsync(Permissions.CAMERA_ROLL);
-      setHasPermission(status === 'granted');
+      const {
+        status: locationPermission,
+      } = await Location.requestPermissionsAsync();
+      const locationPermissionGranted = locationPermission === 'granted';
+      const camPermissionGranted = camPermission === 'granted';
+      setHasPermission(camPermissionGranted && locationPermissionGranted);
+      if (locationPermissionGranted) {
+        const locationInfo = await Location.getCurrentPositionAsync({});
+        console.log('getCameraPermission -> locationInfo', locationInfo);
+        setLocation(locationInfo);
+      }
     })();
   }, []);
 
@@ -161,7 +173,7 @@ function CameraScreen({ route, navigation }) {
     return <View />;
   }
   if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+    return <Text>Access to both camera and location are needed!</Text>;
   }
 
   return (

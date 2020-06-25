@@ -12,6 +12,9 @@ import {
   CLEAR_SCANNED_LABEL,
 } from '../../constants/actionTypes/Entity';
 import { uiStartLoading, uiStopLoading } from './ui';
+import deviceInfo from '../../constants/device';
+
+console.log('deviceInfo', deviceInfo);
 
 export const setIsCreatingEntity = (entityType, isBeingCreated) => ({
   type: SET_IS_CREATING_ENTITY,
