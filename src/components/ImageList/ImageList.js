@@ -12,6 +12,7 @@ import { entityRefresh } from '../../store/actions/entity';
 import styles from './ImageListStyles';
 import Colors from '../../constants/Colors';
 import { baseUrl } from '../../constants/api';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ImageList = ({ navigation, relationshipEntity }) => {
   const { footerContainer, headerContainer, headerText } = styles;
@@ -61,13 +62,17 @@ const ImageList = ({ navigation, relationshipEntity }) => {
       renderItem={({ item }) => {
         const name = relationshipEntity.name.split(' ').join('%20');
         return (
-          <Image
-            style={{ width: 120, height: 120, margin: 2 }}
-            source={{
-              uri: `${baseUrl}/image/${name}/${item.id}`,
-            }}
-            PlaceholderContent={<ActivityIndicator />}
-          />
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Image', { imageId: item.id })}
+          >
+            <Image
+              style={{ width: 120, height: 120, margin: 2 }}
+              source={{
+                uri: `${baseUrl}/image/${name}/${item.id}`,
+              }}
+              PlaceholderContent={<ActivityIndicator />}
+            />
+          </TouchableOpacity>
         );
       }}
       keyExtractor={image => image.id.toString()}

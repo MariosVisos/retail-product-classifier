@@ -14,8 +14,6 @@ import {
 import { uiStartLoading, uiStopLoading } from './ui';
 import deviceInfo from '../../constants/device';
 
-console.log('deviceInfo', deviceInfo);
-
 export const setIsCreatingEntity = (entityType, isBeingCreated) => ({
   type: SET_IS_CREATING_ENTITY,
   payload: { entityType, isBeingCreated },
@@ -71,7 +69,28 @@ function buildEntities(entityType, entitiesRaw) {
         entity.imageIds = entityRaw.image_ids;
         break;
       case 'image':
-        entity.labelId = entityRaw.label_id;
+        {
+          const boundingBoxRaw = JSON.parse(entityRaw.bounding_box);
+          const metaDataRaw = JSON.parse(entityRaw.meta_data);
+          entity.labelId = entityRaw.label_id;
+          entity.boundingBox = {
+            topLeft: boundingBoxRaw.top_left,
+            bottomRight: boundingBoxRaw.bottom_right,
+            height: boundingBoxRaw.height,
+            width: boundingBoxRaw.width,
+          };
+          entity.metaData = {
+            deviceInfo: {
+              brand: metaDataRaw.device_info.brand,
+              manufacturer: metaDataRaw.device_info.manufacturer,
+              modelName: metaDataRaw.device_info.model_name,
+              deviceYearClass: metaDataRaw.device_info.device_year_class,
+              osName: metaDataRaw.device_info.os_name,
+              osVersion: metaDataRaw.device_info.os_version,
+            },
+          };
+          entity.labelId = entityRaw.label_id;
+        }
         break;
       default:
         console.error(
@@ -196,8 +215,34 @@ export const uploadImage = (photo, labelName, boundingBox) => {
       // const directoriesArray = photo.uri.split('/');
       // const fileName = directoriesArray[directoriesArray.length - 1];
       const bodyFormData = new FormData();
+      const { bottomRight, topLeft, height, width } = boundingBox;
+      const boundingBoxSnakeCase = {
+        top_left: topLeft,
+        bottom_right: bottomRight,
+        height,
+        width,
+      };
+      const {
+        brand,
+        manufacturer,
+        modelName,
+        deviceYearClass,
+        osName,
+        osVersion,
+      } = deviceInfo;
+      const metaDataSnakeCase = {
+        device_info: {
+          brand,
+          manufacturer,
+          model_name: modelName,
+          device_year_class: deviceYearClass,
+          os_name: osName,
+          os_version: osVersion,
+        },
+      };
       bodyFormData.append('label_name', labelName);
-      bodyFormData.append('bounding_box', JSON.stringify(boundingBox));
+      bodyFormData.append('bounding_box', JSON.stringify(boundingBoxSnakeCase));
+      bodyFormData.append('meta_data', JSON.stringify(metaDataSnakeCase));
       bodyFormData.append('image', {
         name: 'test.jpg',
         type: 'image/jpg',
@@ -249,7 +294,7 @@ export const barCodeScanned = (barCode, relationshipEntity) => {
       response = await axios.get(`/label/test`, {
         params: { gtin: barCode, dataset_id: relationshipEntity.id },
       });
-      console.log('barCodeScanned -> response.data', response.data);
+      console.log('barCodeScanned -> server-response.data', response.data);
       if (response.data.error) {
         response = await axios.get(
           `https://eatfit-service.foodcoa.ch/products/${barCode}/`,
@@ -260,13 +305,22 @@ export const barCodeScanned = (barCode, relationshipEntity) => {
             },
           },
         );
+        console.log('barCodeScanned -> eatfit-response', response.data);
         if (response.data.success) {
           const [product] = response.data.products;
-          name = product.product_name_en;
+          name =
+            product.product_name_en ||
+            product.product_name_de ||
+            product.product_name_fr ||
+            product.product_name_it;
         } else {
           const openFoodFactsUrl = `https://world.openfoodfacts.org/api/v0/product/${barCode}.json`;
 
           response = await axios.get(openFoodFactsUrl);
+          console.log(
+            'barCodeScanned -> openFoodFactsUrl-response',
+            response.data,
+          );
           const brand = response.data.product.brands;
           const productName = response.data.product.product_name;
           name = `${brand} ${productName}`;
