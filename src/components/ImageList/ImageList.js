@@ -8,11 +8,11 @@ import {
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Image } from 'react-native-elements';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import { entityRefresh } from '../../store/actions/entity';
 import styles from './ImageListStyles';
 import Colors from '../../constants/Colors';
 import { baseUrl } from '../../constants/api';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ImageList = ({ navigation, relationshipEntity }) => {
   const { footerContainer, headerContainer, headerText } = styles;

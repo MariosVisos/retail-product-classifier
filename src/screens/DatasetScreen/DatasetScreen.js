@@ -12,7 +12,9 @@ const DatasetScreen = ({ navigation, route }) => {
   const { id } = route.params.dataset;
   const [isCreateLabelVisible, setIsCreateLabelVisible] = useState(false);
   const toggleCreateLabelOverlay = () => {
-    setIsCreateLabelVisible(!isCreateLabelVisible);
+    setIsCreateLabelVisible(
+      prevIsCreateLabelVisible => !prevIsCreateLabelVisible,
+    );
   };
   const { container, trainButton, scanToAddButton, manuallyAddButton } = styles;
   const relationshipEntity = { type: 'dataset', id };

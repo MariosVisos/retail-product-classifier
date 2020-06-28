@@ -8,6 +8,7 @@ import HomeScreen from './screens/HomeScreen/HomeScreen';
 import DatasetScreen from './screens/DatasetScreen/DatasetScreen';
 import LabelScreen from './screens/LabelScreen/LabelScreen';
 import CameraScreen from './screens/CameraScreen/CameraScreen';
+import ImageScreen from './screens/ImageScreen/ImageScreen';
 import SettingsScreen from './screens/SettingsScreen/SettingsScreen';
 import Colors from './constants/Colors';
 import { setUserData } from './store/actions';
@@ -86,6 +87,14 @@ function HomeStackNavigator() {
         options={({ route }) => ({
           ...showHeaderOptions,
           title: route.params.label.name,
+        })}
+      />
+      <HomeStack.Screen
+        name="Image"
+        component={ImageScreen}
+        options={() => ({
+          ...showHeaderOptions,
+          title: 'Image details',
         })}
       />
       <HomeStack.Screen

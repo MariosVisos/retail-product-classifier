@@ -10,7 +10,9 @@ import EntityCreateOverlay from '../../components/EntityCreateOverlay/EntityCrea
 const HomeScreen = ({ navigation }) => {
   const [isCreateDatasetVisible, setIsCreateDatasetVisible] = useState(false);
   const toggleCreateDatasetOverlay = () => {
-    setIsCreateDatasetVisible(!isCreateDatasetVisible);
+    setIsCreateDatasetVisible(
+      prevIsCreateDatasetVisible => !prevIsCreateDatasetVisible,
+    );
   };
 
   const { container, newShelfButtonContainer } = styles;
