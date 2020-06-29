@@ -36,7 +36,7 @@ const LabelListItem = ({ navigation, label }) => {
             source={{
               uri: `${baseUrl}/image/${name}/${imageIds[0]}`,
             }}
-            PlaceholderContent={<ActivityIndicator />}
+            PlaceholderContent={<ActivityIndicator color={Colors.secondary} />}
           />
         ) : (
           <NoImage />

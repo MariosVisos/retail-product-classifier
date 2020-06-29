@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, Platform, Alert } from 'react-native';
+import { View, Text, Platform, Alert, Image } from 'react-native';
 import { Camera } from 'expo-camera';
 import { useSafeArea } from 'react-native-safe-area-context';
 import { Entypo } from '@expo/vector-icons';
@@ -8,17 +8,23 @@ import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 // import * as FileSystem from 'expo-file-system';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Button from '../../components/ui/Button/Button';
 import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
 import styles from './CameraScreenStyles';
 import BoundingBox from '../../components/BoundingBox/BoundingBox';
+import NearbyStores from '../../components/NearbyStores/NearbyStores';
 import Colors from '../../constants/Colors';
 import { barCodeScanned, clearScannedLabel } from '../../store/actions/entity';
 import Loading from '../../components/Loading/Loading';
 import ProgressBars from '../../components/ProgressBars/ProgressBars';
 import CameraTutorialOverlay from '../../components/CameraTutorialOverlay/CameraTutorialOverlay';
 import { toggleDontShowAgain } from '../../store/actions';
+import {
+  buildGetPhotoByReferenceUrl,
+  buildSearchLocationUrl,
+} from '../../utils/googlePlaces';
 
 function CameraScreen({ route, navigation }) {
   const { dataset } = route.params;
@@ -30,6 +36,7 @@ function CameraScreen({ route, navigation }) {
 
   const [showStepBackTutorial, setShowStepBackTutorial] = useState(false);
   const [photo, setPhoto] = useState(null);
+  const [nearbyStores, setNearbyStores] = useState(null);
   const [location, setLocation] = useState(null);
 
   useEffect(() => {
@@ -46,8 +53,27 @@ function CameraScreen({ route, navigation }) {
       setHasPermission(camPermissionGranted && locationPermissionGranted);
       if (locationPermissionGranted) {
         const locationInfo = await Location.getCurrentPositionAsync({});
-        console.log('getCameraPermission -> locationInfo', locationInfo);
+        const { latitude, longitude } = locationInfo.coords;
+        const searchPlaceUrl = buildSearchLocationUrl(latitude, longitude);
+        const response = await axios.get(searchPlaceUrl);
+        console.log('getNearbyPlaces -> results', response.data.results);
+        const stores = [];
+        response.data.results.forEach(storeObj => {
+          const { name, photos } = storeObj;
+          let photoUrl;
+          if (photos) {
+            photoUrl = buildGetPhotoByReferenceUrl(photos[0].photo_reference);
+          }
+          const store = {
+            name,
+            photoUrl,
+          };
+          stores.push(store);
+        });
+
+        setNearbyStores(stores);
         setLocation(locationInfo);
+        console.log('getCameraPermission -> locationInfo', locationInfo);
       }
     })();
   }, []);
@@ -59,8 +85,26 @@ function CameraScreen({ route, navigation }) {
 
   const dispatch = useDispatch();
 
+  function movePlaceToFront(selectedIndex) {
+    setNearbyStores(prevStores => {
+      const newStores = [];
+      prevStores.forEach((store, index) => {
+        if (selectedIndex === index) {
+          newStores.unshift(store);
+        } else {
+          newStores.push(store);
+        }
+      });
+      return newStores;
+    });
+  }
+
   function handleCheckBoxPress() {
     dispatch(toggleDontShowAgain(step));
+  }
+
+  function setLocationStoreName(store) {
+    setLocation(prevLocation => ({ ...prevLocation, store }));
   }
 
   useFocusEffect(
@@ -101,12 +145,15 @@ function CameraScreen({ route, navigation }) {
         }
         // getPictureSizes();
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log('getSupportedRatios -> error', error);
+    }
   };
 
   async function handleCameraButtonPress() {
     if (cameraRef) {
       const photoObj = await cameraRef.takePictureAsync({ quality: 0 });
+      photoObj.location = location;
       setPhoto(photoObj);
       // const directoriesArray = photo.uri.split('/');
       // const fileName = directoriesArray[directoriesArray.length - 1];
@@ -165,7 +212,16 @@ function CameraScreen({ route, navigation }) {
     return instructionText;
   }
 
-  if (isLoading) {
+  function handleStorePress(storeIndex) {
+    movePlaceToFront(storeIndex);
+  }
+
+  function handleConfirmPress(storeIndex) {
+    setLocationStoreName(nearbyStores[storeIndex].name);
+    setNearbyStores(null);
+  }
+
+  if (isLoading || (!nearbyStores && !location)) {
     return <Loading />;
   }
 
@@ -174,6 +230,18 @@ function CameraScreen({ route, navigation }) {
   }
   if (hasPermission === false) {
     return <Text>Access to both camera and location are needed!</Text>;
+  }
+
+  if (nearbyStores) {
+    return (
+      <View style={{ marginTop }}>
+        <NearbyStores
+          stores={nearbyStores}
+          onStorePress={handleStorePress}
+          onConfirmPress={handleConfirmPress}
+        />
+      </View>
+    );
   }
 
   return (

@@ -50,7 +50,7 @@ const ImageScreen = ({ route }) => {
         containerStyle={cardStyle}
       >
         <TouchableWithoutFeedback
-          onLongPress={toggleImageOverlay}
+          onPress={toggleImageOverlay}
           style={imageContainer}
         >
           <ImageBackground
@@ -59,7 +59,7 @@ const ImageScreen = ({ route }) => {
               uri: `${baseUrl}/image/${label.name}/${image.id}`,
             }}
             resizeMode="cover"
-            PlaceholderContent={<ActivityIndicator />}
+            PlaceholderContent={<ActivityIndicator color={Colors.secondary} />}
           >
             <Icon
               reverse
@@ -129,7 +129,7 @@ const ImageScreen = ({ route }) => {
               uri: `${baseUrl}/image/${label.name}/${image.id}`,
             }}
             resizeMode="cover"
-            PlaceholderContent={<ActivityIndicator />}
+            PlaceholderContent={<ActivityIndicator color={Colors.secondary} />}
           />
           <Button
             onPress={toggleImageOverlay}

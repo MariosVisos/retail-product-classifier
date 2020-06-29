@@ -70,8 +70,9 @@ function buildEntities(entityType, entitiesRaw) {
         break;
       case 'image':
         {
-          const boundingBoxRaw = JSON.parse(entityRaw.bounding_box);
           const metaDataRaw = JSON.parse(entityRaw.meta_data);
+          const dimensions = JSON.parse(entityRaw.dimensions);
+          const boundingBoxRaw = metaDataRaw.bounding_box;
           entity.labelId = entityRaw.label_id;
           entity.boundingBox = {
             topLeft: boundingBoxRaw.top_left,
@@ -90,6 +91,7 @@ function buildEntities(entityType, entitiesRaw) {
             },
           };
           entity.labelId = entityRaw.label_id;
+          entity.dimensions = dimensions;
         }
         break;
       default:
@@ -239,9 +241,12 @@ export const uploadImage = (photo, labelName, boundingBox) => {
           os_name: osName,
           os_version: osVersion,
         },
+        bounding_box: boundingBoxSnakeCase,
+        location: photo.location,
       };
+      const imageDimensions = { height: photo.height, width: photo.width };
       bodyFormData.append('label_name', labelName);
-      bodyFormData.append('bounding_box', JSON.stringify(boundingBoxSnakeCase));
+      bodyFormData.append('dimensions', JSON.stringify(imageDimensions));
       bodyFormData.append('meta_data', JSON.stringify(metaDataSnakeCase));
       bodyFormData.append('image', {
         name: 'test.jpg',

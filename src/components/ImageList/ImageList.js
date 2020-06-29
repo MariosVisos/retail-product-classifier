@@ -70,7 +70,9 @@ const ImageList = ({ navigation, relationshipEntity }) => {
               source={{
                 uri: `${baseUrl}/image/${name}/${item.id}`,
               }}
-              PlaceholderContent={<ActivityIndicator />}
+              PlaceholderContent={
+                <ActivityIndicator color={Colors.secondary} />
+              }
             />
           </TouchableOpacity>
         );
