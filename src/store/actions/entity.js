@@ -44,14 +44,14 @@ export const addRelationshipEntityId = (entity, relationshipEntities) => ({
   payload: { entity, relationshipEntities },
 });
 
-export const getLabelByBarCodeSuccess = labelName => ({
+export const getLabelByBarCodeSuccess = label => ({
   type: GET_LABEL_BY_BARCODE_SUCCESS,
-  payload: { labelName },
+  payload: { label },
 });
 
 export const clearScannedLabel = () => ({
   type: CLEAR_SCANNED_LABEL,
-  payload: { labelName: null },
+  payload: { label: null },
 });
 
 function buildEntities(entityType, entitiesRaw) {
@@ -74,7 +74,7 @@ function buildEntities(entityType, entitiesRaw) {
           const dimensions = JSON.parse(entityRaw.dimensions);
           const boundingBoxRaw = metaDataRaw.bounding_box;
           entity.labelId = entityRaw.label_id;
-          entity.boundingBox = {
+          const boundingBox = {
             topLeft: boundingBoxRaw.top_left,
             bottomRight: boundingBoxRaw.bottom_right,
             height: boundingBoxRaw.height,
@@ -89,6 +89,8 @@ function buildEntities(entityType, entitiesRaw) {
               osName: metaDataRaw.device_info.os_name,
               osVersion: metaDataRaw.device_info.os_version,
             },
+            location: metaDataRaw.location,
+            boundingBox,
           };
           entity.labelId = entityRaw.label_id;
           entity.dimensions = dimensions;
@@ -106,7 +108,13 @@ function buildEntities(entityType, entitiesRaw) {
   return entities;
 }
 
-export const createEntity = (entityType, relationshipEntity, name, gtin) => {
+export const createEntity = (
+  entityType,
+  relationshipEntity,
+  name,
+  gtin,
+  callBarcodeSuccess,
+) => {
   return async dispatch => {
     batch(() => {
       dispatch(setIsCreatingEntity(entityType, true));
@@ -125,6 +133,9 @@ export const createEntity = (entityType, relationshipEntity, name, gtin) => {
       const entityRaw = response.data;
       const entities = buildEntities(entityType, [entityRaw]);
       batch(() => {
+        if (callBarcodeSuccess) {
+          dispatch(getLabelByBarCodeSuccess(entities[0]));
+        }
         dispatch(entitiesCreate(entityType, entities));
         dispatch(setEntityCreateSuccess(entityType, true));
         if (relationshipEntity) {
@@ -211,7 +222,7 @@ export const entityRefresh = (entityType, relationshipEntity) => {
   };
 };
 
-export const uploadImage = (photo, labelName, boundingBox) => {
+export const uploadImage = (photo, label, boundingBox) => {
   return async dispatch => {
     try {
       // const directoriesArray = photo.uri.split('/');
@@ -245,7 +256,7 @@ export const uploadImage = (photo, labelName, boundingBox) => {
         location: photo.location,
       };
       const imageDimensions = { height: photo.height, width: photo.width };
-      bodyFormData.append('label_name', labelName);
+      bodyFormData.append('label_id', label.id);
       bodyFormData.append('dimensions', JSON.stringify(imageDimensions));
       bodyFormData.append('meta_data', JSON.stringify(metaDataSnakeCase));
       bodyFormData.append('image', {
@@ -295,7 +306,7 @@ export const barCodeScanned = (barCode, relationshipEntity) => {
     try {
       dispatch(uiStartLoading('Getting product'));
       let response;
-      let name;
+      const label = {};
       response = await axios.get(`/label/test`, {
         params: { gtin: barCode, dataset_id: relationshipEntity.id },
       });
@@ -313,11 +324,14 @@ export const barCodeScanned = (barCode, relationshipEntity) => {
         console.log('barCodeScanned -> eatfit-response', response.data);
         if (response.data.success) {
           const [product] = response.data.products;
-          name =
+          label.name =
             product.product_name_en ||
             product.product_name_de ||
             product.product_name_fr ||
             product.product_name_it;
+          if (product.image) {
+            label.refImageUrl = product.image;
+          }
         } else {
           const openFoodFactsUrl = `https://world.openfoodfacts.org/api/v0/product/${barCode}.json`;
 
@@ -328,18 +342,29 @@ export const barCodeScanned = (barCode, relationshipEntity) => {
           );
           const brand = response.data.product.brands;
           const productName = response.data.product.product_name;
-          name = `${brand} ${productName}`;
+          label.name = `${brand} ${productName}`;
         }
       } else {
-        name = response.data.label.name;
+        label.id = response.data.label.id;
+        label.name = response.data.label.name;
       }
-      console.log('barCodeScanned -> name', name);
+      console.log('barCodeScanned -> name', label);
 
       batch(() => {
         if (response.data.products || response.data.product) {
-          dispatch(createEntity('label', relationshipEntity, name, barCode));
+          const callBarcodeSuccess = true;
+          dispatch(
+            createEntity(
+              'label',
+              relationshipEntity,
+              label.name,
+              barCode,
+              callBarcodeSuccess,
+            ),
+          );
+        } else {
+          dispatch(getLabelByBarCodeSuccess(label));
         }
-        dispatch(getLabelByBarCodeSuccess(name));
         dispatch(uiStopLoading());
       });
     } catch (error) {

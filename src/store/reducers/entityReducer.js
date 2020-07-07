@@ -22,7 +22,7 @@ const initialState = {
   dataset: baseEntityState,
   label: baseEntityState,
   image: baseEntityState,
-  scannedLabelName: null,
+  scannedLabel: null,
 };
 
 const setIsEntityCreated = produce((draft, { entityType, isBeingCreated }) => {
@@ -60,8 +60,8 @@ const addRelationshipEntityId = produce(
   },
 );
 
-const setScannedLabel = produce((draft, { labelName }) => {
-  draft.scannedLabelName = labelName;
+const setScannedLabel = produce((draft, { label }) => {
+  draft.scannedLabel = label;
 });
 
 function entityReducer(state = initialState, action) {

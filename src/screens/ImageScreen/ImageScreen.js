@@ -40,8 +40,8 @@ const ImageScreen = ({ route }) => {
   function toggleImageOverlay() {
     setIsOverlayVisible(prevIsOverlayVisible => !prevIsOverlayVisible);
   }
-  const { name, metaData } = image;
-  const { deviceInfo } = metaData;
+  const { name, metaData, dimensions } = image;
+  const { deviceInfo, location } = metaData;
   return (
     <View style={container}>
       <Card
@@ -56,22 +56,22 @@ const ImageScreen = ({ route }) => {
           <ImageBackground
             style={imageStyle}
             source={{
-              uri: `${baseUrl}/image/${label.name}/${image.id}`,
+              uri: `${baseUrl}/image/${label.id}/${image.id}`,
             }}
             resizeMode="cover"
             PlaceholderContent={<ActivityIndicator color={Colors.secondary} />}
           >
-            <Icon
+            {/* <Icon
               reverse
               reverseColor={Colors.secondary}
               containerStyle={maximizeIcon}
               name="maximize-2"
               type="feather"
-              onPress={toggleImageOverlay}
               raised
               size={20}
+              onPress={toggleImageOverlay}
               color={Colors.primary}
-            />
+            /> */}
           </ImageBackground>
         </TouchableWithoutFeedback>
         <ScrollView>
@@ -79,6 +79,9 @@ const ImageScreen = ({ route }) => {
             <View style={propertyKeysContainer}>
               <Text style={propertyText}>Filename</Text>
               <Text style={propertyText}>Label</Text>
+              <Text style={propertyText}>Store</Text>
+              <Text style={propertyText}>Width</Text>
+              <Text style={propertyText}>Height</Text>
               <Text style={propertyText}>Phone brand</Text>
               <Text style={propertyText}>Phone manufacturer</Text>
               <Text style={propertyText}>Phone model</Text>
@@ -96,22 +99,49 @@ const ImageScreen = ({ route }) => {
                 </Text>
               </View>
               <View style={valueTextContainer}>
-                <Text style={valueText}>{deviceInfo.brand}</Text>
+                <Text numberOfLines={1} style={valueText}>
+                  {location.store}
+                </Text>
               </View>
               <View style={valueTextContainer}>
-                <Text style={valueText}>{deviceInfo.manufacturer}</Text>
+                <Text numberOfLines={1} style={valueText}>
+                  {dimensions.width}
+                </Text>
               </View>
               <View style={valueTextContainer}>
-                <Text style={valueText}>{deviceInfo.modelName}</Text>
+                <Text numberOfLines={1} style={valueText}>
+                  {dimensions.height}
+                </Text>
               </View>
               <View style={valueTextContainer}>
-                <Text style={valueText}>{deviceInfo.deviceYearClass}</Text>
+                <Text numberOfLines={1} style={valueText}>
+                  {deviceInfo.brand}
+                </Text>
               </View>
               <View style={valueTextContainer}>
-                <Text style={valueText}>{deviceInfo.osName}</Text>
+                <Text numberOfLines={1} style={valueText}>
+                  {deviceInfo.manufacturer}
+                </Text>
               </View>
               <View style={valueTextContainer}>
-                <Text style={valueText}>{deviceInfo.osVersion}</Text>
+                <Text numberOfLines={1} style={valueText}>
+                  {deviceInfo.modelName}
+                </Text>
+              </View>
+              <View style={valueTextContainer}>
+                <Text numberOfLines={1} style={valueText}>
+                  {deviceInfo.deviceYearClass}
+                </Text>
+              </View>
+              <View style={valueTextContainer}>
+                <Text numberOfLines={1} style={valueText}>
+                  {deviceInfo.osName}
+                </Text>
+              </View>
+              <View style={valueTextContainer}>
+                <Text numberOfLines={1} style={valueText}>
+                  {deviceInfo.osVersion}
+                </Text>
               </View>
             </View>
           </View>
@@ -126,7 +156,7 @@ const ImageScreen = ({ route }) => {
           <Image
             style={overlayImage}
             source={{
-              uri: `${baseUrl}/image/${label.name}/${image.id}`,
+              uri: `${baseUrl}/image/${label.id}/${image.id}`,
             }}
             resizeMode="cover"
             PlaceholderContent={<ActivityIndicator color={Colors.secondary} />}

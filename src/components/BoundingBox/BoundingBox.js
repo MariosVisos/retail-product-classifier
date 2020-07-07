@@ -40,7 +40,7 @@ const BoundingBox = ({
     cameraScreenHeight = screenHeight - verticalInset;
   }
 
-  const scannedLabelName = useSelector(state => state.entity.scannedLabelName);
+  const scannedLabel = useSelector(state => state.entity.scannedLabel);
   const dispatch = useDispatch();
 
   const boxX = initialBoxWidth;
@@ -423,7 +423,7 @@ const BoundingBox = ({
             // console.log('screenWidth', cameraScreenWidth);
             // console.log('screenHeight', cameraScreenHeight);
 
-            dispatch(uploadImage(photo, scannedLabelName, boundingBox));
+            dispatch(uploadImage(photo, scannedLabel, boundingBox));
             // console.log('scannedLabelName', scannedLabelName);
 
             // console.log('x', valX + tranX);

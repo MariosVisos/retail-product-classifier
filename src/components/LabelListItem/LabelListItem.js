@@ -9,7 +9,7 @@ import Colors from '../../constants/Colors';
 import { baseUrl } from '../../constants/api';
 
 const LabelListItem = ({ navigation, label }) => {
-  const { name, imageIds } = label;
+  const { id, name, imageIds } = label;
   const { container } = styles;
 
   function handleLabelPress() {
@@ -34,7 +34,7 @@ const LabelListItem = ({ navigation, label }) => {
           <Image
             style={{ width: 60, height: 60 }}
             source={{
-              uri: `${baseUrl}/image/${name}/${imageIds[0]}`,
+              uri: `${baseUrl}/image/${id}/${imageIds[0]}`,
             }}
             PlaceholderContent={<ActivityIndicator color={Colors.secondary} />}
           />

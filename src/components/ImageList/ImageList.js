@@ -60,7 +60,7 @@ const ImageList = ({ navigation, relationshipEntity }) => {
     <FlatList
       data={images}
       renderItem={({ item }) => {
-        const name = relationshipEntity.name.split(' ').join('%20');
+        // const name = relationshipEntity.name.split(' ').join('%20');
         return (
           <TouchableOpacity
             onPress={() => navigation.navigate('Image', { imageId: item.id })}
@@ -68,7 +68,7 @@ const ImageList = ({ navigation, relationshipEntity }) => {
             <Image
               style={{ width: 120, height: 120, margin: 2 }}
               source={{
-                uri: `${baseUrl}/image/${name}/${item.id}`,
+                uri: `${baseUrl}/image/${relationshipEntity.id}/${item.id}`,
               }}
               PlaceholderContent={
                 <ActivityIndicator color={Colors.secondary} />
