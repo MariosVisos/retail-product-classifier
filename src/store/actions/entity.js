@@ -94,6 +94,7 @@ function buildEntities(entityType, entitiesRaw) {
           };
           entity.labelId = entityRaw.label_id;
           entity.dimensions = dimensions;
+          entity.angle = entityRaw.angle;
         }
         break;
       default:
@@ -258,6 +259,7 @@ export const uploadImage = (photo, label, boundingBox) => {
       const imageDimensions = { height: photo.height, width: photo.width };
       bodyFormData.append('label_id', label.id);
       bodyFormData.append('dimensions', JSON.stringify(imageDimensions));
+      bodyFormData.append('angle', JSON.stringify(photo.angle));
       bodyFormData.append('meta_data', JSON.stringify(metaDataSnakeCase));
       bodyFormData.append('image', {
         name: 'test.jpg',

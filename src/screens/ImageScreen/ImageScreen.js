@@ -40,7 +40,7 @@ const ImageScreen = ({ route }) => {
   function toggleImageOverlay() {
     setIsOverlayVisible(prevIsOverlayVisible => !prevIsOverlayVisible);
   }
-  const { name, metaData, dimensions } = image;
+  const { angle, name, metaData, dimensions } = image;
   const { deviceInfo, location } = metaData;
   return (
     <View style={container}>
@@ -82,6 +82,7 @@ const ImageScreen = ({ route }) => {
               <Text style={propertyText}>Store</Text>
               <Text style={propertyText}>Width</Text>
               <Text style={propertyText}>Height</Text>
+              <Text style={propertyText}>Angle</Text>
               <Text style={propertyText}>Phone brand</Text>
               <Text style={propertyText}>Phone manufacturer</Text>
               <Text style={propertyText}>Phone model</Text>
@@ -111,6 +112,11 @@ const ImageScreen = ({ route }) => {
               <View style={valueTextContainer}>
                 <Text numberOfLines={1} style={valueText}>
                   {dimensions.height}
+                </Text>
+              </View>
+              <View style={valueTextContainer}>
+                <Text numberOfLines={1} style={valueText}>
+                  {angle}
                 </Text>
               </View>
               <View style={valueTextContainer}>

@@ -81,6 +81,11 @@ const NearbyStores = ({ stores, onStorePress, onConfirmPress }) => {
         }
         return storeElement;
       })}
+      <Button
+        containerStyle={confirmButton}
+        title="None of the above"
+        onPress={() => onConfirmPress(null)}
+      />
     </ScrollView>
   );
 };

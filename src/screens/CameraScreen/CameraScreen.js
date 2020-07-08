@@ -56,7 +56,6 @@ function CameraScreen({ route, navigation }) {
         const { latitude, longitude } = locationInfo.coords;
         const searchPlaceUrl = buildSearchLocationUrl(latitude, longitude);
         const response = await axios.get(searchPlaceUrl);
-        console.log('getNearbyPlaces -> results', response.data.results);
         const stores = [];
         response.data.results.forEach(storeObj => {
           const { name, photos } = storeObj;
@@ -73,7 +72,6 @@ function CameraScreen({ route, navigation }) {
 
         setNearbyStores(stores);
         setLocation(locationInfo);
-        console.log('getCameraPermission -> locationInfo', locationInfo);
       }
     })();
   }, []);
@@ -145,15 +143,14 @@ function CameraScreen({ route, navigation }) {
         }
         // getPictureSizes();
       }
-    } catch (error) {
-      console.log('getSupportedRatios -> error', error);
-    }
+    } catch (error) {}
   };
 
   async function handleCameraButtonPress() {
     if (cameraRef) {
       const photoObj = await cameraRef.takePictureAsync({ quality: 0 });
       photoObj.location = location;
+      photoObj.angle = step;
       setPhoto(photoObj);
       // const directoriesArray = photo.uri.split('/');
       // const fileName = directoriesArray[directoriesArray.length - 1];
@@ -195,16 +192,20 @@ function CameraScreen({ route, navigation }) {
         instructionText = 'Try to fit the product in the bounding box';
         break;
       case 2:
-        instructionText =
-          'Now go a bit back and try to fit the product in the bounding box';
+        instructionText = 'Now go a bit left';
         break;
       case 3:
-        instructionText =
-          'Now go a bit back again and try to fit the product in the bounding box';
+        instructionText = 'Now go a bit right ';
         break;
       case 4:
         instructionText =
-          'Now go a bit left and try to fit the product in the bounding box';
+          'Now go a bit back and try to fit the product in the bounding box from the center';
+        break;
+      case 5:
+        instructionText = 'Now go a bit left again';
+        break;
+      case 6:
+        instructionText = 'Now go a bit right again ';
         break;
       default:
         break;
@@ -217,7 +218,11 @@ function CameraScreen({ route, navigation }) {
   }
 
   function handleConfirmPress(storeIndex) {
-    setLocationStoreName(nearbyStores[storeIndex].name);
+    if (storeIndex === null) {
+      setLocationStoreName('Unknown');
+    } else {
+      setLocationStoreName(nearbyStores[storeIndex].name);
+    }
     setNearbyStores(null);
   }
 
@@ -266,7 +271,7 @@ function CameraScreen({ route, navigation }) {
         }}
       >
         {step > 0 && [
-          <ProgressBars key="progressBar" currentStep={step} totalSteps={4} />,
+          <ProgressBars key="progressBar" currentStep={step} totalSteps={6} />,
           <View key="instructionContainer" style={styles.instructionContainer}>
             <Text style={styles.instructionText}>{getInstructionText()}</Text>
           </View>,

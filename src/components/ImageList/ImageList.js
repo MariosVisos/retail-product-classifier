@@ -5,6 +5,7 @@ import {
   Text,
   View,
   RefreshControl,
+  Dimensions,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { Image } from 'react-native-elements';
@@ -13,6 +14,10 @@ import { entityRefresh } from '../../store/actions/entity';
 import styles from './ImageListStyles';
 import Colors from '../../constants/Colors';
 import { baseUrl } from '../../constants/api';
+
+const windowWidth = Dimensions.get('window').width;
+
+const edgeWidth = (windowWidth - 12) / 3;
 
 const ImageList = ({ navigation, relationshipEntity }) => {
   const { footerContainer, headerContainer, headerText } = styles;
@@ -66,7 +71,7 @@ const ImageList = ({ navigation, relationshipEntity }) => {
             onPress={() => navigation.navigate('Image', { imageId: item.id })}
           >
             <Image
-              style={{ width: 120, height: 120, margin: 2 }}
+              style={{ width: edgeWidth, height: edgeWidth, margin: 2 }}
               source={{
                 uri: `${baseUrl}/image/${relationshipEntity.id}/${item.id}`,
               }}

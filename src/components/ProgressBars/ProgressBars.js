@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Dimensions } from 'react-native';
 import styles from './ProgressBarsStyles';
 
 const {
@@ -11,9 +11,11 @@ const {
   activeStepContainer,
 } = styles;
 
+const windowWidth = Dimensions.get('window').width;
+
 function ProgressBars({ currentStep, totalSteps }) {
   const progressBars = [];
-  const progressBarWidth = 200;
+  const progressBarWidth = (windowWidth - 48) / totalSteps;
 
   for (let i = 0; i < totalSteps; i += 1) {
     let progressBarStyle = progressBarContainer;
@@ -25,12 +27,12 @@ function ProgressBars({ currentStep, totalSteps }) {
     const progressBar =
       currentStep === i + 1 ? (
         <View key={i} style={activeStepContainer}>
-          <View style={[progressBarStyle, { progressBarWidth }]}>
+          <View style={[progressBarStyle, { width: progressBarWidth }]}>
             <Text style={stepTextStyle}>{i + 1}</Text>
           </View>
         </View>
       ) : (
-        <View key={i} style={[progressBarStyle, { progressBarWidth }]}>
+        <View key={i} style={[progressBarStyle, { width: progressBarWidth }]}>
           <Text style={stepTextStyle}>{i + 1}</Text>
         </View>
       );
