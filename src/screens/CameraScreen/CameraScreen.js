@@ -150,7 +150,14 @@ function CameraScreen({ route, navigation }) {
     if (cameraRef) {
       const photoObj = await cameraRef.takePictureAsync({ quality: 0 });
       photoObj.location = location;
-      photoObj.angle = step;
+      let angle = 1;
+      if (step === 2 || step === 5) {
+        angle = 2;
+      }
+      if (step === 3 || step === 6) {
+        angle = 3;
+      }
+      photoObj.angle = angle;
       setPhoto(photoObj);
       // const directoriesArray = photo.uri.split('/');
       // const fileName = directoriesArray[directoriesArray.length - 1];
@@ -177,7 +184,7 @@ function CameraScreen({ route, navigation }) {
   }
 
   function handleNextButtonPress() {
-    if (step === 4) {
+    if (step === 6) {
       navigation.navigate('Home');
     } else {
       setShowStepBackTutorial(true);

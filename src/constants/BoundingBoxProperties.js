@@ -12,8 +12,8 @@ const Properties = {
     cornerArea: 100,
     cornerDragArea: 6400,
   },
-  minHeight: 80,
-  minWidth: 80,
+  minHeight: 20,
+  minWidth: 20,
 };
 
 export default Properties;
