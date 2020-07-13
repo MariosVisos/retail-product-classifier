@@ -20,6 +20,7 @@ const DatasetListItem = ({ dataset, navigation }) => {
     trainButtonStyle,
     classifyButtonStyle,
     leftContainer,
+    nameContainer,
   } = styles;
 
   function handleDatasetPress() {
@@ -34,7 +35,10 @@ const DatasetListItem = ({ dataset, navigation }) => {
   return (
     <TouchableOpacity onPress={handleDatasetPress} style={container}>
       <View style={leftContainer}>
-        <Text style={nameText}>{dataset.name}</Text>
+        <View style={nameContainer}>
+          <Text style={nameText}>{dataset.name}</Text>
+        </View>
+
         <Text style={labelSubtitleText}>
           {dataset.labelIds.length} products
         </Text>

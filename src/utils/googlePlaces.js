@@ -22,12 +22,13 @@ export function buildSearchLocationUrl(latitude, longitude) {
   };
   const locationParam = {
     key: 'location',
-    value: `47.5404462,7.7208802`,
+    value: `${latitude},${longitude}`,
   };
-  const radiusParam = { key: 'radius', value: 3000 };
+  // const radiusParam = { key: 'radius', value: 3000 };
+  const rankByParam = { key: 'rankby', value: 'distance' };
   url = addParameterToUrl(url, keyParam);
   url = addParameterToUrl(url, typeParam);
-  url = addParameterToUrl(url, radiusParam);
+  url = addParameterToUrl(url, rankByParam);
   url = addParameterToUrl(url, locationParam);
   return url;
 }

@@ -32,7 +32,7 @@ const DatasetScreen = ({ navigation, route }) => {
         containerStyle={scanToAddButton}
         raised
       />
-      <Button
+      {/* <Button
         onPress={toggleCreateLabelOverlay}
         icon={<AntDesign name="pluscircleo" size={26} color={Colors.primary} />}
         title="Manually add"
@@ -44,7 +44,7 @@ const DatasetScreen = ({ navigation, route }) => {
         toggleOverlay={toggleCreateLabelOverlay}
         entityType="label"
         relationshipEntity={relationshipEntity}
-      />
+      /> */}
     </View>
   );
 };

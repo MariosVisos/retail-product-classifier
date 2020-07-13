@@ -27,13 +27,13 @@ const CameraTutorialOverlay = ({
       uri = 'https://media.giphy.com/media/Xg5asdpw4iASCRIcqg/giphy.gif';
       break;
     case 2:
-      uri = 'https://media.giphy.com/media/QURxYDqGL7AbWgBbvx/giphy.gif';
+      uri = 'https://media.giphy.com/media/daxyPRjrw1kMni4pkH/giphy.gif';
       break;
     case 3:
       uri = 'https://media.giphy.com/media/MCXdtdt5wLOSLsHCys/giphy.gif';
       break;
     case 4:
-      uri = 'https://media.giphy.com/media/daxyPRjrw1kMni4pkH/giphy.gif';
+      uri = 'https://media.giphy.com/media/QURxYDqGL7AbWgBbvx/giphy.gif';
       break;
     case 5:
       uri = 'https://media.giphy.com/media/daxyPRjrw1kMni4pkH/giphy.gif';

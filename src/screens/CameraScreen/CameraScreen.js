@@ -143,7 +143,9 @@ function CameraScreen({ route, navigation }) {
         }
         // getPictureSizes();
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log('getSupportedRatios -> error', error);
+    }
   };
 
   async function handleCameraButtonPress() {
@@ -199,20 +201,20 @@ function CameraScreen({ route, navigation }) {
         instructionText = 'Try to fit the product in the bounding box';
         break;
       case 2:
-        instructionText = 'Now go a bit left';
+        instructionText = 'Now please move a bit to the LEFT';
         break;
       case 3:
-        instructionText = 'Now go a bit right ';
+        instructionText = 'Now please move a bit to the RIGHT';
         break;
       case 4:
         instructionText =
-          'Now go a bit back and try to fit the product in the bounding box from the center';
+          'Now move a bit back and try to fit the product in the bounding box from the center';
         break;
       case 5:
-        instructionText = 'Now go a bit left again';
+        instructionText = 'Now please move a bit to the LEFT again';
         break;
       case 6:
-        instructionText = 'Now go a bit right again ';
+        instructionText = 'Now please move a bit to the RIGHT again';
         break;
       default:
         break;

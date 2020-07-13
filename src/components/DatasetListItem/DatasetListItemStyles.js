@@ -19,7 +19,14 @@ const styles = StyleSheet.create({
   labelSubtitleText: { color: Colors.grayDark },
   leftContainer: { padding: 8 },
   modelSubtitleText: { color: Colors.grayDark },
-  nameText: { color: Colors.black, fontSize: 18 },
+  nameContainer: { flexDirection: 'row', maxWidth: 280 },
+  nameText: {
+    color: Colors.black,
+    flex: 1,
+    flexWrap: 'wrap',
+    flexShrink: 1,
+    fontSize: 18,
+  },
   trainButtonStyle: { backgroundColor: Colors.secondary, marginRight: 8 },
 });
 export default styles;
