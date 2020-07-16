@@ -69,8 +69,11 @@ function CameraScreen({ route, navigation }) {
           };
           stores.push(store);
         });
-
-        setNearbyStores(stores);
+        if (stores.length > 0) {
+          setNearbyStores(stores);
+        } else {
+          setNearbyStores(null);
+        }
         setLocation(locationInfo);
       }
     })();
