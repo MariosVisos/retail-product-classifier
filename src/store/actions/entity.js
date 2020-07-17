@@ -91,10 +91,12 @@ function buildEntities(entityType, entitiesRaw) {
             },
             location: metaDataRaw.location,
             boundingBox,
+            user: metaDataRaw.user,
           };
           entity.labelId = entityRaw.label_id;
           entity.dimensions = dimensions;
           entity.angle = entityRaw.angle;
+          entity.createdAt = new Date(entityRaw.created_at);
         }
         break;
       default:
@@ -224,10 +226,11 @@ export const entityRefresh = (entityType, relationshipEntity) => {
 };
 
 export const uploadImage = (photo, label, boundingBox) => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
     try {
       // const directoriesArray = photo.uri.split('/');
       // const fileName = directoriesArray[directoriesArray.length - 1];
+      const { user } = getState();
       const bodyFormData = new FormData();
       const { bottomRight, topLeft, height, width } = boundingBox;
       const boundingBoxSnakeCase = {
@@ -255,6 +258,7 @@ export const uploadImage = (photo, label, boundingBox) => {
         },
         bounding_box: boundingBoxSnakeCase,
         location: photo.location,
+        user: { id: user.id, email: user.email },
       };
       const imageDimensions = { height: photo.height, width: photo.width };
       bodyFormData.append('label_id', label.id);

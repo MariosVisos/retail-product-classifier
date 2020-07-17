@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ActivityIndicator, View, ImageBackground, Text } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Image, Icon, Overlay, Card } from 'react-native-elements';
+import { format } from 'date-fns';
 import { Entypo } from '@expo/vector-icons';
 import {
   TouchableWithoutFeedback,
@@ -40,8 +41,8 @@ const ImageScreen = ({ route }) => {
   function toggleImageOverlay() {
     setIsOverlayVisible(prevIsOverlayVisible => !prevIsOverlayVisible);
   }
-  const { angle, name, metaData, dimensions } = image;
-  const { deviceInfo, location } = metaData;
+  const { angle, name, metaData, dimensions, createdAt } = image;
+  const { deviceInfo, location, user } = metaData;
   return (
     <View style={container}>
       <Card
@@ -83,6 +84,9 @@ const ImageScreen = ({ route }) => {
               <Text style={propertyText}>Width</Text>
               <Text style={propertyText}>Height</Text>
               <Text style={propertyText}>Angle</Text>
+              <Text style={propertyText}>Created at</Text>
+              <Text style={propertyText}>User id</Text>
+              <Text style={propertyText}>User email</Text>
               <Text style={propertyText}>Phone brand</Text>
               <Text style={propertyText}>Phone manufacturer</Text>
               <Text style={propertyText}>Phone model</Text>
@@ -117,6 +121,21 @@ const ImageScreen = ({ route }) => {
               <View style={valueTextContainer}>
                 <Text numberOfLines={1} style={valueText}>
                   {angle}
+                </Text>
+              </View>
+              <View style={valueTextContainer}>
+                <Text numberOfLines={1} style={valueText}>
+                  {format(createdAt, 'dd.MM.yyyy HH:mm')}
+                </Text>
+              </View>
+              <View style={valueTextContainer}>
+                <Text numberOfLines={1} style={valueText}>
+                  {user.id}
+                </Text>
+              </View>
+              <View style={valueTextContainer}>
+                <Text numberOfLines={1} style={valueText}>
+                  {user.email}
                 </Text>
               </View>
               <View style={valueTextContainer}>
