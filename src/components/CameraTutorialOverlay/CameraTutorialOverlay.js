@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageBackground } from 'react-native';
+import { ImageBackground, View } from 'react-native';
 import { Overlay } from 'react-native-elements';
 import { Entypo } from '@expo/vector-icons';
 import Button from '../ui/Button/Button';
@@ -12,6 +12,7 @@ const {
   overlayStyle,
   cancelButtonContainer,
   checkBoxContainer,
+  statusBarCover,
 } = styles;
 
 const CameraTutorialOverlay = ({
@@ -24,22 +25,22 @@ const CameraTutorialOverlay = ({
   let uri = '';
   switch (step) {
     case 1:
-      uri = 'https://media.giphy.com/media/Xg5asdpw4iASCRIcqg/giphy.gif';
+      uri = 'https://media.giphy.com/media/QZgzbNMN4LTNCADLy0/giphy.gif';
       break;
     case 2:
-      uri = 'https://media.giphy.com/media/daxyPRjrw1kMni4pkH/giphy.gif';
+      uri = 'https://media.giphy.com/media/j72v5AvizjzM3DUSlS/giphy.gif';
       break;
     case 3:
-      uri = 'https://media.giphy.com/media/MCXdtdt5wLOSLsHCys/giphy.gif';
+      uri = 'https://media.giphy.com/media/ZYL8DAzhKtR2snLY4I/giphy.gif';
       break;
     case 4:
-      uri = 'https://media.giphy.com/media/QURxYDqGL7AbWgBbvx/giphy.gif';
+      uri = 'https://media.giphy.com/media/cilTxIRpKtuMIxj1HR/giphy.gif';
       break;
     case 5:
-      uri = 'https://media.giphy.com/media/daxyPRjrw1kMni4pkH/giphy.gif';
+      uri = 'https://media.giphy.com/media/fxa5kYcNBt4jUtNjWe/giphy.gif';
       break;
     case 6:
-      uri = 'https://media.giphy.com/media/daxyPRjrw1kMni4pkH/giphy.gif';
+      uri = 'https://media.giphy.com/media/ZdI6six6eLpc0kUNqp/giphy.gif';
       break;
 
     default:
@@ -59,6 +60,7 @@ const CameraTutorialOverlay = ({
         style={imageStyle}
         resizeMode="stretch"
       >
+        <View style={statusBarCover} />
         <Checkbox
           title="Don't show this again"
           checked={checked}
