@@ -42,6 +42,12 @@ const ImageScreen = ({ route }) => {
     setIsOverlayVisible(prevIsOverlayVisible => !prevIsOverlayVisible);
   }
   const { angle, name, metaData, dimensions, createdAt } = image;
+  let angleText = 'Center';
+  if (angle === '2') {
+    angleText = 'Left';
+  } else if (angle === '3') {
+    angleText = 'Right';
+  }
   const { deviceInfo, location, user } = metaData;
   return (
     <View style={container}>
@@ -50,19 +56,22 @@ const ImageScreen = ({ route }) => {
         title={label.name}
         containerStyle={cardStyle}
       >
-        <TouchableWithoutFeedback
-          onPress={toggleImageOverlay}
-          style={imageContainer}
-        >
-          <ImageBackground
-            style={imageStyle}
-            source={{
-              uri: `${baseUrl}/image/${label.id}/${image.id}`,
-            }}
-            resizeMode="cover"
-            PlaceholderContent={<ActivityIndicator color={Colors.secondary} />}
+        <ScrollView>
+          <TouchableWithoutFeedback
+            onPress={toggleImageOverlay}
+            style={imageContainer}
           >
-            {/* <Icon
+            <ImageBackground
+              style={imageStyle}
+              source={{
+                uri: `${baseUrl}/image/${label.id}/${image.id}`,
+              }}
+              resizeMode="cover"
+              PlaceholderContent={
+                <ActivityIndicator color={Colors.secondary} />
+              }
+            >
+              {/* <Icon
               reverse
               reverseColor={Colors.secondary}
               containerStyle={maximizeIcon}
@@ -73,9 +82,9 @@ const ImageScreen = ({ route }) => {
               onPress={toggleImageOverlay}
               color={Colors.primary}
             /> */}
-          </ImageBackground>
-        </TouchableWithoutFeedback>
-        <ScrollView>
+            </ImageBackground>
+          </TouchableWithoutFeedback>
+
           <View style={propertiesContainer}>
             <View style={propertyKeysContainer}>
               <Text style={propertyText}>Filename</Text>
@@ -120,12 +129,14 @@ const ImageScreen = ({ route }) => {
               </View>
               <View style={valueTextContainer}>
                 <Text numberOfLines={1} style={valueText}>
-                  {angle}
+                  {angleText}
                 </Text>
               </View>
               <View style={valueTextContainer}>
                 <Text numberOfLines={1} style={valueText}>
-                  {format(createdAt, 'dd.MM.yyyy HH:mm')}
+                  {createdAt instanceof Date &&
+                    !Number.isNaN &&
+                    format(createdAt, 'dd.MM.yyyy HH:mm')}
                 </Text>
               </View>
               <View style={valueTextContainer}>
