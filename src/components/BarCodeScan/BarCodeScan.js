@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Dimensions, Text } from 'react-native';
 import Svg, { Defs, Rect, Mask } from 'react-native-svg';
 // import { useHeaderHeight } from '@react-navigation/stack';
-import styles from './SvgBoundingBoxStyles';
+import styles from './BarCodeScanStyles';
 import Colors from '../../constants/Colors';
 
 const screenWidth = Math.round(Dimensions.get('window').width);
@@ -11,7 +11,7 @@ const screenHeight = Math.round(Dimensions.get('window').height);
 const x = 200;
 const y = 200;
 
-const SvgBoundingBox = () => {
+const BarCodeScan = () => {
   // const headerHeight = useHeaderHeight();
   return (
     <View style={{ ...styles.layout }}>
@@ -45,4 +45,4 @@ const SvgBoundingBox = () => {
   );
 };
 
-export default SvgBoundingBox;
+export default BarCodeScan;
