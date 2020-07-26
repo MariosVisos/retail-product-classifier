@@ -13,6 +13,7 @@ function CustomOverlay({
   applyButtonTitle,
   onApplyPress,
   fullScreen,
+  onCancelPress,
   children,
 }) {
   return (
@@ -30,7 +31,11 @@ function CustomOverlay({
         </View>
         {children}
         <View style={styles.footerContainer}>
-          <Button onPress={onBackdropPress} type="outline" title="Cancel" />
+          <Button
+            onPress={onCancelPress || onBackdropPress}
+            type="outline"
+            title="Cancel"
+          />
           <Button onPress={onApplyPress} title={applyButtonTitle} />
         </View>
       </>

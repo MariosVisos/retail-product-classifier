@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import Button from '../../components/ui/Button/Button';
-import SvgBoundingBox from '../../components/SvgBoundingBox/SvgBoundingBox';
+import BarCodeScan from '../../components/BarCodeScan/BarCodeScan';
 import styles from './CameraScreenStyles';
 import BoundingBox from '../../components/BoundingBox/BoundingBox';
 import NearbyStores from '../../components/NearbyStores/NearbyStores';
@@ -25,6 +25,7 @@ import {
   buildGetPhotoByReferenceUrl,
   buildSearchLocationUrl,
 } from '../../utils/googlePlaces';
+import EntityCreateOverlay from '../../components/EntityCreateOverlay/EntityCreateOverlay';
 
 function CameraScreen({ route, navigation }) {
   const { dataset } = route.params;
@@ -83,6 +84,7 @@ function CameraScreen({ route, navigation }) {
   const dontShowChecked = useSelector(
     state => state.settings.showTutorialByStep[step],
   );
+  const scannedLabel = useSelector(state => state.entity.scannedLabel);
 
   const dispatch = useDispatch();
 
@@ -238,6 +240,10 @@ function CameraScreen({ route, navigation }) {
     setNearbyStores(null);
   }
 
+  function handleCancelPress() {
+    navigation.goBack();
+  }
+
   if (isLoading || (!nearbyStores && !location)) {
     return <Loading />;
   }
@@ -260,10 +266,11 @@ function CameraScreen({ route, navigation }) {
       </View>
     );
   }
+  const relationshipEntity = { type: 'dataset', id: dataset.id };
 
   return (
     <View style={{ ...styles.container, marginTop }}>
-      {!isBarCodeScanned && <SvgBoundingBox />}
+      {!isBarCodeScanned && <BarCodeScan />}
 
       <Camera
         ratio={cameraRatio}
@@ -282,6 +289,18 @@ function CameraScreen({ route, navigation }) {
           ],
         }}
       >
+        <EntityCreateOverlay
+          isVisible={
+            !!(!(scannedLabel && scannedLabel.name) && isBarCodeScanned)
+          }
+          toggleOverlay={() => {}}
+          entityType="label"
+          relationshipEntity={relationshipEntity}
+          onCancelPress={handleCancelPress}
+          headerTitle="Product no found! Please add the product manually"
+          gtin={scannedLabel && scannedLabel.gtin}
+        />
+
         {step > 0 && [
           <ProgressBars key="progressBar" currentStep={step} totalSteps={6} />,
           <View key="instructionContainer" style={styles.instructionContainer}>
@@ -313,7 +332,9 @@ function CameraScreen({ route, navigation }) {
           />,
         ]}
         <CameraTutorialOverlay
-          isVisible={showStepBackTutorial}
+          isVisible={
+            !!(scannedLabel && scannedLabel.name && showStepBackTutorial)
+          }
           onBackdropPress={() => setShowStepBackTutorial(false)}
           onCheckBoxPress={handleCheckBoxPress}
           checked={dontShowChecked}

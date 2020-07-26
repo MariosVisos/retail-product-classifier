@@ -8,6 +8,7 @@ import {
   createEntity,
   setEntityCreateError,
   setEntityCreateSuccess,
+  getLabelByBarCodeSuccess,
 } from '../../store/actions/entity';
 import capitalizeFirstLetter from '../../utils/capitalizeFirstLetter';
 
@@ -16,10 +17,26 @@ const EntityCreateOverlay = ({
   toggleOverlay,
   entityType,
   relationshipEntity,
+  onBackdropPress,
+  onCancelPress,
+  headerTitle,
+  gtin,
 }) => {
-  const entityDisplayName = entityType === 'dataset' ? 'shelf' : entityType;
+  /* eslint-disable */
+  const entityDisplayName =
+    entityType === 'dataset'
+      ? 'shelf'
+      : entityType === 'label'
+      ? 'product'
+      : entityType;
   const entityDisplayNameCapitalized =
-    entityType === 'dataset' ? 'Shelf' : capitalizeFirstLetter(entityType);
+    entityType === 'dataset'
+      ? 'Shelf'
+      : entityType === 'label'
+      ? 'Product'
+      : capitalizeFirstLetter(entityType);
+  /* eslint-enable */
+
   const exampleInputValue =
     entityType === 'dataset' ? 'Cereal' : 'Kellogs Special K';
   const [entityName, setEntityName] = useState('');
@@ -84,7 +101,17 @@ const EntityCreateOverlay = ({
     if (emptyEntityName) {
       setIsEntityNameValid(false);
     } else {
-      dispatch(createEntity(entityType, relationshipEntity, entityName));
+      const callBarcodeSuccess = true;
+
+      dispatch(
+        createEntity(
+          entityType,
+          relationshipEntity,
+          entityName,
+          gtin,
+          callBarcodeSuccess,
+        ),
+      );
     }
   }
 
@@ -95,11 +122,12 @@ const EntityCreateOverlay = ({
   return (
     <Overlay
       isVisible={isVisible}
-      onBackdropPress={handleBackdropPress}
-      headerTitle={`Create new ${entityDisplayName}`}
+      onBackdropPress={onBackdropPress || handleBackdropPress}
+      headerTitle={headerTitle || `Create new ${entityDisplayName}`}
       applyButtonTitle={`Create ${entityDisplayName}`}
       overlayStyle={styles.container}
       onApplyPress={handleCreateEntityPress}
+      onCancelPress={onCancelPress}
     >
       <Input
         containerStyle={styles.inputContainer}

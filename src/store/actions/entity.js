@@ -346,9 +346,13 @@ export const barCodeScanned = (barCode, relationshipEntity) => {
             'barCodeScanned -> openFoodFactsUrl-response',
             response.data,
           );
-          const brand = response.data.product.brands;
-          const productName = response.data.product.product_name;
-          label.name = `${brand} ${productName}`;
+          if (response.data.status_verbose === 'product not found') {
+            label.gtin = barCode;
+          } else {
+            const brand = response.data.product.brands;
+            const productName = response.data.product.product_name;
+            label.name = `${brand} ${productName}`;
+          }
         }
       } else {
         label.id = response.data.label.id;
@@ -368,9 +372,8 @@ export const barCodeScanned = (barCode, relationshipEntity) => {
               callBarcodeSuccess,
             ),
           );
-        } else {
-          dispatch(getLabelByBarCodeSuccess(label));
         }
+        dispatch(getLabelByBarCodeSuccess(label));
         dispatch(uiStopLoading());
       });
     } catch (error) {
