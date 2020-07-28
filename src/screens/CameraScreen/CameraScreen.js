@@ -182,12 +182,10 @@ function CameraScreen({ route, navigation }) {
   // }
 
   function handleBarCodeScanned({ data }) {
-    if (!isBarCodeScanned) {
-      dispatch(barCodeScanned(data, dataset));
-      setIsBarCodeScanned(true);
-      increaseStep();
-      setShowStepBackTutorial(true);
-    }
+    dispatch(barCodeScanned(data, dataset));
+    setIsBarCodeScanned(true);
+    increaseStep();
+    setShowStepBackTutorial(true);
   }
 
   function handleNextButtonPress() {
@@ -280,7 +278,7 @@ function CameraScreen({ route, navigation }) {
         style={styles.camera}
         type={cameraType}
         onCameraReady={getSupportedRatios}
-        onBarCodeScanned={handleBarCodeScanned}
+        onBarCodeScanned={isBarCodeScanned ? undefined : handleBarCodeScanned}
         barCodeScannerSettings={{
           barCodeTypes: [
             BarCodeScanner.Constants.BarCodeType.ean8,
@@ -289,17 +287,19 @@ function CameraScreen({ route, navigation }) {
           ],
         }}
       >
-        <EntityCreateOverlay
-          isVisible={
-            !!(!(scannedLabel && scannedLabel.name) && isBarCodeScanned)
-          }
-          toggleOverlay={() => {}}
-          entityType="label"
-          relationshipEntity={relationshipEntity}
-          onCancelPress={handleCancelPress}
-          headerTitle="Product no found! Please add the product manually"
-          gtin={scannedLabel && scannedLabel.gtin}
-        />
+        {!!(!(scannedLabel && scannedLabel.name) && isBarCodeScanned) && (
+          <EntityCreateOverlay
+            isVisible={
+              !!(!(scannedLabel && scannedLabel.name) && isBarCodeScanned)
+            }
+            toggleOverlay={() => {}}
+            entityType="label"
+            relationshipEntity={relationshipEntity}
+            onCancelPress={handleCancelPress}
+            headerTitle="Product not found! Please add the product manually"
+            gtin={scannedLabel && scannedLabel.gtin}
+          />
+        )}
 
         {step > 0 && [
           <ProgressBars key="progressBar" currentStep={step} totalSteps={6} />,

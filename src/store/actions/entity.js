@@ -13,6 +13,8 @@ import {
 } from '../../constants/actionTypes/Entity';
 import { uiStartLoading, uiStopLoading } from './ui';
 import deviceInfo from '../../constants/device';
+import buildGetProductByBarCodeUrl from '../../utils/eatFit';
+import { eatFit } from '../../constants/api';
 
 export const setIsCreatingEntity = (entityType, isBeingCreated) => ({
   type: SET_IS_CREATING_ENTITY,
@@ -318,15 +320,12 @@ export const barCodeScanned = (barCode, relationshipEntity) => {
       });
       console.log('barCodeScanned -> server-response.data', response.data);
       if (response.data.error) {
-        response = await axios.get(
-          `https://eatfit-service.foodcoa.ch/products/${barCode}/`,
-          {
-            headers: {
-              Authorization:
-                'Basic ZWF0Zml0X3N0dWRlbnRfbWFyaW9zOjdGM1oxMDNMNzNrR3pkcDJtZmRjRDNVdw==',
-            },
+        const eatFitUrl = buildGetProductByBarCodeUrl(barCode);
+        response = await axios.get(eatFitUrl, {
+          headers: {
+            Authorization: `Basic ${eatFit.apiKey}`,
           },
-        );
+        });
         console.log('barCodeScanned -> eatfit-response', response.data);
         if (response.data.success) {
           const [product] = response.data.products;

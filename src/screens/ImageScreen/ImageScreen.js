@@ -134,9 +134,7 @@ const ImageScreen = ({ route }) => {
               </View>
               <View style={valueTextContainer}>
                 <Text numberOfLines={1} style={valueText}>
-                  {createdAt instanceof Date &&
-                    !Number.isNaN &&
-                    format(createdAt, 'dd.MM.yyyy HH:mm')}
+                  {format(createdAt, 'dd.MM.yyyy HH:mm')}
                 </Text>
               </View>
               <View style={valueTextContainer}>

@@ -1,5 +1,4 @@
 import { googlePlaces } from '../constants/api';
-import { add, max } from 'react-native-reanimated';
 
 const { apiKey, baseUrl, nearbySearchEndpoint, photoEndpoint } = googlePlaces;
 

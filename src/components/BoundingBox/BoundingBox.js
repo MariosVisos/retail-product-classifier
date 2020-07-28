@@ -389,8 +389,6 @@ const BoundingBox = ({
     ],
   };
 
-  const [animated, setAnimated] = useState(false);
-
   useCode(
     () =>
       photo && [
@@ -411,7 +409,7 @@ const BoundingBox = ({
               width: (photo.width * width) / cameraScreenWidth,
               height: (photo.height * height) / cameraScreenHeight,
             };
-            console.log('boundingBox', boundingBox);
+            // console.log('boundingBox', boundingBox);
 
             // console.log('BoundingBox -> height', height);
             // console.log('BoundingBox -> width', width);
@@ -428,7 +426,7 @@ const BoundingBox = ({
 
             // console.log('x', valX + tranX);
             // console.log('y', valY + tranY);
-            console.log('photo', photo);
+            // console.log('photo', photo);
 
             setPhoto(null);
           },
