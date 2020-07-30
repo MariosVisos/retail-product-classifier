@@ -5,7 +5,11 @@ import {
   SET_IS_CREATING_ENTITY,
   SET_ENTITY_CREATE_ERROR,
   SET_ENTITY_CREATE_SUCCESS,
+  SET_IS_DELETING_ENTITY,
+  SET_ENTITY_DELETE_ERROR,
+  SET_ENTITY_DELETE_SUCCESS,
   ENTITIES_CREATE,
+  ENTITIES_DELETE,
   SET_ENTITY_REFRESHING,
   ADD_RELATIONSHIP_ENTITY_IDS,
   GET_LABEL_BY_BARCODE_SUCCESS,
@@ -15,6 +19,44 @@ import { uiStartLoading, uiStopLoading } from './ui';
 import deviceInfo from '../../constants/device';
 import buildGetProductByBarCodeUrl from '../../utils/eatFit';
 import { eatFit } from '../../constants/api';
+
+function handleAxiosError(error) {
+  const errorData = {};
+  if (error.response) {
+    const { data } = error.response;
+    // The request was made and the server responded with a status code
+    // that falls out of the range of 2xx
+    console.log(
+      'The request was made and the server responded with a status code that falls out of the range of 2xx',
+    );
+    console.log('error.response.data', error.response.data);
+    console.log('error.response.status', error.response.status);
+    console.log('error.response.headers', error.response.headers);
+
+    errorData.message = `Der Server hat mit einem Statuscode ${error.response.status} geantwortet.`;
+    errorData.reason = 'statusOutOf200';
+    errorData.data = data;
+  } else if (error.request) {
+    // The request was made but no response was received
+    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+    // http.ClientRequest in node.js
+    console.log('The request was made but no response was received');
+    console.log('error.request', error.request);
+
+    errorData.reason = 'noResponse';
+    errorData.message = 'Netzwerkfehler';
+  } else {
+    // Something happened in setting up the request that triggered an Error
+    console.log(
+      'Something happened in setting up the request that triggered an Error',
+    );
+    console.log('error.message', error.message);
+    errorData.message = `${error.message}`;
+    errorData.reason = 'badRequest';
+  }
+
+  return errorData;
+}
 
 export const setIsCreatingEntity = (entityType, isBeingCreated) => ({
   type: SET_IS_CREATING_ENTITY,
@@ -30,9 +72,27 @@ export const setEntityCreateSuccess = (entityType, createSuccess) => ({
   type: SET_ENTITY_CREATE_SUCCESS,
   payload: { entityType, createSuccess },
 });
+export const setIsDeletingEntity = (entityType, isBeingDeleted) => ({
+  type: SET_IS_DELETING_ENTITY,
+  payload: { entityType, isBeingDeleted },
+});
+
+export const setEntityDeleteError = (entityType, error) => ({
+  type: SET_ENTITY_DELETE_ERROR,
+  payload: { entityType, error },
+});
+
+export const setEntityDeleteSuccess = (entityType, deleteSuccess) => ({
+  type: SET_ENTITY_DELETE_SUCCESS,
+  payload: { entityType, deleteSuccess },
+});
 
 export const entitiesCreate = (entityType, entities) => ({
   type: ENTITIES_CREATE,
+  payload: { entityType, entities },
+});
+export const entitiesDelete = (entityType, entities) => ({
+  type: ENTITIES_DELETE,
   payload: { entityType, entities },
 });
 
@@ -69,6 +129,7 @@ function buildEntities(entityType, entitiesRaw) {
         break;
       case 'label':
         entity.imageIds = entityRaw.image_ids;
+        entity.datasetId = entityRaw.dataset_id;
         break;
       case 'image':
         {
@@ -123,7 +184,7 @@ export const createEntity = (
   return async dispatch => {
     batch(() => {
       dispatch(setIsCreatingEntity(entityType, true));
-      dispatch(uiStartLoading('Creating shelf'));
+      dispatch(uiStartLoading(`Creating ${entityType}`));
     });
     const params = {};
     if (relationshipEntity) {
@@ -149,36 +210,55 @@ export const createEntity = (
         }
       });
     } catch (error) {
-      console.log('createEntity -> error', error);
-      if (error.response) {
-        const { data } = error.response;
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log('createEntity -> data', data);
-        // console.log(error.response.status);
-        // console.log(error.response.headers);
-        const errorData = {};
+      const errorData = handleAxiosError(error);
+      if (
+        'reason' in errorData &&
+        errorData.reason === 'statusOutOf200' &&
+        'data' in errorData
+      ) {
+        const { data } = errorData;
         if (data.reason === 'name_already_exists') {
           errorData.reason = 'nameAlreadyExists';
           errorData.message = data.message;
-        }
-        if (data.reason === 'error_inserting') {
+        } else if (data.reason === 'error_inserting') {
           errorData.reason = 'errorInserting';
           errorData.message = data.message;
         }
         dispatch(setEntityCreateError(entityType, errorData));
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
       }
-      // console.log(error.config);
+
+      dispatch(setIsCreatingEntity(entityType, false));
+      dispatch(uiStopLoading());
     }
-    dispatch(setIsCreatingEntity(entityType, false));
-    dispatch(uiStopLoading());
+  };
+};
+
+export const deleteEntity = (entity, relationshipEntity) => {
+  return async dispatch => {
+    const { id, type } = entity;
+    batch(() => {
+      dispatch(setIsDeletingEntity(type, true));
+      dispatch(uiStartLoading(`Deleting ${type}`));
+    });
+
+    try {
+      const response = await axios.delete(
+        `${type}/${relationshipEntity.id}/${id}`,
+      );
+      console.log('deleteEntity -> response', response);
+      batch(() => {
+        dispatch(entitiesDelete(type, [entity]));
+        dispatch(setEntityDeleteSuccess(type, true));
+      });
+    } catch (error) {
+      const errorData = handleAxiosError(error);
+      if ('reason' in errorData && errorData.reason === 'statusOutOf200') {
+        dispatch(setEntityCreateError(type, errorData));
+      }
+
+      dispatch(setIsCreatingEntity(type, false));
+      dispatch(uiStopLoading());
+    }
   };
 };
 
@@ -206,22 +286,10 @@ export const entityRefresh = (entityType, relationshipEntity) => {
         }
       });
     } catch (error) {
-      if (error.response) {
-        const { data } = error.response;
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(data);
-        // console.log(error.response.status);
-        // console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
+      const errorData = handleAxiosError(error);
+      if ('reason' in errorData && errorData.reason === 'statusOutOf200') {
+        console.error('entityRefresh -> errorData', errorData);
       }
-      // console.log(error.config);
     }
     dispatch(setEntityRefreshing(entityType, false));
   };
@@ -289,22 +357,10 @@ export const uploadImage = (photo, label, boundingBox) => {
       // const entities = response.data[entityPlural];
       // dispatch(entitiesCreate('image', entities ));
     } catch (error) {
-      if (error.response) {
-        const { data } = error.response;
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log(data);
-        // console.log(error.response.status);
-        // console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
+      const errorData = handleAxiosError(error);
+      if ('reason' in errorData && errorData.reason === 'statusOutOf200') {
+        console.error('uploadImage -> errorData', errorData);
       }
-      // console.log(error.config);
     }
   };
 };
@@ -376,23 +432,10 @@ export const barCodeScanned = (barCode, relationshipEntity) => {
         dispatch(uiStopLoading());
       });
     } catch (error) {
-      console.log('barCodeScanned -> error', error);
-      if (error.response) {
-        const { data } = error.response;
-        // The request was made and the server responded with a status code
-        // that falls out of the range of 2xx
-        console.log('barCodeScanned -> data', data);
-        // console.log(error.response.status);
-        // console.log(error.response.headers);
-      } else if (error.request) {
-        // The request was made but no response was received
-        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-        // http.ClientRequest in node.js
-        console.log(error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
+      const errorData = handleAxiosError(error);
+      if ('reason' in errorData && errorData.reason === 'statusOutOf200') {
+        console.error('entityRefresh -> errorData', errorData);
       }
-      // console.log(error.config);
       dispatch(uiStopLoading());
     }
   };

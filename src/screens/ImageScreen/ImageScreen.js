@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { ActivityIndicator, View, ImageBackground, Text } from 'react-native';
-import { useSelector } from 'react-redux';
-import { Image, Icon, Overlay, Card } from 'react-native-elements';
+import { useSelector, useDispatch } from 'react-redux';
+import { Image, Overlay, Card } from 'react-native-elements';
 import { format } from 'date-fns';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, FontAwesome5 } from '@expo/vector-icons';
 import {
   TouchableWithoutFeedback,
   ScrollView,
@@ -13,6 +13,7 @@ import styles from './ImageScreenStyles';
 import { baseUrl } from '../../constants/api';
 import Button from '../../components/ui/Button/Button';
 import Colors from '../../constants/Colors';
+import { deleteEntity } from '../../store/actions/entity';
 
 const {
   container,
@@ -32,12 +33,21 @@ const {
   dividerStyle,
 } = styles;
 
-const ImageScreen = ({ route }) => {
+const ImageScreen = ({ navigation, route }) => {
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const image = useSelector(
     state => state.entity.image.byId[route.params.imageId],
   );
-  const label = useSelector(state => state.entity.label.byId[image.labelId]);
+  const dispatch = useDispatch();
+  const label = useSelector(
+    state => image && state.entity.label.byId[image.labelId],
+  );
+  const dataset = useSelector(
+    state => label && state.entity.dataset.byId[label.datasetId],
+  );
+  if (!image) {
+    return <Text>Image deleted!</Text>;
+  }
   function toggleImageOverlay() {
     setIsOverlayVisible(prevIsOverlayVisible => !prevIsOverlayVisible);
   }
@@ -48,6 +58,16 @@ const ImageScreen = ({ route }) => {
   } else if (angle === '3') {
     angleText = 'Right';
   }
+
+  function handleDeletePress() {
+    const entity = { id: image.id, type: image.type };
+    const relationshipEntity = { id: label.id, type: label.type };
+    navigation.navigate('Dataset', {
+      dataset,
+    });
+    dispatch(deleteEntity(entity, relationshipEntity));
+  }
+
   const { deviceInfo, location, user } = metaData;
   return (
     <View style={container}>
@@ -179,6 +199,11 @@ const ImageScreen = ({ route }) => {
               </View>
             </View>
           </View>
+          <Button
+            icon={<FontAwesome5 name="trash" size={20} color={Colors.black} />}
+            title="Delete image"
+            onPress={handleDeletePress}
+          />
         </ScrollView>
       </Card>
       <Overlay

@@ -4,6 +4,10 @@ import {
   SET_ENTITY_CREATE_ERROR,
   SET_ENTITY_CREATE_SUCCESS,
   ENTITIES_CREATE,
+  SET_IS_DELETING_ENTITY,
+  SET_ENTITY_DELETE_ERROR,
+  SET_ENTITY_DELETE_SUCCESS,
+  ENTITIES_DELETE,
   SET_ENTITY_REFRESHING,
   ADD_RELATIONSHIP_ENTITY_IDS,
   GET_LABEL_BY_BARCODE_SUCCESS,
@@ -15,6 +19,9 @@ const baseEntityState = {
   isBeingCreated: false,
   createError: null,
   createSuccess: false,
+  isBeingDeleted: false,
+  deleteError: null,
+  deleteSuccess: false,
   refreshing: false,
 };
 
@@ -42,6 +49,26 @@ const setEntityCreateSuccess = produce(
 const entitiesCreate = produce((draft, { entityType, entities }) => {
   entities.forEach(entity => {
     draft[entityType].byId[entity.id] = entity;
+  });
+});
+
+const setIsEntityDeleted = produce((draft, { entityType, isBeingDeleted }) => {
+  draft[entityType].isBeingDeleted = isBeingDeleted;
+});
+
+const setEntityDeleteError = produce((draft, { entityType, error }) => {
+  draft[entityType].createError = error;
+});
+
+const setEntityDeleteSuccess = produce(
+  (draft, { entityType, createSuccess }) => {
+    draft[entityType].createSuccess = createSuccess;
+  },
+);
+
+const entitiesDelete = produce((draft, { entityType, entities }) => {
+  entities.forEach(entity => {
+    delete draft[entityType].byId[entity.id];
   });
 });
 
@@ -75,6 +102,14 @@ function entityReducer(state = initialState, action) {
       return setEntityCreateSuccess(state, payload);
     case ENTITIES_CREATE:
       return entitiesCreate(state, payload);
+    case SET_IS_DELETING_ENTITY:
+      return setIsEntityDeleted(state, payload);
+    case SET_ENTITY_DELETE_ERROR:
+      return setEntityDeleteError(state, payload);
+    case SET_ENTITY_DELETE_SUCCESS:
+      return setEntityDeleteSuccess(state, payload);
+    case ENTITIES_DELETE:
+      return entitiesDelete(state, payload);
     case SET_ENTITY_REFRESHING:
       return setEntityRefreshing(state, payload);
     case ADD_RELATIONSHIP_ENTITY_IDS:
