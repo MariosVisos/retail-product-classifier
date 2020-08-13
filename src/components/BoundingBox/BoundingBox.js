@@ -421,7 +421,10 @@ const BoundingBox = ({
             // console.log('screenWidth', cameraScreenWidth);
             // console.log('screenHeight', cameraScreenHeight);
 
-            dispatch(uploadImage(photo, scannedLabel, boundingBox));
+            // dispatch(uploadImage(photo, scannedLabel, boundingBox));
+            console.log('scannedLabel', scannedLabel);
+            console.log('boundingBox', boundingBox);
+            console.log('photo', photo);
             // console.log('scannedLabelName', scannedLabelName);
 
             // console.log('x', valX + tranX);

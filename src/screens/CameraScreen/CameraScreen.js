@@ -26,10 +26,14 @@ import {
   buildSearchLocationUrl,
 } from '../../utils/googlePlaces';
 import EntityCreateOverlay from '../../components/EntityCreateOverlay/EntityCreateOverlay';
+import uuidv4 from '../../utils/idGenerator';
 
 function CameraScreen({ route, navigation }) {
   const { dataset } = route.params;
   let cameraRef;
+  // Get safe areas and notches
+  const insets = useSafeArea();
+  const marginTop = insets.top;
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRatio, setCameraRatio] = useState('16:9');
   const [isBarCodeScanned, setIsBarCodeScanned] = useState(false);
@@ -39,7 +43,21 @@ function CameraScreen({ route, navigation }) {
   const [photo, setPhoto] = useState(null);
   const [nearbyStores, setNearbyStores] = useState(null);
   const [location, setLocation] = useState(null);
-
+  const [boundingBoxes, setBoundingBoxes] = useState([
+    <BoundingBox
+      key={uuidv4()}
+      initialBoxWidth={100}
+      initialBoxHeight={100}
+      photo={photo}
+      setPhoto={setPhoto}
+      insets={insets}
+    />,
+    <Button
+      onPress={addBoundingBox}
+      key="addBBox"
+      icon={<Entypo name="plus" size={28} color={Colors.primary} />}
+    />,
+  ]);
   useEffect(() => {
     // Ask for camera permission after component mounts for the first time
     // Immediately Invoked Function Expression
@@ -88,6 +106,24 @@ function CameraScreen({ route, navigation }) {
 
   const dispatch = useDispatch();
 
+  function addBoundingBox() {
+    setBoundingBoxes(prevBoundingBoxes => {
+      const secondLastIndex = prevBoundingBoxes.length - 2;
+      const lastIndex = prevBoundingBoxes.length - 2;
+      return [
+        ...prevBoundingBoxes.slice(0, secondLastIndex),
+        <BoundingBox
+          key={uuidv4()}
+          initialBoxWidth={100}
+          initialBoxHeight={100}
+          photo={photo}
+          setPhoto={setPhoto}
+          insets={insets}
+        />,
+        ...prevBoundingBoxes.slice(lastIndex),
+      ];
+    });
+  }
   function movePlaceToFront(selectedIndex) {
     setNearbyStores(prevStores => {
       const newStores = [];
@@ -117,9 +153,6 @@ function CameraScreen({ route, navigation }) {
       };
     }, [dispatch]),
   );
-  // Get safe areas and notches
-  const insets = useSafeArea();
-  const marginTop = insets.top;
 
   const cameraType = Camera.Constants.Type.back;
 
@@ -306,14 +339,7 @@ function CameraScreen({ route, navigation }) {
           <View key="instructionContainer" style={styles.instructionContainer}>
             <Text style={styles.instructionText}>{getInstructionText()}</Text>
           </View>,
-          <BoundingBox
-            key="boundingBox"
-            initialBoxWidth={100}
-            initialBoxHeight={100}
-            photo={photo}
-            setPhoto={setPhoto}
-            insets={insets}
-          />,
+          boundingBoxes,
           <Button
             raised
             key="nextButton"
