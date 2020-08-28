@@ -23,6 +23,10 @@
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": ["**/*"],
+    "android": {
+      "package": "com.rpc.retail_product_classifier",
+      "versionCode": 1
+    },
     "ios": {
       "supportsTablet": true
     }

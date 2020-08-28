@@ -25,26 +25,24 @@ const LabelListItem = ({ navigation, label }) => {
   );
 
   return (
-    <ListItem
-      containerStyle={container}
-      title={name}
-      subtitle={`${imageIds.length} images`}
-      leftElement={
-        imageIds.length > 0 ? (
-          <Image
-            style={{ width: 60, height: 60 }}
-            source={{
-              uri: `${baseUrl}/image/${id}/${imageIds[0]}`,
-            }}
-            PlaceholderContent={<ActivityIndicator color={Colors.secondary} />}
-          />
-        ) : (
-          <NoImage />
-        )
-      }
-      rightElement={dotsIconWithTooltip}
-      onPress={handleLabelPress}
-    />
+    <ListItem containerStyle={container} onPress={handleLabelPress}>
+      {imageIds.length > 0 ? (
+        <Image
+          style={{ width: 60, height: 60 }}
+          source={{
+            uri: `${baseUrl}/image/${id}/${imageIds[0]}`,
+          }}
+          PlaceholderContent={<ActivityIndicator color={Colors.secondary} />}
+        />
+      ) : (
+        <NoImage />
+      )}
+      <ListItem.Content>
+        <ListItem.Title>{name}</ListItem.Title>
+        <ListItem.Subtitle>{`${imageIds.length} images`}</ListItem.Subtitle>
+      </ListItem.Content>
+      {dotsIconWithTooltip}
+    </ListItem>
   );
 };
 

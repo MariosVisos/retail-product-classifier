@@ -71,11 +71,9 @@ const ImageScreen = ({ navigation, route }) => {
   const { deviceInfo, location, user } = metaData;
   return (
     <View style={container}>
-      <Card
-        dividerStyle={dividerStyle}
-        title={label.name}
-        containerStyle={cardStyle}
-      >
+      <Card containerStyle={cardStyle}>
+        <Card.Title>{label.name}</Card.Title>
+        <Card.Divider style={dividerStyle} />
         <ScrollView>
           <TouchableWithoutFeedback
             onPress={toggleImageOverlay}

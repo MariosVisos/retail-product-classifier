@@ -10,15 +10,10 @@ const LabelListItemPopover = () => {
   function handleDeletePress() {}
   return (
     <View style={container}>
-      <ListItem
-        containerStyle={listItemContainer}
-        titleStyle={titleStyle}
-        title="Delete"
-        leftIcon={
-          <FontAwesome5 name="trash" size={18} color={Colors.blackLight} />
-        }
-        onPress={handleDeletePress}
-      />
+      <ListItem containerStyle={listItemContainer} onPress={handleDeletePress}>
+        <FontAwesome5 name="trash" size={18} color={Colors.blackLight} />
+        <ListItem.Title style={titleStyle}>Delete</ListItem.Title>
+      </ListItem>
     </View>
   );
 };
