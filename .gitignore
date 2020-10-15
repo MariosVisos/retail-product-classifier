@@ -15,3 +15,4 @@ web-report/
 .DS_Store
 
 src/constants/apiKeys.js
+debug.log

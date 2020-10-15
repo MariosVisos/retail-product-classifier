@@ -14,7 +14,7 @@ In the root directory run:
 expo install in order to install the dependencies
 ```
 
-Open the api.js file in the src/constants directory and set the baseUrl to the base URL where the [retail-product-classifier-server](https://github.com/MariosVisos/retail-product-classifier-server) is running.
+Open the api.js file in the src/constants directory and set your api key credentials as well as the base url where the [retail-product-classifier-server](https://github.com/MariosVisos/retail-product-classifier-server) is running.
 
 ## Usage
 

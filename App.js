@@ -3,7 +3,8 @@ import { AsyncStorage } from 'react-native';
 import { Provider } from 'react-redux';
 import axios from 'axios';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AppLoading, SplashScreen } from 'expo';
+import { AppLoading } from 'expo';
+import * as SplashScreen from 'expo-splash-screen';
 import Main from './src/Main';
 import configureStore from './src/store/configureStore';
 
@@ -22,7 +23,7 @@ export default function App() {
 
   function handleAppLoadingFinish() {
     setIsAppReady(true);
-    SplashScreen.hide();
+    SplashScreen.hideAsync();
   }
 
   if (!isAppReady) {
