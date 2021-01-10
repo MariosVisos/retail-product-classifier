@@ -3,7 +3,7 @@ import { AsyncStorage } from 'react-native';
 import { Provider } from 'react-redux';
 import axios from 'axios';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AppLoading } from 'expo';
+import AppLoading from 'expo-app-loading';
 import * as SplashScreen from 'expo-splash-screen';
 import Main from './src/Main';
 import configureStore from './src/store/configureStore';

@@ -1,5 +1,8 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import {
+  getFocusedRouteNameFromRoute,
+  NavigationContainer,
+} from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons } from '@expo/vector-icons';
@@ -49,14 +52,14 @@ function renderTabBarIcon({ color, size, route }) {
 }
 
 function isCameraScreen(route) {
-  const { state, params } = route;
+  // const { state, params } = route;
   // Access the tab navigator's state using `route.state`
-  const routeName = state
-    ? // Get the currently active route name in the tab navigator
-      state.routes[state.index].name
-    : // If state doesn't exist, we need to default to `screen` param if available, or the initial screen
-      // In our case, it's "Home" as that's the first screen inside the navigator
-      params?.screen || 'Home';
+  const routeName = getFocusedRouteNameFromRoute(route);
+  // ? // Get the currently active route name in the tab navigator
+  //   state.routes[state.index].name
+  // : // If state doesn't exist, we need to default to `screen` param if available, or the initial screen
+  //   // In our case, it's "Home" as that's the first screen inside the navigator
+  //   params?.screen || 'Home';
   if (routeName === 'BarCode' || routeName === 'Camera') {
     return false;
   }
